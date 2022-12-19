@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import optionen as opt
 import protokoll as prot
 from pathlib import Path
 import os
@@ -19,9 +17,13 @@ class Vertrieb():
         self.oprot.SchreibeInProtokoll(text)
         
         self.dtype_dic= { 'nr':int, 'jahr':int, 'tkz':int, 'name':str, 'wert':str}
-
         
         self.LegeFileVertrieb()
+        
+        self.eigaben_dict={}
+
+    def LeseMarkDaten(self):
+        pass
 
     def LegeTabelleVertriebAn(self):
         datei=self.file_vertrieb
@@ -99,7 +101,7 @@ class Vertrieb():
         nr=eintrag_dict.get('nr')
         jahr=eintrag_dict.get('jahr')
         tkz=eintrag_dict.get('tkz')
-        name=eintrag_dict.get('name')
+        name=eintrag_dict.get('name')   
         
         if self.LeseAusCSV(eintrag_dict) != '':
             df = pd.read_csv(datei, sep=';')
@@ -127,7 +129,11 @@ class Vertrieb():
         f.write(text)    
         f.close()       
     
+    def ErmittleAnzahl(self, eingaben_dict):
+        pass
+    
     def SchreibeNeugeschaeft(self, vertrieb_dict):
+        #hier wird die Strucktur und die Hoehe des Neugeschäfts festgeleht:
         satz_dict={}
         jahr=int(vertrieb_dict.get('jahr'))
         nr=int(self.LeseNummer())

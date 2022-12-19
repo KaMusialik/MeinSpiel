@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
+import os
 import pandas as pd
 
 class Optionen:
@@ -10,11 +10,21 @@ class Optionen:
         self.file_optionen = f
         datei= Path(self.file_optionen)
         if datei.is_file():
-            print("Datei " + self.file_optionen+ " existiert.")
-            #self.SchreibeInOptionen('file_optionen', self.file_optionen)
+            text = 'Optionen/init: Datei ' + self.file_optionen+ ' existiert.'
+            print(text)
+            os.remove(self.file_optionen)
+            text='Datei ' + self.file_optionen + ' wurde gelöscht.'
+            print(text)
         else:
-            print("Datei " + self.file_optionen + " existiert nicht!!!")   
-            return
+           text = 'Optionen/init: Datei ' + self.file_optionen+ ' existiert nicht!. Sie wird angelegt'
+           print(text)
+        
+        f = open(self.file_optionen, "w")
+        text = 'key;wert'+ "\n"
+        f=open(self.file_optionen, "a")
+        f.write(text)    
+        f.close()   
+
         
     def PruefeObDateiExistiert(self, f):
         datei= Path(f)
@@ -43,7 +53,7 @@ class Optionen:
         df1 = df[df.key == key]
         
         if df1.empty:
-            wert=0
+            wert=""
             text='Optionen/LeseInhaltOptionen: Kein Eintrag gefunden. Es wurde null verwendet: key='+str(print(key))
             print(text)
         else:
