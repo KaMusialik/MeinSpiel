@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import protokoll as prot
 import pandas as pd
 import datetime
@@ -12,16 +12,15 @@ import shutil
 import hilfe_system as hs
 
 
-class System(object):
+class System():
 
     def __init__(self, f_dict):
         
         work_dir=f_dict.get('work_dir')
-        #self.file_protokoll=work_dir+'protokoll_system.csv'
+
         self.file_protokoll = f_dict.get('protokoll_file_system')
         
         self.file_system_bestand = f_dict.get('file_system_bestand')
-        #f_dict['system_bestand']=self.file_system_bestand
         
         self.file_system_fortschreibung = f_dict.get('file_system_fortschreibung')
         self.dtype_fortschreibung = f_dict.get('file_system_fortschreibung_struktur')

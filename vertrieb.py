@@ -259,7 +259,7 @@ class Vertrieb():
             satz_dict['wert']=anzahl_renten
             self.SchreibeInTabelleVertrieb(satz_dict)
 
-            satz_dict['name']='lauftzeit'
+            satz_dict['name']='laufzeit'
             laufzeit = int(vertrieb_dict.get('laufzeitRente'))
             satz_dict['wert']=laufzeit
             self.SchreibeInTabelleVertrieb(satz_dict)
@@ -316,7 +316,7 @@ class Vertrieb():
             satz_dict['wert']=anzahl_bu
             self.SchreibeInTabelleVertrieb(satz_dict)
 
-            satz_dict['name']='lauftzeit'
+            satz_dict['name']='laufzeit'
             laufzeit = int(vertrieb_dict.get('laufzeitBu'))
             satz_dict['wert']=laufzeit
             self.SchreibeInTabelleVertrieb(satz_dict)

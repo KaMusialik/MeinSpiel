@@ -3,7 +3,7 @@
 import protokoll as prot
 import produkt as prod
 
-class Produktmanager(object):
+class Produktmanager():
     
     def __init__(self, f_dict, dic):
         
@@ -43,6 +43,7 @@ class Produktmanager(object):
         if vertrag_neu.get('gevo') == 'Neuzugang':
             vertrag_neu=self.Beitrag(vertrag_neu)
             vertrag_neu=self.Versicherungssumme(vertrag_neu)
+            vertrag_neu=self.Beitragssumme(vertrag_neu)
             
         return vertrag_neu
             
@@ -121,7 +122,16 @@ class Produktmanager(object):
         return vertrag
     
     def Beitrag(self, vertrag):
-        vertrag['bruttojahresbeitrag']=1200
+        anzahl = float(vertrag.get('anzahl'))
+        bruttobeitrag = float(self.produkt.get('bruttobeitrag'))
+        vertrag['bruttojahresbeitrag'] = bruttobeitrag * anzahl
+        
+        return vertrag        
+
+    def Beitragssumme(self, vertrag):
+        bruttobeitrag = float(vertrag.get('bruttojahresbeitrag'))
+        laufzeit = float(vertrag.get('laufzeit'))
+        vertrag['beitragssumme'] = bruttobeitrag * laufzeit
         
         return vertrag        
 
