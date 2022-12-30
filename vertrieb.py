@@ -4,6 +4,7 @@ import protokoll as prot
 from pathlib import Path
 import os
 import pandas as pd
+import hilfe_statistik as hs
 
 class Vertrieb():
 
@@ -12,18 +13,81 @@ class Vertrieb():
         file_protokoll=f_dict.get('protokoll_file_vertrieb')
         self.oprot = prot.Protokoll(file_protokoll)
         
-        self.file_vertrieb=f_dict.get('file_vertrieb')
-        text ='Vertrieb/__Init__: File für die Angaben zum Neugeschäft festgelegt: '+self.file_vertrieb
+        self.file_vertrieb = f_dict.get('file_vertrieb') #hier wird das Neugeschäft reingeschriben
+        text ='Vertrieb/__Init__: File für die Angaben zum Neugeschäft festgelegt: ' + self.file_vertrieb
         self.oprot.SchreibeInProtokoll(text)
+
+        self.optionen_file_grundeinstellungen = f_dict.get('optionen_file_grundeinstellungwindow') #hier stehen die Grunddaten bzw. Marktdaten
+        
+        self.beitragMarktBu = 0
+        self.beitragMarktRente = 0
+        self.provisionMarktBu = 0
+        self.provisionMarktRente = 0
+        self.erwarteteAnzahlRente = 0
+        self.erwarteteAnzahlBu = 0
+        self.streuungImNG = ''
         
         self.dtype_dic= { 'nr':int, 'jahr':int, 'tkz':int, 'name':str, 'wert':str}
         
         self.LegeFileVertrieb()
         
         self.eigaben_dict={}
+        
+        self.LeseMarkDaten()
+
+    def LeseCsvOptinen(self, file, key):
+        wert = ""
+        df=pd.read_csv(file, sep=";")
+        df1 = df[df.key == key]
+        
+        if df1.empty:
+            wert=""
+            text='Vertrieb/LeseCsvOptinen: Kein Eintrag gefunden. Es wurde null verwendet: key='+str(print(key))
+            print(text)
+        else:
+            index=df1.index[0]
+            wert=df1.at[index, 'wert']
+            
+        return wert 
 
     def LeseMarkDaten(self):
-        pass
+        file = self.optionen_file_grundeinstellungen
+        
+        #Wert für Beitrag Renten:
+        key = 'beitragMarktRente'
+        wert = self.LeseCsvOptinen(file, key)
+        self.beitragMarktRente = wert
+ 
+        #Wert für Beitrag Bu:
+        key = 'beitragMarktBu'
+        wert = self.LeseCsvOptinen(file, key)
+        self.beitragMarktBu = wert
+
+        #Wert für erwartete Anzahl Bu:
+        key = 'anzahlBu'
+        wert = self.LeseCsvOptinen(file, key)
+        self.erwarteteAnzahlBu = wert
+ 
+        #Wert für Provison Renten:
+        key = 'provisionMarktBu'
+        wert = self.LeseCsvOptinen(file, key)
+        self.provisionMarktBu = wert
+ 
+        #Wert für Provison Renten:
+        key = 'provisionMarktRente'
+        wert = self.LeseCsvOptinen(file, key)
+        self.provisionMarktRente = wert
+
+        #Wert für erwartete Anzahl Rente:
+        key = 'anzahlRente'
+        wert = self.LeseCsvOptinen(file, key)
+        self.erwarteteAnzahlRente = wert
+
+        #Wert für Streuung im Neugeschäft:
+        key = 'streuungImNG'
+        wert = self.LeseCsvOptinen(file, key)
+        self.streuungImNG = wert
+
 
     def LegeTabelleVertriebAn(self):
         datei=self.file_vertrieb
@@ -44,7 +108,7 @@ class Vertrieb():
     def LegeFileVertrieb(self):
         datei= Path(self.file_vertrieb)
         if datei.is_file():
-            text="Vertrieb/LegeFileVertrieb " +str(datei)+ " existiert bereits. Daher muss sie zuerst entfernt werden."
+            text="Vertrieb/LegeFileVertrieb " +str(datei)+ " existiert bereits. Daher muss die Datein zuerst entfernt werden."
             print(text)
             self.oprot.SchreibeInProtokoll(text)
             os.remove(datei)
@@ -129,16 +193,45 @@ class Vertrieb():
         f.write(text)    
         f.close()       
     
-    def ErmittleAnzahl(self, eingaben_dict):
-        pass
+    def ErmittleAnzahl(self, anzahl_dict):
+        #hier wird die Anzahl der Verträge im Neugeschäft ermittelt:
+        
+        erwarteteAnzahl = float(anzahl_dict.get('erwaerteteAnzahl'))
+        beitragZumMarkt = float(anzahl_dict.get('beitragZumMarkt'))
+        provisionZumMarkt = float(anzahl_dict.get('provisionZumMarkt'))
+        
+        stat_dict = {}
+        stat_dict['risiko'] = anzahl_dict.get('streuungImNG')
+        ohs = hs.Hilfe_Statistik(stat_dict)
+        zufallszahl = ohs.NeueZufallszahl()
+        nv = ohs.Phi(zufallszahl)
+        
+        wert = erwarteteAnzahl/beitragZumMarkt*provisionZumMarkt * nv
+        
+        if wert < 0: #es werten nur positive Werte zugelassen:
+            wert = 0
+            
+        return wert
     
     def SchreibeNeugeschaeft(self, vertrieb_dict):
-        #hier wird die Strucktur und die Hoehe des Neugeschäfts festgeleht:
+        #hier wird die Struktur und die Hoehe des Neugeschäfts festgeleht:
         satz_dict={}
         jahr=int(vertrieb_dict.get('jahr'))
         nr=int(self.LeseNummer())
 
-        anzahl_renten = int(vertrieb_dict.get('anzahl_renten'))
+        anzahl_dict = {}
+        
+        anzahl_dict['beitragZumMarkt'] = vertrieb_dict.get('beitrag_RentenZumMarkt')
+        anzahl_dict['beitragMarkt'] = self.beitragMarktRente
+        anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlRente
+        anzahl_dict['provisionZumMarkt'] = vertrieb_dict.get('provision_RentenZumMarkt')
+        anzahl_dict['streuungImNG'] = self.streuungImNG
+        
+        if vertrieb_dict.get('neugeschaeft_Rente') == True:
+            anzahl_renten = self.ErmittleAnzahl(anzahl_dict)
+        else:
+            anzahl_renten = 0
+    
         if anzahl_renten > 0:
             tkz='20200101767'
             sra='N'
@@ -167,7 +260,7 @@ class Vertrieb():
             self.SchreibeInTabelleVertrieb(satz_dict)
 
             satz_dict['name']='lauftzeit'
-            laufzeit = int(vertrieb_dict.get('laufzeit_renten'))
+            laufzeit = int(vertrieb_dict.get('laufzeitRente'))
             satz_dict['wert']=laufzeit
             self.SchreibeInTabelleVertrieb(satz_dict)
 
@@ -184,7 +277,17 @@ class Vertrieb():
             satz_dict['wert']=zw
             self.SchreibeInTabelleVertrieb(satz_dict)
 
-        anzahl_bu = int(vertrieb_dict.get('anzahl_bu'))
+        anzahl_dict['beitragZumMarkt'] = vertrieb_dict.get('beitrag_BuZumMarkt')
+        anzahl_dict['beitragMarkt'] = self.beitragMarktBu
+        anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlBu
+        anzahl_dict['provisionZumMarkt'] = vertrieb_dict.get('provision_BuZumMarkt')
+        anzahl_dict['streuungImNG'] = self.streuungImNG
+        
+        if vertrieb_dict.get('neugeschaeft_Bu') == True:
+            anzahl_bu = self.ErmittleAnzahl(anzahl_dict)
+        else:
+            anzahl_bu = 0
+
         if anzahl_bu > 0:
             tkz='20200101709'
             sra='N'
@@ -209,16 +312,12 @@ class Vertrieb():
             satz_dict['wert']=beginn
             self.SchreibeInTabelleVertrieb(satz_dict)
 
-            satz_dict['name']='ende'
-            satz_dict['wert']=ende
-            self.SchreibeInTabelleVertrieb(satz_dict)
-
             satz_dict['name']='anzahl'
             satz_dict['wert']=anzahl_bu
             self.SchreibeInTabelleVertrieb(satz_dict)
 
             satz_dict['name']='lauftzeit'
-            laufzeit = int(vertrieb_dict.get('laufzeit_bu'))
+            laufzeit = int(vertrieb_dict.get('laufzeitBu'))
             satz_dict['wert']=laufzeit
             self.SchreibeInTabelleVertrieb(satz_dict)
 

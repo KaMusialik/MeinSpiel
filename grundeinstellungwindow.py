@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import optionen as opt
 import protokoll as prot
-import os
 import pandas as pd
 
 from pathlib import Path
@@ -61,6 +60,23 @@ class GrundEinstelleungWindow():
             self.w.radioButton_KA_Risiko_sehr_riskant.setChecked(True)
         else:
             self.w.radioButton_KA_Risiko_sehr_riskant.setChecked(False)
+
+        #Einstellungen zur Streueung im Neugeschäft:
+        streuungImNG = self.start_dict.get('streuungImNG')
+        if streuungImNG == 'normal':
+            self.w.radioButton_StreuungImNG_normal.setChecked(True)
+        else:
+            self.w.radioButton_StreuungImNG_normal.setChecked(False)
+
+        if streuungImNG == 'gross':
+            self.w.radioButton_StreuungImNG_gross.setChecked(True)
+        else:
+            self.w.radioButton_StreuungImNG_gross.setChecked(False)
+
+        if streuungImNG == 'sehrgross':
+            self.w.radioButton_StreuungImNG_sehrgross.setChecked(True)
+        else:
+            self.w.radioButton_StreuungImNG_sehrgross.setChecked(False)
         
         
         wert = self.start_dict.get('beitragMarktRente')
@@ -68,18 +84,29 @@ class GrundEinstelleungWindow():
 
         wert = self.start_dict.get('provisionMarktRente')
         self.w.lineEdit_ProvisionRente.setText(wert)        
+
+        wert = self.start_dict.get('anzahlRente')
+        self.w.lineEdit_AnzahlRente.setText(wert)        
         
         wert = self.start_dict.get('beitragMarktBu')
         self.w.lineEdit_BeitragBu.setText(wert)
 
         wert = self.start_dict.get('provisionMarktBu')
         self.w.lineEdit_ProvisionBu.setText(wert)
+
+        wert = self.start_dict.get('anzahlBu')
+        self.w.lineEdit_AnzahlBu.setText(wert)
     
     def LeseStartDatenAusOptionen(self):
         file = self.start_dict.get('file')
         
         #Wert für Kapitalanlagen Renten:
         key = 'ka_renten_sa'
+        wert = self.LeseCsvOptinen(file, key)
+        self.start_dict[key] = wert
+
+        #Streuung im Neugeschäft:
+        key = 'streuungImNG'
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
         
@@ -102,6 +129,16 @@ class GrundEinstelleungWindow():
         key = 'provisionMarktRente'
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
+
+        #Wert für Anzahl Renten:
+        key = 'anzahlRente'
+        wert = self.LeseCsvOptinen(file, key)
+        self.start_dict[key] = wert
+
+        #Wert für Anzahl BU:
+        key = 'anzahlBu'
+        wert = self.LeseCsvOptinen(file, key)
+        self.start_dict[key] = wert
     
     def LeseCsvOptinen(self, file, key):
         wert = ""
@@ -119,6 +156,8 @@ class GrundEinstelleungWindow():
         return wert       
     
     def LeseDatenAusFenster(self):
+        
+        #hier werden die Informationen aus dem Dialog ausgelesen und in die Datei Optionen reingeschrieben:
         if self.w.radioButton_KA_Risiko_normal.isChecked():
             ka_renten_sa = 'normal'
         elif self.w.radioButton_KA_Risiko_riskant.isChecked():
@@ -126,7 +165,7 @@ class GrundEinstelleungWindow():
         elif self.w.radioButton_KA_Risiko_sehr_riskant.isChecked():
             ka_renten_sa = 'high_risky'
         else:
-            ka_renten_sa = 'nermal'
+            ka_renten_sa = 'normal'
             text = 'Grundeinstellungwindow/LeseDatenAusFenster: Das Risiko in der Kapitalanlage in den Renten konnte nicht zugerdnet werden. Es wurde daher festgelegt: ' + str(ka_renten_sa)
             self.oprot.SchreibeInProtokoll(text)
 
@@ -147,6 +186,11 @@ class GrundEinstelleungWindow():
         text = provisionMarktRente
         self.oopt.SchreibeInOptionen(key, text)
 
+        anzahlRente = self.w.lineEdit_AnzahlRente.text()
+        key = 'anzahlRente'
+        text = anzahlRente
+        self.oopt.SchreibeInOptionen(key, text)
+
         beitragMarktBu = self.w.lineEdit_BeitragBu.text()
         key = 'beitragMarktBu'
         text = beitragMarktBu
@@ -155,6 +199,26 @@ class GrundEinstelleungWindow():
         provisionMarktBu = self.w.lineEdit_ProvisionBu.text()
         key = 'provisionMarktBu'
         text = provisionMarktBu
+        self.oopt.SchreibeInOptionen(key, text)
+
+        anzahlBu= self.w.lineEdit_AnzahlBu.text()
+        key = 'anzahlBu'
+        text = anzahlBu
+        self.oopt.SchreibeInOptionen(key, text)
+        
+        if self.w.radioButton_StreuungImNG_normal.isChecked():
+            streuungImNG = 'normal'
+        elif self.w.radioButton_StreuungImNG_gross.isChecked():
+            streuungImNG = 'gross'
+        elif self.w.radioButton_StreuungImNG_sehrgross.isChecked():
+            streuungImNG = 'sehrgross'
+        else:
+            streuungImNG = 'normal'
+            text = 'Grundeinstellungwindow/LeseDatenAusFenster: Die Streuung im Neugeschäft konnte nicht zugerdnet werden. Es wurde daher festgelegt: ' + str(streuungImNG)
+            self.oprot.SchreibeInProtokoll(text)
+            
+        key = 'streuungImNG'
+        text = str(streuungImNG)   
         self.oopt.SchreibeInOptionen(key, text)
         
         self.SchliesseFenster()

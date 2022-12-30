@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import protokoll as prot
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,7 +34,7 @@ class Statistik(object):
         #es werden Übersichten für die Statistik erstellt:
         datei=self.file_statistik
         
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_statistik_dict)
+        df=pd.read_csv(datei, sep=";")
 
         col_labels = []
         row_labels = ['Anfang', 'Zugang', 'Abgang', 'Ende']

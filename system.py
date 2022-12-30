@@ -17,15 +17,16 @@ class System(object):
     def __init__(self, f_dict):
         
         work_dir=f_dict.get('work_dir')
-        self.file_protokoll=work_dir+'protokoll_system.csv'
+        #self.file_protokoll=work_dir+'protokoll_system.csv'
+        self.file_protokoll = f_dict.get('protokoll_file_system')
         
-        self.file_system_bestand=work_dir+'system_bestand.csv'
-        f_dict['system_bestand']=self.file_system_bestand
+        self.file_system_bestand = f_dict.get('file_system_bestand')
+        #f_dict['system_bestand']=self.file_system_bestand
         
-        self.file_system_fortschreibung=f_dict.get('file_system_fortschreibung')
+        self.file_system_fortschreibung = f_dict.get('file_system_fortschreibung')
         self.dtype_fortschreibung = f_dict.get('file_system_fortschreibung_struktur')
         
-        self.file_system_statistik=work_dir+'system_statistik.csv'
+        self.file_system_statistik = f_dict.get('file_system_statistik')
         
         self.LegeBestand()
         self.LegeFortschreibung()

@@ -11,6 +11,10 @@ import optionen as opt
 import protokoll as prot
 
 import grundeinstellungwindow as gW
+import statistikwindow as sW
+import produktwindow as pW
+import vertragswindow as vW
+
 import bilanz as bil
 import vertrieb as ver
 #import oe_antrag as oe_antrag
@@ -27,20 +31,19 @@ files_dict['work_dir'] = '/home/karol_laptop/MeineProjekte/MeinSpiel/csv_fuer_me
 files_dict['grundeinstellungwindow_file'] = files_dict.get('work_dir')+'grundeinstellungwindow.ui'
 files_dict['spielwindow_file'] = files_dict.get('work_dir')+'spielwindow.ui'
 files_dict['leereswindow_file'] = files_dict.get('work_dir')+'leereswindow.ui'
+files_dict['statistikwindow_file'] = files_dict.get('work_dir')+'statistikwindow.ui'
+files_dict['produktwindow_file'] = files_dict.get('work_dir')+'produktwindow.ui'
+files_dict['vertragswindow_file'] = files_dict.get('work_dir')+'vertragswindow.ui'
 
 files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'
 files_dict['grafik_file_entwicklung_renten'] = files_dict.get(
     'work_dir')+'grafik_renten.png'
 
-files_dict['optionen_file_grundeinstellungwindow'] = files_dict.get(
-    'work_dir')+'optionen_grundeinstellungwindow.csv'
-files_dict['protokoll_file_grundeinstellungwindow'] = files_dict.get(
-    'work_dir')+'protokoll_grundeinstellungwindow.txt'
+files_dict['optionen_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'optionen_grundeinstellungwindow.csv'
+files_dict['protokoll_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'protokoll_grundeinstellungwindow.txt'
 
-files_dict['optionen_file_main'] = files_dict.get(
-    'work_dir')+'optionen_main.csv'
-files_dict['protokoll_file_main'] = files_dict.get(
-    'work_dir')+'protokoll_main.txt'
+files_dict['optionen_file_main'] = files_dict.get('work_dir')+'optionen_main.csv'
+files_dict['protokoll_file_main'] = files_dict.get('work_dir')+'protokoll_main.txt'
 
 files_dict['optionen_file_vertrieb'] = files_dict.get(
     'work_dir')+'optionen_vertrieb.csv'
@@ -68,16 +71,21 @@ files_dict['file_bilanz_start'] = files_dict.get('work_dir')+'bilanz_start.csv'
 files_dict['file_bilanz_struktur'] = {
     'jahr': int, 'rgl': str, 'avbg': str, 'name': str, 'wert': str}
 
-files_dict['protokoll_file_system'] = files_dict.get(
-    'work_dir')+'protokoll_system.txt'
-files_dict['file_system_fortschreibung_struktur'] = {
-    'vsnr': str, 'histnr': int, 'von': int, 'bis': int, 'name': str, 'wert': str}
-files_dict['file_system_bestand_struktur'] = {
-    'vsnr': str, 'histnr': int, 'von': int, 'bis': int, 'name': str, 'wert': str}
-files_dict['file_system_fortschreibung'] = files_dict.get(
-    'work_dir')+'system_fortschreibung.csv'
-files_dict['grafik_file_statistik_anzahl'] = files_dict.get(
-    'work_dir')+'grafik_statistik_anzahl.png'
+#hier stehen die Produktdaten:
+files_dict['file_produkt'] = files_dict.get('work_dir')+'produkt.csv'
+
+#hier stehen die Systemdateien:
+files_dict['protokoll_file_system'] = files_dict.get('work_dir')+'protokoll_system.txt'
+files_dict['file_system_fortschreibung_struktur'] = {'vsnr': str, 'histnr': int, 'von': int, 'bis': int, 'name': str, 'wert': str}
+files_dict['file_system_bestand'] = files_dict.get('work_dir')+'system_bestand.csv'
+files_dict['file_system_bestand_struktur'] = {'vsnr': str, 'histnr': int, 'von': int, 'bis': int, 'name': str, 'wert': str}
+files_dict['file_system_fortschreibung'] = files_dict.get('work_dir')+'system_fortschreibung.csv'
+files_dict['grafik_file_statistik_anzahl'] = files_dict.get('work_dir')+'grafik_statistik_anzahl.png'
+files_dict['file_system_statistik'] = files_dict.get('work_dir')+'system_statistik.csv'
+
+files_dict['protokoll_file_statistikwindow'] = files_dict.get('work_dir')+'protokoll_statistikwindow.txt'
+files_dict['protokoll_file_produktwindow'] = files_dict.get('work_dir')+'protokoll_produktwindow.txt'
+files_dict['protokoll_file_vertragswindow'] = files_dict.get('work_dir')+'protokoll_vertragswindow.txt'
 
 # in diesem dictionary werden Infos zu Kapitalallokation abgelegt:
 ka_sa_dict = {}
@@ -141,6 +149,15 @@ def LegeDefoultEinstellungenfest():
     wSpielwindow.horizontalSlider_ProvisionBuZumMarkt.setMaximum(200)
     wSpielwindow.horizontalSlider_ProvisionBuZumMarkt.setValue(100)
 
+    #Slider für Laufzeit:    
+    # Rente:
+    wSpielwindow.horizontalSlider_LaufzeitRente.setMinimum(1)
+    wSpielwindow.horizontalSlider_LaufzeitRente.setMaximum(35)
+    wSpielwindow.horizontalSlider_LaufzeitRente.setValue(5)
+    # Bu:
+    wSpielwindow.horizontalSlider_LaufzeitBu.setMinimum(1)
+    wSpielwindow.horizontalSlider_LaufzeitBu.setMaximum(35)
+    wSpielwindow.horizontalSlider_LaufzeitBu.setValue(10)
 
 def LegeGuVTabelleAn(obil):
     # Im Dialog werden die Ergebnisse der GuV ausgegeben:
@@ -318,9 +335,17 @@ def ZeigeGrafik_Entwicklung_Renten():
     ZeigeGrafik(file)
 
 
-def ZeigeGrafik_Statistik_Anzahl():
-    file = files_dict.get('grafik_file_statistik_anzahl')
-    ZeigeGrafik(file)
+def ZeigeWindowStatistik():
+    osW = sW.StatistikWindow(files_dict)
+    osW.RufeFensterAuf()
+
+def ZeigeWindowProdukt():
+    opW = pW.ProduktWindow(files_dict)
+    opW.RufeFensterAuf()
+    
+def ZeigeWindowVertrag():
+    ovW = vW.VertragsWindow(files_dict)
+    ovW.RufeFensterAuf()
 
 def LeseAusFensterSpielVertriebEingaben():
     # hier werden die Eingaben zum Thema Neugeschäft aus dem Dialog Spiel ausgelesen:
@@ -343,6 +368,27 @@ def LeseAusFensterSpielVertriebEingaben():
     provision = int(wSpielwindow.label_ProvisionBuZumMarkt.text())
     vertrieb_dict['provision_BuZumMarkt'] = provision     
     
+    #Laufzeit der Verträge:
+    #Rente:
+    laufzeit = int(wSpielwindow.label_LaufzeitRente.text())   
+    vertrieb_dict['laufzeitRente'] = laufzeit     
+    #Bu:
+    laufzeit = int(wSpielwindow.label_LaufzeitBu.text())   
+    vertrieb_dict['laufzeitBu'] = laufzeit     
+        
+    #Neugeschäft oder Runoff:
+    #Renten:
+    if wSpielwindow.radioButton_Rente_Neugeschaeft.isChecked() == True:
+        vertrieb_dict['neugeschaeft_Rente'] = True
+    else:
+        vertrieb_dict['neugeschaeft_Rente'] = False
+
+    #Bu:
+    if wSpielwindow.radioButton_Bu_Neugeschaeft.isChecked() == True:
+        vertrieb_dict['neugeschaeft_Bu'] = True
+    else:
+        vertrieb_dict['neugeschaeft_Bu'] = False
+        
     text = 'Aus dem Dialog zum Vertrieb wurden für folgende Eingaben ausgelesen:' + \
         str(vertrieb_dict)
     oprot.SchreibeInProtokoll(text)
@@ -382,6 +428,14 @@ def ProvisionRenteZumMarktmSlider():
 def ProvisionBuZumMarktmSlider():
     beitrag = wSpielwindow.horizontalSlider_ProvisionBuZumMarkt.value()
     wSpielwindow.label_ProvisionBuZumMarkt.setText(str(beitrag))
+
+def LaufzeitRenteSlider():
+    laufzeit = wSpielwindow.horizontalSlider_LaufzeitRente.value()
+    wSpielwindow.label_LaufzeitRente.setText(str(laufzeit))
+
+def LaufzeitBuSlider():
+    laufzeit = wSpielwindow.horizontalSlider_LaufzeitBu.value()
+    wSpielwindow.label_LaufzeitBu.setText(str(laufzeit))
 
 def KontrolleAnteilRentenInKa():
     anteil1 = wSpielwindow.comboBox_A1.currentText()
@@ -513,15 +567,6 @@ def Steuerung():
             wSpielwindow.pushButton_ZSK).get('breite')-10
         wSpielwindow.pushButton_ZSK.setIconSize(core.QSize(breite, hoehe))
 
-        file_grafik = files_dict.get('grafik_file_statistik_anzahl')
-        icon = gui.QIcon(file_grafik)
-        wSpielwindow.pushButton_statistik_anzahl.setIcon(icon)
-        hoehe = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_statistik_anzahl).get('hoehe')-10
-        breite = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_statistik_anzahl).get('breite')-10
-        wSpielwindow.pushButton_statistik_anzahl.setIconSize(
-            core.QSize(breite, hoehe))
 
     oprot.SchreibeInProtokoll("ENDE erreicht!!!")
     print("**** Ende ****")
@@ -539,16 +584,19 @@ if __name__ == "__main__":
     wSpielwindow = uic.loadUi(files_dict.get('spielwindow_file'))
     
     wSpielwindow.pushButton_ZSK.clicked.connect(ZeigeGrafik_ZSK)
-    wSpielwindow.pushButton_statistik_anzahl.clicked.connect(
-        ZeigeGrafik_Statistik_Anzahl)
-    wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(
-        ZeigeGrafik_Entwicklung_Renten)
+    wSpielwindow.pushButton_statistik.clicked.connect(ZeigeWindowStatistik)
+    wSpielwindow.pushButton_produkt.clicked.connect(ZeigeWindowProdukt)
+    wSpielwindow.pushButton_vertrag.clicked.connect(ZeigeWindowVertrag)
+    
+    wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(ZeigeGrafik_Entwicklung_Renten)
     wSpielwindow.horizontalSlider_Renten.valueChanged.connect(AnteilImSliderRenten)
     
     wSpielwindow.horizontalSlider_ProduktRenteZumMarkt.valueChanged.connect(BeitragProdukteRentenZumMarktmSlider)
     wSpielwindow.horizontalSlider_ProduktBuZumMarkt.valueChanged.connect(BeitragProdukteBuZumMarktmSlider)
     wSpielwindow.horizontalSlider_ProvisionBuZumMarkt.valueChanged.connect(ProvisionBuZumMarktmSlider)
     wSpielwindow.horizontalSlider_ProvisionRenteZumMarkt.valueChanged.connect(ProvisionRenteZumMarktmSlider)
+    wSpielwindow.horizontalSlider_LaufzeitRente.valueChanged.connect(LaufzeitRenteSlider)
+    wSpielwindow.horizontalSlider_LaufzeitBu.valueChanged.connect(LaufzeitBuSlider)
     
     LegeLaufzeitAuswahlBeiRentenFestInKa()
     

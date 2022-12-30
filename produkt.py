@@ -3,7 +3,7 @@ import protokoll as prot
 import pandas as pd
 
 
-class Produkt(object):
+class Produkt():
     
     def __init__(self, f_dict):
         
@@ -11,7 +11,7 @@ class Produkt(object):
         file_protokoll=work_dir+'protokoll_system_pm_produkt.txt'
         self.oprot = prot.Protokoll(file_protokoll)
         
-        self.file_produkt=work_dir+'produkt.csv'        
+        self.file_produkt=f_dict.get('file_produkt')       
     
     def LeseProduktDaten(self, d):
         datei=self.file_produkt

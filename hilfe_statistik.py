@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from random import gauss
+import math
 
 class Hilfe_Statistik(object):
 
@@ -12,9 +13,9 @@ class Hilfe_Statistik(object):
         
         if self.risiko == 'normal':
             self.sigma = sigma
-        elif self.risiko == 'risky':
+        elif self.risiko == 'risky' or self.risiko == 'gross':
             self.sigma = 2*sigma
-        elif self.risiko == 'high_risky':
+        elif self.risiko == 'high_risky' or self.risiko == 'sehrgross':
             self.sigma = 3*sigma
         else:
             self.sigma = 5*sigma
@@ -28,3 +29,14 @@ class Hilfe_Statistik(object):
             wert = -1
         
         return wert
+    
+    def NeueZufallszahl(self):
+        #hier wird eine Zufallszahl erstellt:
+        x = gauss(self.ex, self.sigma)
+        return x
+    
+    def Phi(self, x):
+        #Wert der Normalverteilung für x, d.h. P(X < x):
+        wert = (1+math.erf((x-self.ex) / self.sigma / math.sqrt(2)))/2
+        return wert
+

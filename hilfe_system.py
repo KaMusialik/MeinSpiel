@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-class Hilfe_System(object):    
+import locale
+
+class Hilfe_System():    
     def __init__(self):
         pass
     
@@ -42,3 +43,13 @@ class VerketteteListe(object):
         self.von=von
         self.bis=bis
         self.nxt=nxt
+
+class ZahlenFormatieren():
+    def __init__(self):
+        pass
+    
+    def TasenderPunktInFloat(self, zahl, nachkommastellen):
+        
+        form = '\"' + "%." + str(nachkommastellen) + 'f' + '\"'
+        wert = locale.format("%.1f", zahl, grouping = True)
+        return wert
