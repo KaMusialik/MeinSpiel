@@ -3,6 +3,8 @@ import optionen as opt
 import protokoll as prot
 import pandas as pd
 
+import hilfe_system as hs
+
 from pathlib import Path
 
 import PyQt5.uic as uic
@@ -42,6 +44,8 @@ class GrundEinstelleungWindow():
             self.w = None
             text = 'Die Datei ' +self.file_ui+ ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
+            
+        self.ohs = hs.ZahlenFormatieren()
 
     def ZeigeStartWerte(self):
         
@@ -79,23 +83,37 @@ class GrundEinstelleungWindow():
             self.w.radioButton_StreuungImNG_sehrgross.setChecked(False)
         
         
-        wert = self.start_dict.get('beitragMarktRente')
-        self.w.lineEdit_BeitragRente.setText(wert)
+        wert_s = self.start_dict.get('provisionMarktRente')
+        if wert_s == '':
+            wert_s = '0'
+            
+        wert_f = float(wert_s) * 1000
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+        self.w.lineEdit_ProvisionRente.setText(wert_s)        
 
-        wert = self.start_dict.get('provisionMarktRente')
-        self.w.lineEdit_ProvisionRente.setText(wert)        
+        wert_s = self.start_dict.get('anzahlMarktRente')
+        if wert_s == '':
+            wert_s = '0'
 
-        wert = self.start_dict.get('anzahlRente')
-        self.w.lineEdit_AnzahlRente.setText(wert)        
+        wert_f = float(wert_s)
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.lineEdit_AnzahlRente.setText(wert_s)        
         
-        wert = self.start_dict.get('beitragMarktBu')
-        self.w.lineEdit_BeitragBu.setText(wert)
+        wert_s = self.start_dict.get('provisionMarktBu')
+        if wert_s == '':
+            wert_s = '0'
 
-        wert = self.start_dict.get('provisionMarktBu')
-        self.w.lineEdit_ProvisionBu.setText(wert)
+        wert_f = float(wert_s) * 1000
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.lineEdit_ProvisionBu.setText(wert_s)
 
-        wert = self.start_dict.get('anzahlBu')
-        self.w.lineEdit_AnzahlBu.setText(wert)
+        wert_s = self.start_dict.get('anzahlMarktBu')
+        if wert_s == '':
+            wert_s = '0'
+
+        wert_f = float(wert_s)
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.lineEdit_AnzahlBu.setText(wert_s)
     
     def LeseStartDatenAusOptionen(self):
         file = self.start_dict.get('file')
@@ -110,16 +128,6 @@ class GrundEinstelleungWindow():
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
         
-        #Wert für Beitrag Renten:
-        key = 'beitragMarktRente'
-        wert = self.LeseCsvOptinen(file, key)
-        self.start_dict[key] = wert
-
-        #Wert für Beitrag Bu:
-        key = 'beitragMarktBu'
-        wert = self.LeseCsvOptinen(file, key)
-        self.start_dict[key] = wert
-
         #Wert für Provison Renten:
         key = 'provisionMarktBu'
         wert = self.LeseCsvOptinen(file, key)
@@ -131,12 +139,12 @@ class GrundEinstelleungWindow():
         self.start_dict[key] = wert
 
         #Wert für Anzahl Renten:
-        key = 'anzahlRente'
+        key = 'anzahlMarktRente'
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
 
         #Wert für Anzahl BU:
-        key = 'anzahlBu'
+        key = 'anzahlMarktBu'
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
     
@@ -176,34 +184,28 @@ class GrundEinstelleungWindow():
         text = str(ka_renten_sa)   
         self.oopt.SchreibeInOptionen(key, text)
         
-        beitragMarktRente = self.w.lineEdit_BeitragRente.text()
-        key = 'beitragMarktRente'
-        text = beitragMarktRente
-        self.oopt.SchreibeInOptionen(key, text)
-
-        provisionMarktRente = self.w.lineEdit_ProvisionRente.text()
+        wert_s = self.w.lineEdit_ProvisionRente.text()
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000
         key = 'provisionMarktRente'
-        text = provisionMarktRente
+        text = str(wert_f)
         self.oopt.SchreibeInOptionen(key, text)
 
-        anzahlRente = self.w.lineEdit_AnzahlRente.text()
-        key = 'anzahlRente'
-        text = anzahlRente
-        self.oopt.SchreibeInOptionen(key, text)
-
-        beitragMarktBu = self.w.lineEdit_BeitragBu.text()
-        key = 'beitragMarktBu'
-        text = beitragMarktBu
+        wert_s = self.w.lineEdit_AnzahlRente.text()
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) 
+        key = 'anzahlMarktRente'
+        text = str(wert_f)
         self.oopt.SchreibeInOptionen(key, text)
         
-        provisionMarktBu = self.w.lineEdit_ProvisionBu.text()
+        wert_s = self.w.lineEdit_ProvisionBu.text()
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000
         key = 'provisionMarktBu'
-        text = provisionMarktBu
+        text = str(wert_f)
         self.oopt.SchreibeInOptionen(key, text)
 
-        anzahlBu= self.w.lineEdit_AnzahlBu.text()
-        key = 'anzahlBu'
-        text = anzahlBu
+        wert_s = self.w.lineEdit_AnzahlBu.text()
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) 
+        key = 'anzahlMarktBu'
+        text = str(wert_f)
         self.oopt.SchreibeInOptionen(key, text)
         
         if self.w.radioButton_StreuungImNG_normal.isChecked():

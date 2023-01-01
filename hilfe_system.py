@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import locale
-
 class Hilfe_System():    
     def __init__(self):
         pass
@@ -46,10 +44,42 @@ class VerketteteListe(object):
 
 class ZahlenFormatieren():
     def __init__(self):
-        pass
+        self.darstellungKomma = ','
+        self.darstellungTausendtrennzeichen = '.'
     
-    def TasenderPunktInFloat(self, zahl, nachkommastellen):
+    
+    def FloatZuStgMitTausendtrennzeichen(self, wert_f_alt, nachkommastellen):
+        wert_f = round(wert_f_alt, nachkommastellen)
+        wert_s = str(wert_f)
+    
+        wert_s_neu = ''
+        laenge = len(wert_s)
+        iVorKomma = -1
+        kommaPosition = wert_s.find('.')
+        for i in range(laenge-1, -1, -1):
+            s = wert_s[i]
+            if i == kommaPosition:
+                s = ','
+                iVorKomma = 1
+            else:
+                if i > kommaPosition:
+                    #d.h. noch im Nachkommabereich:
+                    pass
+                else:
+                    #im Vorkommabereich:
+                    if iVorKomma % 3 == 0:
+                        if i != 0:
+                            s = '.' + s
+    
+                    iVorKomma += 1
+    
+            wert_s_neu = s + wert_s_neu
+    
+        return wert_s_neu  
         
-        form = '\"' + "%." + str(nachkommastellen) + 'f' + '\"'
-        wert = locale.format("%.1f", zahl, grouping = True)
-        return wert
+    def StgMitTausendtrennzeichenZuFloat(self, wert_s_alt):
+        wert_s_neu = wert_s_alt.replace('.', '')
+        wert_s_neu = wert_s_neu.replace(',', '.')
+        wert_f_neu = float(wert_s_neu)
+        return wert_f_neu
+    

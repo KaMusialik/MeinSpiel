@@ -19,8 +19,6 @@ class Vertrieb():
 
         self.optionen_file_grundeinstellungen = f_dict.get('optionen_file_grundeinstellungwindow') #hier stehen die Grunddaten bzw. Marktdaten
         
-        self.beitragMarktBu = 0
-        self.beitragMarktRente = 0
         self.provisionMarktBu = 0
         self.provisionMarktRente = 0
         self.erwarteteAnzahlRente = 0
@@ -52,23 +50,13 @@ class Vertrieb():
 
     def LeseMarkDaten(self):
         file = self.optionen_file_grundeinstellungen
-        
-        #Wert für Beitrag Renten:
-        key = 'beitragMarktRente'
-        wert = self.LeseCsvOptinen(file, key)
-        self.beitragMarktRente = wert
- 
-        #Wert für Beitrag Bu:
-        key = 'beitragMarktBu'
-        wert = self.LeseCsvOptinen(file, key)
-        self.beitragMarktBu = wert
-
+         
         #Wert für erwartete Anzahl Bu:
-        key = 'anzahlBu'
+        key = 'anzahlMarktBu'
         wert = self.LeseCsvOptinen(file, key)
         self.erwarteteAnzahlBu = wert
  
-        #Wert für Provison Renten:
+        #Wert für Provison Bu:
         key = 'provisionMarktBu'
         wert = self.LeseCsvOptinen(file, key)
         self.provisionMarktBu = wert
@@ -79,7 +67,7 @@ class Vertrieb():
         self.provisionMarktRente = wert
 
         #Wert für erwartete Anzahl Rente:
-        key = 'anzahlRente'
+        key = 'anzahlMarktRente'
         wert = self.LeseCsvOptinen(file, key)
         self.erwarteteAnzahlRente = wert
 
@@ -206,7 +194,7 @@ class Vertrieb():
         zufallszahl = ohs.NeueZufallszahl()
         nv = ohs.Phi(zufallszahl)
         
-        wert = erwarteteAnzahl/beitragZumMarkt*provisionZumMarkt * nv
+        wert = erwarteteAnzahl / beitragZumMarkt * provisionZumMarkt * nv
         
         if wert < 0: #es werten nur positive Werte zugelassen:
             wert = 0
@@ -221,10 +209,18 @@ class Vertrieb():
 
         anzahl_dict = {}
         
-        anzahl_dict['beitragZumMarkt'] = vertrieb_dict.get('beitrag_RentenZumMarkt')
-        anzahl_dict['beitragMarkt'] = self.beitragMarktRente
+        wert_s = vertrieb_dict.get('beitrag_RentenZumMarkt')
+        wert_f = float(wert_s)/100
+        wert_s = str(wert_f)
+        anzahl_dict['beitragZumMarkt'] = wert_s
+        
         anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlRente
-        anzahl_dict['provisionZumMarkt'] = vertrieb_dict.get('provision_RentenZumMarkt')
+        
+        wert_s = vertrieb_dict.get('provision_RentenZumMarkt')
+        wert_f = float(wert_s)/100
+        wert_s = str(wert_f)
+        anzahl_dict['provisionZumMarkt'] = wert_s
+        
         anzahl_dict['streuungImNG'] = self.streuungImNG
         
         if vertrieb_dict.get('neugeschaeft_Rente') == True:
@@ -277,10 +273,19 @@ class Vertrieb():
             satz_dict['wert']=zw
             self.SchreibeInTabelleVertrieb(satz_dict)
 
-        anzahl_dict['beitragZumMarkt'] = vertrieb_dict.get('beitrag_BuZumMarkt')
-        anzahl_dict['beitragMarkt'] = self.beitragMarktBu
+        
+        wert_s = vertrieb_dict.get('beitrag_BuZumMarkt')
+        wert_f = float(wert_s)/100
+        wert_s = str(wert_f)
+        anzahl_dict['beitragZumMarkt'] = wert_s
+        
         anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlBu
-        anzahl_dict['provisionZumMarkt'] = vertrieb_dict.get('provision_BuZumMarkt')
+        
+        wert_s = vertrieb_dict.get('provision_BuZumMarkt')
+        wert_f = float(wert_s)/100
+        wert_s = str(wert_f)
+        anzahl_dict['provisionZumMarkt'] = wert_s
+        
         anzahl_dict['streuungImNG'] = self.streuungImNG
         
         if vertrieb_dict.get('neugeschaeft_Bu') == True:

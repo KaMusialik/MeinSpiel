@@ -150,7 +150,7 @@ class StatistikWindow():
             for row_key, row_value in row_labels_dict.items():
                 irow = irow + 1
                 wert_f = float(werte_value.get(row_key))
-                wert_s = ohs.TasenderPunktInFloat(wert_f, 1)
+                wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
                 self.w.tableWidget_Statistik.setItem(irow, icol, QTableWidgetItem(wert_s))
         
         

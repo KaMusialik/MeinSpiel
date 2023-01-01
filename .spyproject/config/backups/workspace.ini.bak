@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['steuerung.py', 'produktwindow.py', 'vertragswindow.py']
+recent_files = ['steuerung.py', 'produktmanager.py', 'vertrieb.py', 'grundeinstellungwindow.py', 'hilfe_system.py']
 
 [main]
 version = 0.2.0
