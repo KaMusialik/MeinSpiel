@@ -65,8 +65,8 @@ class Produktmanager():
         von_mm = int(von_dict.get('monat'))
         bis_mm = int(bis_dict.get('monat'))
         
-        beitrag = float(vertrag.get('bruttojahresbeitrag'))
-        bil_beitrag=(bis_mm+1-von_mm)/12*beitrag
+        beitrag = float(vertrag.get('bruttozahljahresbeitrag'))
+        bil_beitrag=(bis_mm+1-von_mm)/12 * beitrag
         vertrag['bil_gebuchter_beitrag'] = bil_beitrag
         vertrag['bil_verdienter_beitrag_nw216'] = bil_beitrag
         
@@ -124,8 +124,14 @@ class Produktmanager():
     def Beitrag(self, vertrag):
         anzahl = float(vertrag.get('anzahl'))
         bruttobeitrag = float(self.produkt.get('bruttobeitrag'))
-        vertrag['bruttojahresbeitrag'] = bruttobeitrag * anzahl
+        beitragsniveau = float(vertrag.get('beitragsniveau'))
+        vertrag['bruttojahresbeitrag'] = bruttobeitrag * anzahl #Beitrag vor Rabatt
+        vertrag['bruttozahljahresbeitrag'] = bruttobeitrag * anzahl * beitragsniveau #Zahlbeitrag nach Rabatt
         
+        
+        #Der Beitrag wird erhöht bzw. reduziert um einen um einen Beitragsrabatt:
+        vertrag['beitragsrabatt'] = bruttobeitrag * anzahl * (1 - beitragsniveau)
+                
         return vertrag        
 
     def Beitragssumme(self, vertrag):

@@ -273,6 +273,20 @@ class Vertrieb():
             satz_dict['wert']=zw
             self.SchreibeInTabelleVertrieb(satz_dict)
 
+            satz_dict['name'] = 'beitragsniveau'
+            wert_s = vertrieb_dict.get('beitrag_RentenZumMarkt')
+            wert_f = float(wert_s)/100
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)
+            
+            satz_dict['name'] = 'provisionsniveau'
+            wert_s = vertrieb_dict.get('provision_RentenZumMarkt')
+            wert_f = float(wert_s)/100
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)
+
         
         wert_s = vertrieb_dict.get('beitrag_BuZumMarkt')
         wert_f = float(wert_s)/100
@@ -339,6 +353,19 @@ class Vertrieb():
             satz_dict['wert']=zw
             self.SchreibeInTabelleVertrieb(satz_dict)
 
+            satz_dict['name'] = 'beitragsniveau'
+            wert_s = vertrieb_dict.get('beitrag_BuZumMarkt')
+            wert_f = float(wert_s)/100
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)
+
+            satz_dict['name'] = 'provisionsniveau'
+            wert_s = vertrieb_dict.get('provision_BuZumMarkt')
+            wert_f = float(wert_s)/100
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)
             
 
 

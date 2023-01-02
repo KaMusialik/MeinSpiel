@@ -14,6 +14,7 @@ import grundeinstellungwindow as gW
 import statistikwindow as sW
 import produktwindow as pW
 import vertragswindow as vW
+import guvwindow as guvW
 
 import bilanz as bil
 import vertrieb as ver
@@ -34,38 +35,36 @@ files_dict['leereswindow_file'] = files_dict.get('work_dir')+'leereswindow.ui'
 files_dict['statistikwindow_file'] = files_dict.get('work_dir')+'statistikwindow.ui'
 files_dict['produktwindow_file'] = files_dict.get('work_dir')+'produktwindow.ui'
 files_dict['vertragswindow_file'] = files_dict.get('work_dir')+'vertragswindow.ui'
+files_dict['guvwindow_file'] = files_dict.get('work_dir')+'guvwindow.ui'
+
+files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
+files_dict['file_icon_statistikwindow'] = files_dict.get('work_dir')+'iconStatistikWindow.png'
+files_dict['file_icon_guvwindow'] = files_dict.get('work_dir')+'iconGuvWindow.png'
 
 files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'
-files_dict['grafik_file_entwicklung_renten'] = files_dict.get(
-    'work_dir')+'grafik_renten.png'
+files_dict['grafik_file_entwicklung_renten'] = files_dict.get('work_dir')+'grafik_renten.png'
 
 files_dict['optionen_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'optionen_grundeinstellungwindow.csv'
 files_dict['protokoll_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'protokoll_grundeinstellungwindow.txt'
 
+files_dict['protokoll_file_guvwindow'] = files_dict.get('work_dir')+'protokoll_guvwindow.txt'
+
 files_dict['optionen_file_main'] = files_dict.get('work_dir')+'optionen_main.csv'
 files_dict['protokoll_file_main'] = files_dict.get('work_dir')+'protokoll_main.txt'
 
-files_dict['optionen_file_vertrieb'] = files_dict.get(
-    'work_dir')+'optionen_vertrieb.csv'
-files_dict['protokoll_file_vertrieb'] = files_dict.get(
-    'work_dir')+'protokoll_vertrieb.txt'
+files_dict['optionen_file_vertrieb'] = files_dict.get('work_dir')+'optionen_vertrieb.csv'
+files_dict['protokoll_file_vertrieb'] = files_dict.get('work_dir')+'protokoll_vertrieb.txt'
 files_dict['file_vertrieb'] = files_dict.get('work_dir')+'vertrieb.csv'
 
 # Dateien zu Thema Antrag:
-files_dict['optionen_file_antrag'] = files_dict.get(
-    'work_dir')+'optionen_antrag.csv'
-files_dict['file_system_antrag'] = files_dict.get(
-    'work_dir')+'system_antrag.csv'
-files_dict['protokoll_file_antrag'] = files_dict.get(
-    'work_dir')+'protokoll_antrag.txt'
+files_dict['optionen_file_antrag'] = files_dict.get('work_dir')+'optionen_antrag.csv'
+files_dict['file_system_antrag'] = files_dict.get('work_dir')+'system_antrag.csv'
+files_dict['protokoll_file_antrag'] = files_dict.get('work_dir')+'protokoll_antrag.txt'
 
-files_dict['optionen_file_antrag_oe'] = files_dict.get(
-    'work_dir')+'optionen_antrag_oe.csv'
-files_dict['protokoll_file_antrag_oe'] = files_dict.get(
-    'work_dir')+'protokoll_antrag_oe.txt'
+files_dict['optionen_file_antrag_oe'] = files_dict.get('work_dir')+'optionen_antrag_oe.csv'
+files_dict['protokoll_file_antrag_oe'] = files_dict.get('work_dir')+'protokoll_antrag_oe.txt'
 
-files_dict['protokoll_file_bilanz'] = files_dict.get(
-    'work_dir')+'protokoll_bilanz.txt'
+files_dict['protokoll_file_bilanz'] = files_dict.get('work_dir')+'protokoll_bilanz.txt'
 files_dict['file_bilanz'] = files_dict.get('work_dir')+'bilanz.csv'
 files_dict['file_bilanz_start'] = files_dict.get('work_dir')+'bilanz_start.csv'
 files_dict['file_bilanz_struktur'] = {
@@ -158,6 +157,15 @@ def LegeDefoultEinstellungenfest():
     wSpielwindow.horizontalSlider_LaufzeitBu.setMinimum(1)
     wSpielwindow.horizontalSlider_LaufzeitBu.setMaximum(35)
     wSpielwindow.horizontalSlider_LaufzeitBu.setValue(10)
+    
+    wSpielwindow.pushButton_GrundeinstellungWindow.setIcon(gui.QIcon(files_dict.get('file_icon_grundeinstellungwindow')))
+    wSpielwindow.pushButton_GrundeinstellungWindow.setIconSize(core.QSize(41, 41))
+
+    wSpielwindow.pushButton_statistik.setIcon(gui.QIcon(files_dict.get('file_icon_statistikwindow')))
+    wSpielwindow.pushButton_statistik.setIconSize(core.QSize(100, 100))
+
+    wSpielwindow.pushButton_GuvWindow.setIcon(gui.QIcon(files_dict.get('file_icon_guvwindow')))
+    wSpielwindow.pushButton_GuvWindow.setIconSize(core.QSize(100, 100))
 
 def LegeGuVTabelleAn(obil):
     # Im Dialog werden die Ergebnisse der GuV ausgegeben:
@@ -334,6 +342,9 @@ def ZeigeGrafik_Entwicklung_Renten():
     file = files_dict.get('grafik_file_entwicklung_renten')
     ZeigeGrafik(file)
 
+def ZeigeWindowGuv():
+    oguvW = guvW.GuVWindow(files_dict)
+    oguvW.RufeFensterAuf()
 
 def ZeigeWindowStatistik():
     osW = sW.StatistikWindow(files_dict)
@@ -587,6 +598,8 @@ if __name__ == "__main__":
     wSpielwindow.pushButton_statistik.clicked.connect(ZeigeWindowStatistik)
     wSpielwindow.pushButton_produkt.clicked.connect(ZeigeWindowProdukt)
     wSpielwindow.pushButton_vertrag.clicked.connect(ZeigeWindowVertrag)
+    wSpielwindow.pushButton_GrundeinstellungWindow.clicked.connect(RufeGrundeinstellungAuf)
+    wSpielwindow.pushButton_GuvWindow.clicked.connect(ZeigeWindowGuv)
     
     wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(ZeigeGrafik_Entwicklung_Renten)
     wSpielwindow.horizontalSlider_Renten.valueChanged.connect(AnteilImSliderRenten)
