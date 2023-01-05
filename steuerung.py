@@ -15,6 +15,7 @@ import statistikwindow as sW
 import produktwindow as pW
 import vertragswindow as vW
 import guvwindow as guvW
+import zeigedatenintabelle as zD
 
 import bilanz as bil
 import vertrieb as ver
@@ -167,46 +168,20 @@ def LegeDefoultEinstellungenfest():
     wSpielwindow.pushButton_GuvWindow.setIcon(gui.QIcon(files_dict.get('file_icon_guvwindow')))
     wSpielwindow.pushButton_GuvWindow.setIconSize(core.QSize(100, 100))
 
-def LegeGuVTabelleAn(obil):
-    # Im Dialog werden die Ergebnisse der GuV ausgegeben:
-    jahr_beginn = files_dict.get('Startjahr_Simulation')
-    jahr_aktuell = files_dict.get('jahr_aktuell')
+def ZeigeGuVTabelleAn():
+    
+    tabelle = wSpielwindow.tableWidget_GuV
+    ozD = zD.ZeigeDatnInTabelle(tabelle)
+    file_daten = files_dict.get('file_bilanz')
+    ozD.SchreibeDatenIntabelle(file_daten)
 
-    anzahl_jahre = int(jahr_aktuell)-int(jahr_beginn)
+def ZeigeStatistikTabelleAn():
+    #Hier wird die Statistik CSV angezeigt
+    tabelle = wSpielwindow.tableWidget_StatistikCSV
+    ozD = zD.ZeigeDatnInTabelle(tabelle)
+    file_daten = files_dict.get('file_system_statistik')
+    ozD.SchreibeDatenIntabelle(file_daten)
 
-    wSpielwindow.tableWidget_GuV.setColumnCount(anzahl_jahre+1)
-    wSpielwindow.tableWidget_GuV.setRowCount(1)
-
-    vektor_jahre = []
-    for i in range(0, anzahl_jahre+1):
-        jahr = str(jahr_beginn+i-1)
-        vektor_jahre.append(jahr)
-
-    wSpielwindow.tableWidget_GuV.setHorizontalHeaderLabels(vektor_jahre)
-
-    vektor_namen = []
-    index_row = 0
-    namen = {}
-
-    key_bilanz = {}
-    key_bilanz['rl'] = 'guv'
-    key_bilanz['avbg'] = '999'
-
-    name = 'bil_gebuchter_beitrag'
-    key_bilanz['name'] = name
-    namen[name] = 'Gebuchter Beitrag'
-    index_row += 1
-    wSpielwindow.tableWidget_GuV.setRowCount(index_row)
-    vektor_namen.append(namen.get(name))
-    for i in range(0, anzahl_jahre+1):
-        jahr = str(jahr_beginn+i)
-        key_bilanz['jahr'] = jahr
-        wert = obil.LeseBilanzCSV(key_bilanz)
-        wSpielwindow.tableWidget_GuV.setItem(
-            index_row-1, i+1, widgets.QTableWidgetItem(str(wert)))
-
-    # Zeilenüberschriften:
-    wSpielwindow.tableWidget_GuV.setVerticalHeaderLabels(vektor_namen)
 
 def LegeLaufzeitAuswahlBeiRentenFestInKa():
     
@@ -514,7 +489,7 @@ def Steuerung():
     LegeBilanzTabelleAn(obil)
 
     # die Tabelle im Dialog mit Ergebnissen der GuV wird angelegt:
-    LegeGuVTabelleAn(obil)
+    ZeigeGuVTabelleAn()
 
     # solange im Spielwindow okay geclickt wird, dann wird ein Jahr weiter gespielt:
     while wSpielwindow.exec_() == widgets.QDialog.Accepted:
@@ -555,7 +530,9 @@ def Steuerung():
         jahr += 1
         files_dict['jahr_aktuell'] = jahr
         LegeBilanzTabelleAn(obil)  # Ergebnisse der Bilanz
-        LegeGuVTabelleAn(obil)  # Ergebnisse der GuV
+        
+        ZeigeGuVTabelleAn()  # Ergebnisse der GuV
+        ZeigeStatistikTabelleAn() #Hier wird die Statistiktabelle angezeigt
 
         wSpielwindow.label_Jahr.setText(str(jahr))
 
