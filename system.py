@@ -10,6 +10,7 @@ import fortschreibung as fort
 import os
 import shutil
 import hilfe_system as hs
+import provision as prov
 
 
 class System():
@@ -31,7 +32,7 @@ class System():
         self.LegeFortschreibung()
         self.LegeStatistik()
         
-        self.files_dict=f_dict
+        self.files_dict = f_dict
         self.files_dict['wSchreibeInBilanzCSVork_dir']=work_dir
         self.files_dict['file_system_bestand']=self.file_system_bestand
         self.files_dict['file_system_fortschreibung']=self.file_system_fortschreibung
@@ -54,6 +55,7 @@ class System():
         
         self.ofort=fort.Fortschreibung(self.files_dict)
         
+    
     def LegeStatistik(self):
         datei=self.file_system_statistik
         ocsv=pd.DataFrame()
@@ -234,6 +236,9 @@ class System():
         vertrag_neu={}
         vertrag_alt={}
         
+        oprov = prov.Provision(self.files_dict)
+        keyProvision_dict = {}
+        
         for nummer in listeAntraege:
             antragsnummer=self.LeseAusAntragCSV(nummer, 'antragsnummer')
             
@@ -268,6 +273,43 @@ class System():
             
             ofort=fort.Fortschreibung(self.files_dict)
             ofort.SchreibeVertragFort(vertrag_neu, von, bis)
+            
+            #hier werden die Daten in die Provisionstabelle reingeschrieben:
+            keyProvision_dict['vsnr'] = vsnr
+            keyProvision_dict['gevo'] = gevo
+            keyProvision_dict['jahr'] = self.files_dict.get('jahr_aktuell')
+            
+            keyProvision_dict['name'] = 'tkz'
+            wert = vertrag_neu.get('tkz')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'beitragssumme'
+            wert = vertrag_neu.get('beitragssumme')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'vertriebsnummer'
+            wert = vertrag_neu.get('vertriebsnummer')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'provisionsniveau'
+            wert = vertrag_neu.get('provisionsniveau')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'provisionMarkt'
+            wert = vertrag_neu.get('provisionMarkt')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'bruttozahljahresbeitrag'
+            wert = vertrag_neu.get('bruttozahljahresbeitrag')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'laufzeit'
+            wert = vertrag_neu.get('laufzeit')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'avbg'
+            wert = vertrag_neu.get('avbg')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
             
     def SchreibeDictInBilanz(self, vertrag):
         key={}

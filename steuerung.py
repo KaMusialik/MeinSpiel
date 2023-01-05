@@ -19,10 +19,10 @@ import zeigedatenintabelle as zD
 
 import bilanz as bil
 import vertrieb as ver
-#import oe_antrag as oe_antrag
 import antrag as antrag
 import system
 import kapitalanlagen as kap
+import provision
 
 
 files_dict = {}
@@ -68,8 +68,7 @@ files_dict['protokoll_file_antrag_oe'] = files_dict.get('work_dir')+'protokoll_a
 files_dict['protokoll_file_bilanz'] = files_dict.get('work_dir')+'protokoll_bilanz.txt'
 files_dict['file_bilanz'] = files_dict.get('work_dir')+'bilanz.csv'
 files_dict['file_bilanz_start'] = files_dict.get('work_dir')+'bilanz_start.csv'
-files_dict['file_bilanz_struktur'] = {
-    'jahr': int, 'rgl': str, 'avbg': str, 'name': str, 'wert': str}
+files_dict['file_bilanz_struktur'] = {'jahr': int, 'rgl': str, 'avbg': str, 'name': str, 'wert': str}
 
 #hier stehen die Produktdaten:
 files_dict['file_produkt'] = files_dict.get('work_dir')+'produkt.csv'
@@ -82,6 +81,11 @@ files_dict['file_system_bestand_struktur'] = {'vsnr': str, 'histnr': int, 'von':
 files_dict['file_system_fortschreibung'] = files_dict.get('work_dir')+'system_fortschreibung.csv'
 files_dict['grafik_file_statistik_anzahl'] = files_dict.get('work_dir')+'grafik_statistik_anzahl.png'
 files_dict['file_system_statistik'] = files_dict.get('work_dir')+'system_statistik.csv'
+
+#hier stehen die Provisionsdaten:
+files_dict['file_provision'] = files_dict.get('work_dir')+'provision.csv'
+files_dict['file_provision_struktur'] = { 'vsnr':int, 'jahr':int, 'gevo':str, 'name':str, 'wert':str}
+    
 
 files_dict['protokoll_file_statistikwindow'] = files_dict.get('work_dir')+'protokoll_statistikwindow.txt'
 files_dict['protokoll_file_produktwindow'] = files_dict.get('work_dir')+'protokoll_produktwindow.txt'
@@ -472,6 +476,9 @@ def Steuerung():
     oprot.SchreibeInProtokoll('Bilanz wurde angelegt')
     obil.Init_Bilanz(jahr_beginn)
 
+    oprovision = provision.Provision(files_dict)
+    oprovision.BereiteProvisionVor()
+    
     okap = kap.Kapitalanlagen(files_dict)
     oprot.SchreibeInProtokoll('Kapitalanlagen wurden angelegt')
 
@@ -522,6 +529,8 @@ def Steuerung():
 
         osys.Policiere(jahr)
         osys.ErstelleStatistik(von, bis)
+        
+        oprovision.BerechneAP(jahr) #hier wird die AP für die policiereten Verträge berechnet
 
         obil.ErstelleBilanzEnde(jahr)
 

@@ -3,10 +3,14 @@
 
 import protokoll as prot
 import pandas as pd
+import provision
 
 class Bilanz(object):
 
     def __init__(self, f_dict):
+        
+        self.file_dict = f_dict
+        
         file_protokoll=f_dict.get('protokoll_file_bilanz')
         self.oprot = prot.Protokoll(file_protokoll)
 
@@ -28,6 +32,9 @@ class Bilanz(object):
  
         self.file_system_fortschreibung=f_dict.get('file_system_fortschreibung')
         self.dtype_fortschteibung=f_dict.get('file_system_fortschreibung_struktur')
+        
+        self.file_provision = f_dict.get('file_provision')
+        self.file_provision_struktur = f_dict.get('file_provision_struktur')
         
         self.LegeBilanzAn()
         
@@ -171,6 +178,7 @@ class Bilanz(object):
         
     def ErstelleBilanzEnde(self, jahr):
         self.BilanzPositionenAusFortschreibung(jahr)
+        self.BilanzPositionenAusProvision(jahr)
         self.Veraenderungspositionen(jahr)
         self.Jahresueberschuss(jahr)
         
@@ -183,22 +191,31 @@ class Bilanz(object):
         key_dict['rl']='guv'
         key_dict['avbg']='999'
         
-        key_dict['name']='bil_gebuchter_beitrag'
-        gebbtg=self.LeseBilanzCSV(key_dict)
+        key_dict['name'] = 'bil_gebuchter_beitrag'
+        gebbtg = float(self.LeseBilanzCSV(key_dict))
 
-        key_dict['name']='bil_derue7_veraenderung'
-        veranderung_derue=self.LeseBilanzCSV(key_dict)
+        key_dict['name'] = 'bil_derue7_veraenderung'
+        veranderung_derue = float(self.LeseBilanzCSV(key_dict))
+
+        key_dict['name'] = 'ap'
+        ap = float(self.LeseBilanzCSV(key_dict))
         
-        jahresueberschuss=gebbtg-veranderung_derue
-        key_dict['name']='jahresueberschuss'
-        key_dict['wert']=jahresueberschuss
+        
+        
+        jahresueberschuss = gebbtg - veranderung_derue - ap
+        
+        key_dict['name'] = 'jahresueberschuss'
+        key_dict['wert'] = jahresueberschuss
         self.SchreibeInBilanzCSV(key_dict)
     
     def Veraenderungspositionen(self, jahr):
+        #hir werden die Positionen festgelegt, für die die Veränderung zum Vorjahr bestimmt werden sollte
+        
         name='bil_derue7'
         self.VeraenderungspositionenName(jahr, name)
         
     def VeraenderungspositionenName(self, jahr, name_quelle):
+        #hier wird für eine Bilanzposition 'name_quelle' die Veränderung zum Vorjahr ermittelt:
         datei=self.file_bilanz
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
 
@@ -235,10 +252,18 @@ class Bilanz(object):
             self.oprot.SchreibeInProtokoll(text)
 
          
-            wert=self.KumuliereAlleAvbgInBilanz(key_dict)
-            key_dict['wert']=wert
-            key_dict['avbg']='999'
-            self.SchreibeInBilanzCSV(key_dict)
+        wert=self.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert']=wert
+        key_dict['avbg']='999'
+        self.SchreibeInBilanzCSV(key_dict)
+    
+    def BilanzPositionenAusProvision(self, jahr):
+        key_dict = {}
+        key_dict['rl'] = 'guv'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'ap'
+        
+        self.LeseAusProvisionAP(key_dict)
     
     
     def BilanzPositionenAusFortschreibung(self, jahr):
@@ -311,6 +336,48 @@ class Bilanz(object):
        
         return wert   
     
+    def LeseAusProvisionAP(self, key_dict):
+        datei = self.file_provision
+        df = pd.read_csv(datei, sep=";", dtype=self.file_provision_struktur)
+        
+        jahr= int(key_dict.get('jahr'))
+        
+        #welche verträge mit welchen Bestandsgruppen sind betroffen:
+        df1 = df[( (df.jahr == jahr) )]
+        df2=df1.groupby(['jahr', 'vsnr']).count().reset_index()
+
+        listeDerVertraege = []
+        for index, row in df2.iterrows():
+            wert = str(row['vsnr'])
+            listeDerVertraege.append(wert)
+ 
+        oprov = provision.Provision(self.file_dict)
+ 
+        keyProv_dict = {}
+        keyProv_dict['jahr'] = jahr
+        keyProv_dict['gevo'] = 'Neuzugang'
+        for vsnr in listeDerVertraege:
+            keyProv_dict['vsnr'] = vsnr
+   
+            name = 'avbg'
+            keyProv_dict['name'] = name
+            avbg = oprov.LeseAusProvisionCSV(keyProv_dict)
+            key_dict['avbg'] = avbg
+            
+            name = 'ap'
+            keyProv_dict['name'] = name
+            ap = oprov.LeseAusProvisionCSV(keyProv_dict)
+            key_dict['name'] = 'ap'
+            key_dict['wert'] = ap
+            
+            self.SchreibeInBilanzCSV(key_dict)
+
+
+        wert = self.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert']=wert
+        key_dict['avbg']='999'
+        self.SchreibeInBilanzCSV(key_dict)
+
     def LeseAusFortschreibung(self,key_dict):
         datei=self.file_system_fortschreibung
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_fortschteibung)

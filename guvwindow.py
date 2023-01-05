@@ -42,6 +42,8 @@ class GuVWindow():
             self.oprot.SchreibeInProtokoll(text)
 
         self.listeDerPositionen = {'Gebuchter Beitrag': ('bil_gebuchter_beitrag', 1),
+                                   'Abschlussprovision':('ap', 50),
+                                   'Veränderung der Deckungsrüstellung': ('bil_derue7_veraenderung', 100),
                                    'Jahresüberschuss':('jahresueberschuss', 999)
                                    }
 

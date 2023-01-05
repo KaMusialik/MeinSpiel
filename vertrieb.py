@@ -287,6 +287,12 @@ class Vertrieb():
             satz_dict['wert'] = wert_s
             self.SchreibeInTabelleVertrieb(satz_dict)
 
+            satz_dict['name'] = 'provisionMarkt'
+            wert_s = self.provisionMarktRente
+            wert_f = float(wert_s)
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)
         
         wert_s = vertrieb_dict.get('beitrag_BuZumMarkt')
         wert_f = float(wert_s)/100
@@ -367,7 +373,9 @@ class Vertrieb():
             satz_dict['wert'] = wert_s
             self.SchreibeInTabelleVertrieb(satz_dict)
             
-
-
-            
-            
+            satz_dict['name'] = 'provisionMarkt'
+            wert_s = self.provisionMarktBu
+            wert_f = float(wert_s)
+            wert_s = str(wert_f)
+            satz_dict['wert'] = wert_s
+            self.SchreibeInTabelleVertrieb(satz_dict)

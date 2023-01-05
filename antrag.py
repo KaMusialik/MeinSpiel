@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import optionen as opt
@@ -9,7 +8,7 @@ import random
 import os
 import csv
 
-class Antrag(object):
+class Antrag():
 
     def __init__(self, f_dict):
         self.oopt = opt.Optionen(f_dict.get('optionen_file_antrag'))  
