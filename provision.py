@@ -80,8 +80,12 @@ class Provision():
             name = 'provisionMarkt'
             key_dict['name'] = name
             pm = float(self.LeseAusProvisionCSV(key_dict))
+
+            name = 'anzahl'
+            key_dict['name'] = name
+            anzahl = float(self.LeseAusProvisionCSV(key_dict))
             
-            ap = pm * pv * bs
+            ap = pm * pv * bs * anzahl
             
             key_dict['name'] = 'ap'
             self.SchreibeInProvisionCSV(key_dict, ap)

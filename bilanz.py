@@ -379,37 +379,31 @@ class Bilanz(object):
         self.SchreibeInBilanzCSV(key_dict)
 
     def LeseAusFortschreibung(self,key_dict):
-        datei=self.file_system_fortschreibung
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_fortschteibung)
+        datei = self.file_system_fortschreibung
+        df = pd.read_csv(datei, sep=";", dtype=self.dtype_fortschteibung)
         
-        bis=key_dict.get('bis')
-        name=key_dict.get('name')
+        bis = key_dict.get('bis')
+        name = key_dict.get('name')
+
+        #es werden nur die relevanten Positionen genommen:
+        df1 = df[(df.name == name) | (df.name == 'anzahl') | (df.name == 'avbg')]
 
         #nur die datensätze mit richtigem bis:
-        df1 = df[(df.bis == int(bis))]
-        
-        #avbg als Spalte
-        df2= df1[(df1.name=='avbg')]
-        df2.rename({'wert':'avbg'},axis=1, inplace=True)
-        df2 = df2.drop('name', 1)
+        df2 = df1[df1.bis == int(bis)][['vsnr', 'name', 'wert']]        
 
-        #name als Spalte
-        df3= df1[(df1.name==name)]
-        df3.rename({'wert':name},axis=1, inplace=True)
-        df3 = df3.drop('name', 1)
-        df3[name] = pd.to_numeric(df3[name]) 
+        #die Tabelle wird transpniert:
+        df3 = pd.pivot_table(df2, values = 'wert', index = 'vsnr', columns = 'name', aggfunc = 'sum')
         
-        #die zwei tabellen werde jetzt verbunden:
-        df4=pd.merge(df2, df3)
+        #aus der pivot-Tabelle wird dateframe erstellet:
+        df4 = df3.reset_index()
         
-        
-        df5=df4.groupby(['avbg'])[name].sum()
-        
-        for items in df5.iteritems():
-            avbg= items[0]
-            wert= items[1]
-            key_dict['avbg']=avbg
-            key_dict['wert']=wert
+        for index, row in df4.iterrows():
+            avbg = str(row['avbg'])
+            anzahl = float(row['anzahl'])
+            wert_name = float(row[name])
+            wert_name_anzahl = wert_name * anzahl
+            key_dict['avbg'] = avbg
+            key_dict['wert'] = wert_name_anzahl
             self.SchreibeInBilanzCSV(key_dict)
             
         wert=self.KumuliereAlleAvbgInBilanz(key_dict)

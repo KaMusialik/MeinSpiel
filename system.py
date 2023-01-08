@@ -310,6 +310,10 @@ class System():
             keyProvision_dict['name'] = 'avbg'
             wert = vertrag_neu.get('avbg')
             oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
+
+            keyProvision_dict['name'] = 'anzahl'
+            wert = vertrag_neu.get('anzahl')
+            oprov.SchreibeInProvisionCSV(keyProvision_dict, wert)
             
     def SchreibeDictInBilanz(self, vertrag):
         key={}

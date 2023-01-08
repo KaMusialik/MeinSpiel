@@ -19,13 +19,13 @@ class Produktmanager():
         self.oprod = prod.Produkt(f_dict)
         
         #Produktdaten werden geholt:
-        self.produkt={}
-        tkz=dic.get('tkz')
-        self.produkt['tkz']=tkz
-        von=dic.get('von')
-        self.produkt['von']=von
+        self.produkt = {}
+        tkz = dic.get('tkz')
+        self.produkt['tkz'] = tkz
+        von = dic.get('von')
+        self.produkt['von'] = von
         
-        self.produkt=self.oprod.LeseProduktDaten(self.produkt)
+        self.produkt = self.oprod.LeseProduktDaten(self.produkt)
         
     def HoleWertFloat(self, dic, name):
         s=str(dic.get(name))
@@ -36,14 +36,15 @@ class Produktmanager():
 
         except ValueError:
             wert=0.0
-    
+
         return wert
-    
+        
     def Rechne(self, vertrag_alt, vertrag_neu):
         if vertrag_neu.get('gevo') == 'Neuzugang':
-            vertrag_neu=self.Beitrag(vertrag_neu)
-            vertrag_neu=self.Versicherungssumme(vertrag_neu)
-            vertrag_neu=self.Beitragssumme(vertrag_neu)
+            vertrag_neu = self.Beitrag(vertrag_neu)
+            vertrag_neu = self.Versicherungssumme(vertrag_neu)
+            vertrag_neu = self.Beitragssumme(vertrag_neu)
+            vertrag_neu = self.KostenImBeitrag(vertrag_neu)
             
         return vertrag_neu
             
@@ -62,22 +63,45 @@ class Produktmanager():
         return vertrag
     
     def Bilanz_Beitrag(self, von_dict, bis_dict, vertrag):
+        #hier werden die bilanziellen Beiträge, also die auf das Jahresende abgegrentzten Beiträge gerechnet:
         von_mm = int(von_dict.get('monat'))
         bis_mm = int(bis_dict.get('monat'))
+        faktor =  (bis_mm+1-von_mm)/12 
         
-        beitrag = float(vertrag.get('bruttozahljahresbeitrag'))
-        bil_beitrag=(bis_mm+1-von_mm)/12 * beitrag
-        vertrag['bil_gebuchter_beitrag'] = bil_beitrag
-        vertrag['bil_verdienter_beitrag_nw216'] = bil_beitrag
+        bruttojahresbeitrag = float(vertrag.get('bruttojahresbeitrag'))
+        bruttozahljahresbeitrag = float(vertrag.get('bruttozahljahresbeitrag'))
+        
+        bil_gebuchter_beitrag = faktor * bruttozahljahresbeitrag
+        vertrag['bil_gebuchter_beitrag'] = bil_gebuchter_beitrag
+        
+        bil_verdienter_beitrag_nw216 = bil_gebuchter_beitrag
+        vertrag['bil_verdienter_beitrag_nw216'] = bil_verdienter_beitrag_nw216
+        
+        bil_bruttojahresbeitrag = faktor * bruttojahresbeitrag
         
         rb_quote = self.GetWert(self.produkt, 'rb_quote', 'f')
-        vertrag['bil_risikobeitrag_nw216'] = bil_beitrag*rb_quote
-        vertrag.get('bil_sparbeitrag_nw216')
-        spb_quote = self.GetWert(self.produkt, 'spb_quote', 'f')
-        vertrag['bil_sparbeitrag_nw216'] = bil_beitrag*spb_quote
-
-        kb_quote = self.GetWert(self.produkt, 'kb_quote', 'f')
-        vertrag['bil_vkbeitrag_nw216'] = bil_beitrag*kb_quote
+        
+        bil_risikobeitrag_nw216 = bil_bruttojahresbeitrag * rb_quote
+        vertrag['bil_risikobeitrag_nw216'] = bil_risikobeitrag_nw216        
+        
+        vk_beitrag = float(vertrag.get('beitragszuschlagFuerVerwaltung'))
+        bil_vkbeitrag_nw216 = faktor * vk_beitrag
+        vertrag['bil_vk_beitrag_nw216'] = bil_vkbeitrag_nw216
+        
+        ak1_beitrag = float(vertrag.get('ak1'))
+        bil_ak1_beitrag = faktor * ak1_beitrag
+        
+        ak2_beitrag = float(vertrag.get('ak2'))
+        bil_ak2_beitrag = faktor * ak2_beitrag
+        
+        ak3_beitrag = float(vertrag.get('ak3'))
+        bil_ak3_beitrag = faktor * ak3_beitrag
+ 
+        bil_ak_beitrag_nw216 = bil_ak1_beitrag + bil_ak2_beitrag + bil_ak3_beitrag
+        vertrag['bil_ak_beitrag_nw216'] = bil_ak_beitrag_nw216
+        
+        bil_sparbeitrag_nw216 = bil_verdienter_beitrag_nw216 - (bil_risikobeitrag_nw216 + bil_vkbeitrag_nw216 + bil_ak_beitrag_nw216)
+        vertrag['bil_sparbeitrag_nw216'] = bil_sparbeitrag_nw216
         
         return vertrag
 
@@ -122,33 +146,74 @@ class Produktmanager():
         return vertrag
     
     def Beitrag(self, vertrag):
-        anzahl = float(vertrag.get('anzahl'))
-        bruttobeitrag = float(self.produkt.get('bruttobeitrag'))
-        beitragsniveau = float(vertrag.get('beitragsniveau'))
-        vertrag['bruttojahresbeitrag'] = bruttobeitrag * anzahl #Beitrag vor Rabatt
-        vertrag['bruttozahljahresbeitrag'] = bruttobeitrag * anzahl * beitragsniveau #Zahlbeitrag nach Rabatt
+        #hier werden alle Beiträge ausgerechnet:
+            
+        bruttobeitrag = float(self.produkt.get('bruttobeitrag')) #Bruttojahresbeitrag ist im Produkt abgelegt
         
+        beitragsniveau = float(vertrag.get('beitragsniveau')) #Beitragsniveau wurde im Dialog vorbelegt
+        
+        vertrag['bruttojahresbeitrag'] = bruttobeitrag #Beitrag vor Rabatt
+        
+        bruttozahljahresbeitrag = bruttobeitrag * beitragsniveau #Zahlbeitrag nach Rabatt
+        vertrag['bruttozahljahresbeitrag'] = bruttozahljahresbeitrag #Zahlbeitrag nach Rabatt
         
         #Der Beitrag wird erhöht bzw. reduziert um einen um einen Beitragsrabatt:
-        vertrag['beitragsrabatt'] = bruttobeitrag * anzahl * (1 - beitragsniveau)
+        vertrag['beitragsrabatt'] = bruttobeitrag * (1 - beitragsniveau)
                 
         return vertrag        
 
     def Beitragssumme(self, vertrag):
-        bruttobeitrag = float(vertrag.get('bruttojahresbeitrag'))
+
+        bruttobeitrag = float(vertrag.get('bruttozahljahresbeitrag'))
+
         laufzeit = float(vertrag.get('laufzeit'))
+        
         vertrag['beitragssumme'] = bruttobeitrag * laufzeit
         
         return vertrag        
 
     def Versicherungssumme(self, vertrag):
-        bruttojahresbeitrag=vertrag.get('bruttojahresbeitrag')
-        vs=bruttojahresbeitrag*20
+
+        bruttojahresbeitrag = vertrag.get('bruttojahresbeitrag')
         
-        vertrag['versicherungssumme']=vs
+        vs = bruttojahresbeitrag * 12
+        
+        vertrag['versicherungssumme'] = vs
         
         return vertrag    
 
+    def KostenImBeitrag(self, vertrag):
+        
+        rabatt = float(vertrag.get('beitragsrabatt')) #der Rabatt reduziert die VK-Zuschläge
+        
+        bruttobeitrag = float(vertrag.get('bruttojahresbeitrag'))
+        
+        beitragssumme = float(vertrag.get('beitragssumme'))
+        
+        bzd = int(vertrag.get('laufzeit'))
+
+        #kostenzuschläge für Verwaltungskosten:
+        beta1 = float(self.produkt.get('beta1')) 
+        vk = beta1 * bruttobeitrag - rabatt
+        
+        vertrag['beitragszuschlagFuerVerwaltung'] = vk
+
+        #kostenzuschläge für Abschlusskosten:
+        alpha1 = float(self.produkt.get('alpha1')) 
+        alpha2 = float(self.produkt.get('alpha2')) 
+        alpha3 = float(self.produkt.get('alpha3')) 
+
+        ak1 = alpha1 * beitragssumme / bzd
+        vertrag['ak1'] = ak1
+
+        ak2 = alpha2 * beitragssumme / bzd
+        vertrag['ak2'] = ak2
+
+        ak3 = alpha3 * beitragssumme / bzd
+        vertrag['ak3'] = ak3
+        
+        return vertrag
+    
     def GetWert(self, vertrag, name, typ):
 
         if name in (None, ''):

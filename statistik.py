@@ -149,9 +149,12 @@ class Statistik(object):
             key['bis']=index[3]
             
             produkt = self.LeseWertAusBestandCSV(key, 'tkz')
-            anzahl = self.LeseWertAusBestandCSV(key, 'anzahl')
-            jsb = self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag')
-            vs = self.LeseWertAusBestandCSV(key, 'versicherungssumme')
+            anzahl = float(self.LeseWertAusBestandCSV(key, 'anzahl'))
+            jsb = float(self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag'))
+            vs = float(self.LeseWertAusBestandCSV(key, 'versicherungssumme'))
+
+            jsb = jsb * anzahl
+            vs = vs * anzahl
             
             eintrag.clear()
             eintrag['von']=von
@@ -217,9 +220,13 @@ class Statistik(object):
                 key['bis']=bis_vertrag
             
                 produkt = self.LeseWertAusBestandCSV(key, 'tkz')
-                anzahl = self.LeseWertAusBestandCSV(key, 'anzahl')
-                jsb = self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag')
-                vs = self.LeseWertAusBestandCSV(key, 'versicherungssumme')
+                
+                anzahl = float(self.LeseWertAusBestandCSV(key, 'anzahl'))
+                jsb = float(self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag'))
+                vs = float(self.LeseWertAusBestandCSV(key, 'versicherungssumme'))
+
+                jsb = jsb * anzahl                
+                vs = vs * anzahl
                 
                 eintrag.clear()
                 eintrag['von']=von
@@ -260,9 +267,14 @@ class Statistik(object):
             key['bis']=index[3]
             
             produkt = self.LeseWertAusBestandCSV(key, 'tkz')
-            anzahl = self.LeseWertAusBestandCSV(key, 'anzahl')
-            jsb = self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag')
-            vs = self.LeseWertAusBestandCSV(key, 'versicherungssumme')
+            anzahl = float(self.LeseWertAusBestandCSV(key, 'anzahl'))
+            jsb = float(self.LeseWertAusBestandCSV(key, 'bruttojahresbeitrag'))
+            vs = float(self.LeseWertAusBestandCSV(key, 'versicherungssumme'))
+            bs = float(self.LeseWertAusBestandCSV(key, 'beitragssumme'))
+
+            jsb = jsb * anzahl
+            vs = vs * anzahl
+            bs = bs * anzahl
             
             eintrag.clear()
             eintrag['von']=von
@@ -277,11 +289,15 @@ class Statistik(object):
             self.SchreibeInStatistikCSV(eintrag)
 
             eintrag['name']='jsb'
-            eintrag['wert']=jsb
+            eintrag['wert']= jsb
             self.SchreibeInStatistikCSV(eintrag)
             
             eintrag['name']='vs'
             eintrag['wert']=vs
+            self.SchreibeInStatistikCSV(eintrag)
+
+            eintrag['name'] = 'beitragssumme'
+            eintrag['wert'] = bs
             self.SchreibeInStatistikCSV(eintrag)
 
     def SchreibeInStatistikCSV(self, eintrag):
