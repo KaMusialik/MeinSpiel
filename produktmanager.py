@@ -3,11 +3,13 @@
 import protokoll as prot
 import produkt as prod
 
+import pandas as pd
+
 class Produktmanager():
     
     def __init__(self, f_dict, dic):
         
-        pfad_pm=f_dict.get('work_dir_pm')
+        pfad_pm = f_dict.get('work_dir_pm')
 
         vsnr=dic.get('vsnr')
         histnr=dic.get('histnr')
@@ -26,6 +28,9 @@ class Produktmanager():
         self.produkt['von'] = von
         
         self.produkt = self.oprod.LeseProduktDaten(self.produkt)
+        
+        self.file_nachreservierung = f_dict.get('file_nachreservierung')
+        self.file_nachreservierung_struktur = f_dict.get('file_nachreservierung_struktur')
         
     def HoleWertFloat(self, dic, name):
         s=str(dic.get(name))
@@ -105,6 +110,34 @@ class Produktmanager():
         
         return vertrag
 
+    def LeseNachreservierung(self, vertrag):
+        tkz = int(vertrag.get('tkz'))
+        jahr = int(vertrag.get('jahr'))
+        name = 'nachreservierungswert'
+
+        datei = self.file_nachreservierung
+        struktur = self.file_nachreservierung_struktur
+
+        df = pd.read_csv(datei, sep=";", dtype = struktur)
+        
+        df1 = df[( (df.jahr == jahr) & (df.tkz == tkz) & (df.name == name))]
+        
+        if df1.empty:
+            wert=0
+            text='Produkttmanager/LeseNachreservierung: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: '+str(vertrag)
+            self.oprot.SchreibeInProtokoll(text)
+        else:
+            if df1.__len__() != 1:
+                wert=999999999
+                text='Produkttmanager/LeseNachreservierung: mehrere Eintraeg in der Tabelle gefunden. Es wurde ein Wert von '+str(wert)+ ' verwendet: '+str(vertrag)
+                self.oprot.SchreibeInProtokoll(text)
+            else:
+                index=df1.index[0]
+                wert=df1.at[index, 'wert']
+
+        return float(wert)   
+
+
     def Bilanz_Deckungsrueckstellung(self, von, bis, vertrag):
         
         spb = self.HoleWertFloat(vertrag, 'bil_sparbeitrag_nw216')
@@ -114,33 +147,29 @@ class Produktmanager():
         
         rz_zinsen = (derue1_anfang+spb)*rz
         
-        derue1_ende = derue1_anfang+spb+rz_zinsen
+        derue1_ende = derue1_anfang + spb+rz_zinsen
         
-        rw=max(derue1_ende*0.8, 0)
+        rw = max(derue1_ende*0.8, 0)
         
-        derue2_ende=max(derue1_ende,rw,0)
+        derue2_ende = max(derue1_ende,rw,0)
         
-        bio_nachreservierung_ende=max(derue1_ende*0.1, 0)
+        nachreservierungWert = self.LeseNachreservierung(vertrag)
+        
+        nachreservierung_ende = max(derue1_ende * nachreservierungWert, 0)
 
-        derue3_ende=derue2_ende+bio_nachreservierung_ende
-        
-        zzr_nachreservierung_ende=max(derue1_ende*0.3,0)
-        
-        derue5_ende=derue3_ende+zzr_nachreservierung_ende
-        
-        unisex_nachreservierung_ende=max(derue1_ende*0.0,0)
-        
-        derue7_ende=derue5_ende+unisex_nachreservierung_ende
+        derue3_ende = derue2_ende + nachreservierung_ende
+                
+        derue5_ende = derue3_ende
+                
+        derue7_ende = derue5_ende
         
         vertrag['bil_rz_nw217'] = rz_zinsen
         vertrag['bil_derue1_ende'] = derue1_ende
         vertrag['bil_rueckkaufswert'] = rw
         vertrag['bil_derue2_ende'] = derue2_ende
-        vertrag['bil_bio_nachreservierung_ende'] = bio_nachreservierung_ende
+        vertrag['nachreservierung_ende'] = nachreservierung_ende
         vertrag['bil_derue3_ende'] = derue3_ende
-        vertrag['bil_zzr_nachreservierung_ende'] = zzr_nachreservierung_ende
         vertrag['bil_derue5_ende'] = derue5_ende
-        vertrag['bil_unisex_nachreservierung_ende'] = unisex_nachreservierung_ende
         vertrag['bil_derue7_ende'] = derue7_ende
         
         return vertrag

@@ -247,9 +247,7 @@ class Fortschreibung:
         vertrag_neu['bil_derue5_anfang'] = vertrag_alt['bil_derue5_ende']
         vertrag_neu['bil_derue7_anfang'] = vertrag_alt['bil_derue7_ende']
         
-        vertrag_neu['bil_bio_nachreservierung_anfang'] = vertrag_alt['bil_bio_nachreservierung_ende']
-        vertrag_neu['bil_zzr_nachreservierung_anfang'] = vertrag_alt['bil_zzr_nachreservierung_ende']
-        vertrag_neu['bil_unisex_nachreservierung_anfang'] = vertrag_alt['bil_unisex_nachreservierung_ende']
+        vertrag_neu['nachreservierung_anfang'] = vertrag_alt['nachreservierung_ende']
 
         return vertrag_neu
     

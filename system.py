@@ -27,7 +27,7 @@ class System():
         self.dtype_fortschreibung = f_dict.get('file_system_fortschreibung_struktur')
         
         self.file_system_statistik = f_dict.get('file_system_statistik')
-        
+                
         self.LegeBestand()
         self.LegeFortschreibung()
         self.LegeStatistik()
@@ -54,8 +54,8 @@ class System():
         self.hilfe = hs.Hilfe_System()
         
         self.ofort=fort.Fortschreibung(self.files_dict)
-        
     
+      
     def LegeStatistik(self):
         datei=self.file_system_statistik
         ocsv=pd.DataFrame()
@@ -412,11 +412,12 @@ class System():
         df[['vsnr', 'histnr', 'von', 'bis', 'name', 'wert']] = df[['vsnr', 'histnr', 'von', 'bis', 'name', 'wert']].astype(str)
         df1 = df[(df.vsnr == vsnr) & (df.histnr == histnr) & (df.von == von) & (df.bis == bis)]['name']
         for name in df1:
-            wert=self.LeseWertAusBestandCSV(key,name)
-            vertrag[name]=wert
+            wert = self.LeseWertAusBestandCSV(key,name)
+            vertrag[name] = wert
             
         return vertrag
-  
+    
+        
     def Fortschreibung(self, von_int, bis_int):
         self.ofort.FortschreibungVonBis(von_int, bis_int)
 

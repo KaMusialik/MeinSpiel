@@ -72,6 +72,15 @@ class GrundEinstelleungWindow():
         else:
             self.w.radioButton_StreuungImNG_normal.setChecked(False)
 
+        #Einstellungen zur Nachreservierung:
+        nachreservierungJaNein = self.start_dict.get('nachreservierungJaNein')
+        if nachreservierungJaNein == 'ja':
+            self.w.radioButton_nachreservierung_ja.setChecked(True)
+            self.w.radioButton_nachreservierung_nein.setChecked(False)
+        else:
+            self.w.radioButton_nachreservierung_ja.setChecked(False)
+            self.w.radioButton_nachreservierung_nein.setChecked(True)
+
         if streuungImNG == 'gross':
             self.w.radioButton_StreuungImNG_gross.setChecked(True)
         else:
@@ -115,6 +124,7 @@ class GrundEinstelleungWindow():
         wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
         self.w.lineEdit_AnzahlBu.setText(wert_s)
     
+    
     def LeseStartDatenAusOptionen(self):
         file = self.start_dict.get('file')
         
@@ -145,6 +155,11 @@ class GrundEinstelleungWindow():
 
         #Wert für Anzahl BU:
         key = 'anzahlMarktBu'
+        wert = self.LeseCsvOptinen(file, key)
+        self.start_dict[key] = wert
+
+        #Wert für Anzahl BU:
+        key = 'nachreservierungJaNein'
         wert = self.LeseCsvOptinen(file, key)
         self.start_dict[key] = wert
     
@@ -222,6 +237,18 @@ class GrundEinstelleungWindow():
         key = 'streuungImNG'
         text = str(streuungImNG)   
         self.oopt.SchreibeInOptionen(key, text)
+        
+        ### Nachreservierung:
+        key = 'nachreservierungJaNein'
+        if self.w.radioButton_nachreservierung_ja.isChecked():
+            nachreservierungJaNein= 'ja'
+        else:
+            nachreservierungJaNein= 'nein'
+            
+        text = str(nachreservierungJaNein)   
+        self.oopt.SchreibeInOptionen(key, text)
+        
+        ### Ende Nachreservierung
         
         self.SchliesseFenster()
         

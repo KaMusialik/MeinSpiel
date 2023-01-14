@@ -23,6 +23,7 @@ import antrag as antrag
 import system
 import kapitalanlagen as kap
 import provision
+import nachreservierung
 
 
 files_dict = {}
@@ -57,6 +58,11 @@ files_dict['optionen_file_vertrieb'] = files_dict.get('work_dir')+'optionen_vert
 files_dict['protokoll_file_vertrieb'] = files_dict.get('work_dir')+'protokoll_vertrieb.txt'
 files_dict['file_vertrieb'] = files_dict.get('work_dir')+'vertrieb.csv'
 
+files_dict['optionen_file_nachreservierung'] = files_dict.get('work_dir')+'optionen_nachreservierung.csv'
+files_dict['protokoll_file_nachreservierung'] = files_dict.get('work_dir')+'protokoll_nachreservierung.txt'
+files_dict['file_nachreservierung'] = files_dict.get('work_dir')+'nachreservierung.csv'
+files_dict['file_nachreservierung_struktur'] = {'jahr': int, 'tkz': int, 'name': str, 'wert': str}
+
 # Dateien zu Thema Antrag:
 files_dict['optionen_file_antrag'] = files_dict.get('work_dir')+'optionen_antrag.csv'
 files_dict['file_system_antrag'] = files_dict.get('work_dir')+'system_antrag.csv'
@@ -72,6 +78,7 @@ files_dict['file_bilanz_struktur'] = {'jahr': int, 'rgl': str, 'avbg': str, 'nam
 
 #hier stehen die Produktdaten:
 files_dict['file_produkt'] = files_dict.get('work_dir')+'produkt.csv'
+files_dict['file_produkt_struktur'] = {'tkz': str, 'sra': str, 'zw': int, 'von': int, 'bis': int, 'name': str, 'wert': str}
 
 #hier stehen die Systemdateien:
 files_dict['protokoll_file_system'] = files_dict.get('work_dir')+'protokoll_system.txt'
@@ -497,6 +504,10 @@ def Steuerung():
 
     # die Tabelle im Dialog mit Ergebnissen der GuV wird angelegt:
     ZeigeGuVTabelleAn()
+    
+    # Nachreservierung:
+    onachres = nachreservierung.Nachreservierung(files_dict)
+    onachres.LegeFileNachreservierung()
 
     # solange im Spielwindow okay geclickt wird, dann wird ein Jahr weiter gespielt:
     while wSpielwindow.exec_() == widgets.QDialog.Accepted:
@@ -523,6 +534,8 @@ def Steuerung():
         okap.Beginn(jahr)
         okap.Fortschreibung(jahr)
 
+        onachres.StelleNachreservierungFest(jahr) #hier wird eine potentielle Nachreservierung festgelegt
+        
         osys.Fortschreibung(von, bis)
 
         oantrag.LeseVertrieb(jahr)
@@ -548,20 +561,15 @@ def Steuerung():
         file_grafik = files_dict.get('grafik_file_entwicklung_renten')
         icon = gui.QIcon(file_grafik)
         wSpielwindow.pushButton_Entwicklung_Renten.setIcon(icon)
-        hoehe = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_Entwicklung_Renten).get('hoehe')-10
-        breite = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_Entwicklung_Renten).get('breite')-10
-        wSpielwindow.pushButton_Entwicklung_Renten.setIconSize(
-            core.QSize(breite, hoehe))
+        hoehe = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_Entwicklung_Renten).get('hoehe')-10
+        breite = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_Entwicklung_Renten).get('breite')-10
+        wSpielwindow.pushButton_Entwicklung_Renten.setIconSize(core.QSize(breite, hoehe))
 
         file_grafik = files_dict.get('file_grafik_zsk')
         icon = gui.QIcon(file_grafik)
         wSpielwindow.pushButton_ZSK.setIcon(icon)
-        hoehe = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_ZSK).get('hoehe')-10
-        breite = LeseGroesseEinesButtonsAus(
-            wSpielwindow.pushButton_ZSK).get('breite')-10
+        hoehe = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_ZSK).get('hoehe')-10
+        breite = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_ZSK).get('breite')-10
         wSpielwindow.pushButton_ZSK.setIconSize(core.QSize(breite, hoehe))
 
 

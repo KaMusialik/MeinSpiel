@@ -282,19 +282,14 @@ class Bilanz(object):
         
         key_dict['name']='bil_derue3_ende'
         self.LeseAusFortschreibung(key_dict)
+        
         key_dict['name']='bil_derue5_ende'
         self.LeseAusFortschreibung(key_dict)
         
         key_dict['name']='bil_derue7_ende'
         self.LeseAusFortschreibung(key_dict)
 
-        key_dict['name']='bil_bio_nachreservierung_ende'
-        self.LeseAusFortschreibung(key_dict)
-
-        key_dict['name']='bil_zzr_nachreservierung_ende'
-        self.LeseAusFortschreibung(key_dict)
-
-        key_dict['name']='bil_unisex_nachreservierung_ende'
+        key_dict['name']='nachreservierung_ende'
         self.LeseAusFortschreibung(key_dict)
         
         #**********************************************************
@@ -397,13 +392,18 @@ class Bilanz(object):
         #aus der pivot-Tabelle wird dateframe erstellet:
         df4 = df3.reset_index()
         
-        for index, row in df4.iterrows():
+        #Berechnung pro vertrag von dem ausgewählten Feld "name" * anzahl:
+        df5 = df4.assign( wert =  pd.to_numeric(df4[name])* pd.to_numeric(df4['anzahl']))
+        
+        #und jetz nach avbg gruppieren und in dem Feld wert summieren:
+        df6 = df5.groupby(['avbg'])['wert'].sum().reset_index()
+        
+        #schreiben in die Tabelle bilanz:
+        for index, row in df6.iterrows():
             avbg = str(row['avbg'])
-            anzahl = float(row['anzahl'])
-            wert_name = float(row[name])
-            wert_name_anzahl = wert_name * anzahl
+            wert = float(row['wert'])
             key_dict['avbg'] = avbg
-            key_dict['wert'] = wert_name_anzahl
+            key_dict['wert'] = wert
             self.SchreibeInBilanzCSV(key_dict)
             
         wert=self.KumuliereAlleAvbgInBilanz(key_dict)
