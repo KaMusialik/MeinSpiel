@@ -56,7 +56,10 @@ class StatistikWindow():
         
         return pos_liste
               
-    def BereiteWerteFuerTableVor(self, name):
+    def BereiteWerteFuerTableVor(self, filter_dict):
+        name = filter_dict.get('position')
+        avbg = filter_dict.get('avbg')
+        
         #hier wird die Statistik in die Tabelle reigeschrieben:
         datei=self.file_statistik
         
@@ -157,9 +160,13 @@ class StatistikWindow():
         
         
     def LeseStatistik(self):
+        filter_dict = {}
         position = self.w.comboBox_auswahl.currentText()
+        filter_dict['position'] = position
+        avbg = self.w.comboBox_Produktgruppe.currentText()
+        filter_dict['avbg'] = avbg
         werte = {}
-        werte= self.BereiteWerteFuerTableVor(position)
+        werte= self.BereiteWerteFuerTableVor(filter_dict)
         self.WerteInTabelle(werte)
     
     def BestimmeListeStatistikPosiotionen(self):
@@ -174,6 +181,7 @@ class StatistikWindow():
     def RufeFensterAuf(self):
         self.w.pushButton_weiter.clicked.connect(self.SchliesseFenster)
         self.w.comboBox_auswahl.activated.connect(self.LeseStatistik)
+        self.w.comboBox_Produktgruppe.activated.connect(self.LeseStatistik)
         self.BestimmeListeStatistikPosiotionen()
         self.LeseStatistik()
         self.w.exec_()

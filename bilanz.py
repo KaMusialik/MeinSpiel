@@ -4,6 +4,7 @@
 import protokoll as prot
 import pandas as pd
 import provision
+import kosten
 
 class Bilanz(object):
 
@@ -35,6 +36,9 @@ class Bilanz(object):
         
         self.file_provision = f_dict.get('file_provision')
         self.file_provision_struktur = f_dict.get('file_provision_struktur')
+
+        self.file_kosten = f_dict.get('file_kosten')
+        self.file_kosten_struktur = f_dict.get('file_kosten_struktur')
         
         self.LegeBilanzAn()
         
@@ -178,8 +182,12 @@ class Bilanz(object):
         
     def ErstelleBilanzEnde(self, jahr):
         self.BilanzPositionenAusFortschreibung(jahr)
+        
         self.BilanzPositionenAusProvision(jahr)
+        self.BilanzPositionenAusKosten(jahr)
+        
         self.Veraenderungspositionen(jahr)
+        
         self.Jahresueberschuss(jahr)
         
         self.Eigenkapital_Ende(jahr)
@@ -199,10 +207,16 @@ class Bilanz(object):
 
         key_dict['name'] = 'ap'
         ap = float(self.LeseBilanzCSV(key_dict))
+
+        key_dict['name'] = 'iAK'
+        iAK = float(self.LeseBilanzCSV(key_dict))
+
+        key_dict['name'] = 'VK_Stueck'
+        VK_Stueck = float(self.LeseBilanzCSV(key_dict))
         
         
         
-        jahresueberschuss = gebbtg - veranderung_derue - ap
+        jahresueberschuss = gebbtg - veranderung_derue - ap - iAK - VK_Stueck
         
         key_dict['name'] = 'jahresueberschuss'
         key_dict['wert'] = jahresueberschuss
@@ -264,6 +278,17 @@ class Bilanz(object):
         key_dict['name'] = 'ap'
         
         self.LeseAusProvisionAP(key_dict)
+
+    def BilanzPositionenAusKosten(self, jahr):
+        key_dict = {}
+        key_dict['rl'] = 'guv'
+        key_dict['jahr'] = jahr
+        
+        key_dict['name'] = 'iAK'
+        self.LeseAusKosten(key_dict)
+
+        key_dict['name'] = 'VK_Stueck'
+        self.LeseAusKosten(key_dict)
     
     
     def BilanzPositionenAusFortschreibung(self, jahr):
@@ -330,6 +355,34 @@ class Bilanz(object):
                 wert = df3[0]
        
         return wert   
+    
+    def LeseAusKosten(self, key_dict):
+        datei = self.file_kosten
+        struktur = self.file_kosten_struktur
+        df = pd.read_csv(datei, sep=";", dtype = struktur)
+        
+        jahr = int(key_dict.get('jahr'))
+        name = str(key_dict.get('name')) 
+        
+        #welche verträge mit welchen Bestandsgruppen sind betroffen:
+        df1 = df[( (df.jahr == jahr) & (df.name == name) )]
+        df2 = df1[['jahr','avbg', 'wert']].groupby(['jahr', 'avbg']).sum().reset_index()
+
+        for index, row in df2.iterrows():
+            
+            avbg = str(row['avbg'])
+            wert = float(row['wert'])
+            
+            key_dict['avbg'] = avbg
+            key_dict['wert'] = wert
+            
+            self.SchreibeInBilanzCSV(key_dict)
+
+
+        wert = self.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert']=wert
+        key_dict['avbg']='999'
+        self.SchreibeInBilanzCSV(key_dict)
     
     def LeseAusProvisionAP(self, key_dict):
         datei = self.file_provision

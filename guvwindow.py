@@ -43,6 +43,8 @@ class GuVWindow():
 
         self.listeDerPositionen = {'Gebuchter Beitrag': ('bil_gebuchter_beitrag', 1),
                                    'Abschlussprovision':('ap', 50),
+                                   'interne AK':('iAK', 51),
+                                   'VK Stueck':('VK_Stueck', 52),
                                    'Veränderung der Deckungsrückstellung': ('bil_derue7_veraenderung', 100),
                                    'Jahresüberschuss':('jahresueberschuss', 999)
                                    }

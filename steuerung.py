@@ -24,6 +24,8 @@ import system
 import kapitalanlagen as kap
 import provision
 import nachreservierung
+import kosten
+import vertraegeausfortschreibungwindow
 
 
 files_dict = {}
@@ -38,6 +40,7 @@ files_dict['statistikwindow_file'] = files_dict.get('work_dir')+'statistikwindow
 files_dict['produktwindow_file'] = files_dict.get('work_dir')+'produktwindow.ui'
 files_dict['vertragswindow_file'] = files_dict.get('work_dir')+'vertragswindow.ui'
 files_dict['guvwindow_file'] = files_dict.get('work_dir')+'guvwindow.ui'
+files_dict['fortschreibungwindow_file'] = files_dict.get('work_dir')+'fortschreibungwindow.ui'
 
 files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
 files_dict['file_icon_statistikwindow'] = files_dict.get('work_dir')+'iconStatistikWindow.png'
@@ -93,10 +96,20 @@ files_dict['file_system_statistik'] = files_dict.get('work_dir')+'system_statist
 files_dict['file_provision'] = files_dict.get('work_dir')+'provision.csv'
 files_dict['file_provision_struktur'] = { 'vsnr':int, 'jahr':int, 'gevo':str, 'name':str, 'wert':str}
     
-
 files_dict['protokoll_file_statistikwindow'] = files_dict.get('work_dir')+'protokoll_statistikwindow.txt'
 files_dict['protokoll_file_produktwindow'] = files_dict.get('work_dir')+'protokoll_produktwindow.txt'
 files_dict['protokoll_file_vertragswindow'] = files_dict.get('work_dir')+'protokoll_vertragswindow.txt'
+
+#Dialog für Verträge aus der Fortschreibung:
+files_dict['protokoll_file_vertraegeausderfortschreibungwindow'] = files_dict.get('work_dir')+'protokoll_vertraegeausderfortschreibungwindow.txt'
+    
+    
+#Kosten:
+files_dict['optionen_file_kosten'] = files_dict.get('work_dir')+'optionen_kosten.csv'
+files_dict['protokoll_file_kosten'] = files_dict.get('work_dir')+'protokoll_kosten.txt'
+files_dict['file_kosten'] = files_dict.get('work_dir')+'kosten.csv'
+files_dict['file_kosten_struktur'] = { 'jahr':int, 'vsnr':int, 'avbg':str, 'name':str, 'wert':float }
+
 
 # in diesem dictionary werden Infos zu Kapitalallokation abgelegt:
 ka_sa_dict = {}
@@ -191,6 +204,13 @@ def ZeigeStatistikTabelleAn():
     tabelle = wSpielwindow.tableWidget_StatistikCSV
     ozD = zD.ZeigeDatnInTabelle(tabelle)
     file_daten = files_dict.get('file_system_statistik')
+    ozD.SchreibeDatenIntabelle(file_daten)
+
+def ZeigeKostenModellTabelleAn():
+    #Hier wird die Kosten-Optionentabelle angezeigt
+    tabelle = wSpielwindow.tableWidget_Kostenmodell
+    ozD = zD.ZeigeDatnInTabelle(tabelle)
+    file_daten = files_dict.get('optionen_file_kosten')
     ozD.SchreibeDatenIntabelle(file_daten)
 
 
@@ -343,6 +363,11 @@ def ZeigeWindowProdukt():
 def ZeigeWindowVertrag():
     ovW = vW.VertragsWindow(files_dict)
     ovW.RufeFensterAuf()
+
+def ZeigeWindowVertraegeAusFortschreibung():
+    objekt = vertraegeausfortschreibungwindow.VertraegeAusFortschreibungWindow(files_dict)
+    jahr = int(files_dict.get('jahr_aktuell'))
+    objekt.RufeFensterAuf(jahr)
 
 def LeseAusFensterSpielVertriebEingaben():
     # hier werden die Eingaben zum Thema Neugeschäft aus dem Dialog Spiel ausgelesen:
@@ -504,10 +529,18 @@ def Steuerung():
 
     # die Tabelle im Dialog mit Ergebnissen der GuV wird angelegt:
     ZeigeGuVTabelleAn()
+
+    # die Tabelle mit Kostenmodell wird angezeigtt:
+    ZeigeKostenModellTabelleAn()
+    
+    okosten = kosten.Kosten(files_dict)
+    okosten.LegeFileKosten()
     
     # Nachreservierung:
     onachres = nachreservierung.Nachreservierung(files_dict)
     onachres.LegeFileNachreservierung()
+    
+    wSpielwindow.tabWidget_2.setCurrentIndex(0)
 
     # solange im Spielwindow okay geclickt wird, dann wird ein Jahr weiter gespielt:
     while wSpielwindow.exec_() == widgets.QDialog.Accepted:
@@ -545,6 +578,8 @@ def Steuerung():
         
         oprovision.BerechneAP(jahr) #hier wird die AP für die policiereten Verträge berechnet
 
+        okosten.ErmittleKosten(jahr) #hier werden die Kosten ermittelt
+        
         obil.ErstelleBilanzEnde(jahr)
 
         okap.ZeichneKapitalanlagen(jahr)
@@ -555,6 +590,7 @@ def Steuerung():
         
         ZeigeGuVTabelleAn()  # Ergebnisse der GuV
         ZeigeStatistikTabelleAn() #Hier wird die Statistiktabelle angezeigt
+        ZeigeKostenModellTabelleAn() # die Tabelle mit KOstenmodell wird angezeigtt:
 
         wSpielwindow.label_Jahr.setText(str(jahr))
 
@@ -571,6 +607,10 @@ def Steuerung():
         hoehe = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_ZSK).get('hoehe')-10
         breite = LeseGroesseEinesButtonsAus(wSpielwindow.pushButton_ZSK).get('breite')-10
         wSpielwindow.pushButton_ZSK.setIconSize(core.QSize(breite, hoehe))
+
+        #Der Focus der Tabs muss wieder ausgerichtet werden:
+        wSpielwindow.tabWidget_2.setCurrentIndex(0)
+        wSpielwindow.tabWidget_Ergebnisse.setCurrentIndex(0)
 
 
     oprot.SchreibeInProtokoll("ENDE erreicht!!!")
@@ -594,6 +634,7 @@ if __name__ == "__main__":
     wSpielwindow.pushButton_vertrag.clicked.connect(ZeigeWindowVertrag)
     wSpielwindow.pushButton_GrundeinstellungWindow.clicked.connect(RufeGrundeinstellungAuf)
     wSpielwindow.pushButton_GuvWindow.clicked.connect(ZeigeWindowGuv)
+    wSpielwindow.pushButton_vertraegeAusFortschreibung.clicked.connect(ZeigeWindowVertraegeAusFortschreibung)
     
     wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(ZeigeGrafik_Entwicklung_Renten)
     wSpielwindow.horizontalSlider_Renten.valueChanged.connect(AnteilImSliderRenten)
