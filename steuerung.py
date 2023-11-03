@@ -6,7 +6,6 @@ import PyQt5.QtWidgets as widgets
 import PyQt5.QtGui as gui
 import PyQt5.uic as uic
 
-
 import optionen as opt
 import protokoll as prot
 
@@ -30,7 +29,7 @@ import vertraegeausfortschreibungwindow
 
 files_dict = {}
 # work directory:
-files_dict['work_dir'] = '/home/karol_laptop/MeineProjekte/MeinSpiel/csv_fuer_mein_Spiel/'
+files_dict['work_dir'] = '/home/karol/Projekte/csv_fuer_mein_Spiel/'
 
 # einzelne Dateien:
 files_dict['grundeinstellungwindow_file'] = files_dict.get('work_dir')+'grundeinstellungwindow.ui'
