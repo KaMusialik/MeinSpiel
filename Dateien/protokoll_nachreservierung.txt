@@ -1,0 +1,2 @@
+Nachreservierung/LegeFileNachreservierung /home/karol/Projekte/MeinSpiel/Dateien/nachreservierung.csv existiert bereits. Daher muss die Datein zuerst entfernt werden.
+nachreservierun/LegeTabelleVertriebAn: Tabelle fuer Vertrieb/Neugeschäft wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/nachreservierung.csv

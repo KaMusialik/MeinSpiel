@@ -1,0 +1,2 @@
+VertraegeAusFortschreibungWindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/system_fortschreibung.csv existiert
+VertraegeAusFortschreibungWindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/fortschreibungwindow.ui existiert

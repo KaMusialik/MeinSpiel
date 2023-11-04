@@ -29,7 +29,7 @@ import vertraegeausfortschreibungwindow
 
 files_dict = {}
 # work directory:
-files_dict['work_dir'] = '/home/karol/Projekte/csv_fuer_mein_Spiel/'
+files_dict['work_dir'] = '/home/karol/Projekte/MeinSpiel/Dateien/'
 
 # einzelne Dateien:
 files_dict['grundeinstellungwindow_file'] = files_dict.get('work_dir')+'grundeinstellungwindow.ui'

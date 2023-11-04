@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1037</width>
+    <height>730</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>170</y>
+     <width>952</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Markdaten zur Neugeschäftseinschätzung:</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>952</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>133</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Rente</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>10</y>
+      <width>57</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>BU</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>261</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Durchschnittsprovision in %o:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_ProvisionRente">
+    <property name="geometry">
+     <rect>
+      <x>323</x>
+      <y>78</y>
+      <width>113</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_ProvisionBu">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>80</y>
+      <width>113</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>301</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>erwartete Anzahl für unseren Marktanteil:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_AnzahlRente">
+    <property name="geometry">
+     <rect>
+      <x>323</x>
+      <y>108</y>
+      <width>113</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_AnzahlBu">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>110</y>
+      <width>113</width>
+      <height>23</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_StreuungImNG_normal">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>50</y>
+      <width>99</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>normal</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_StreuungImNG_gross">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>80</y>
+      <width>99</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>gross</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_StreuungImNG_sehrgross">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>110</y>
+      <width>99</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>sehr gross</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>10</y>
+      <width>291</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Streuung im Neugeschäftseinschätzung:</string>
+    </property>
+   </widget>
+   <zorder>groupBox</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_4</zorder>
+   <zorder>label_6</zorder>
+   <zorder>lineEdit_ProvisionRente</zorder>
+   <zorder>lineEdit_ProvisionBu</zorder>
+   <zorder>label_7</zorder>
+   <zorder>lineEdit_AnzahlRente</zorder>
+   <zorder>lineEdit_AnzahlBu</zorder>
+   <zorder>radioButton_StreuungImNG_normal</zorder>
+   <zorder>radioButton_StreuungImNG_gross</zorder>
+   <zorder>radioButton_StreuungImNG_sehrgross</zorder>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_KA_Risiko">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>30</y>
+     <width>952</width>
+     <height>117</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Risiko in der Kapitalanlage:</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QRadioButton" name="radioButton_KA_Risiko_normal">
+      <property name="text">
+       <string>normal</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="radioButton_KA_Risiko_riskant">
+      <property name="text">
+       <string>riskant</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QRadioButton" name="radioButton_KA_Risiko_sehr_riskant">
+      <property name="text">
+       <string>sehr riskant</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton_weiter">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>680</y>
+     <width>80</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Weiter...</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>440</y>
+     <width>361</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="title">
+    <string>Risiko der Veränderung der Rechnungsgrundlagen:</string>
+   </property>
+   <widget class="QRadioButton" name="radioButton_nachreservierung_ja">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>99</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ja</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_nachreservierung_nein">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>70</y>
+      <width>99</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nein</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

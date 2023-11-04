@@ -1,0 +1,2 @@
+vertragswindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/system_bestand.csv existiert
+vertragswindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/vertragswindow.ui existiert

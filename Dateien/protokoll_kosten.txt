@@ -1,0 +1,2 @@
+Kosten/LegeFileKosten /home/karol/Projekte/MeinSpiel/Dateien/kosten.csv existiert bereits. Daher muss die Datein zuerst entfernt werden.
+Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/kosten.csv
