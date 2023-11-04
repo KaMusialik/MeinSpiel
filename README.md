@@ -1,4 +1,6 @@
-Hier werden die Codes *.py zu meine Spiel abgelegt. Es sind viele ...
-Es muss parall ein Verzeichnis mit den Daten zum Spiel und Fenster.ui geben. Dies wird in der steuerung.py als Workdir oben eingetragen.
+Hier gibt es zwei Verzeichnisse:
+- Codes: hier werden die py-Dateien mit den Codes abgelegt
+- Dateien: hier werden alle Dateien (ui für Dialoge, csv, pdf, ...) abgelegt, die für dieses Projekt benötigt werden
 
-z.B.: files_dict['work_dir'] = '/home/karol/Projekte/csv_fuer_mein_Spiel/'
+Das Spiel wird in der Datei Steueerung.py gestartet. Dort wir auch das Work-Vereichnis = Dateien eingetragen
+z.B.: files_dict['work_dir'] = '/home/karol/Projekte/MeinSpiel/Dateien/'
