@@ -1,1 +1,1 @@
-Statistikwindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/statistikwindow.ui existiert
+Statistikwindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/statistikwindow.ui existiert

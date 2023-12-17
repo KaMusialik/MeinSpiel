@@ -1,2 +1,2 @@
-Produktwindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/produkt.csv existiert
-Produktwindow/init: Die Datei /home/karol/Projekte/csv_fuer_mein_Spiel/produktwindow.ui existiert
+Produktwindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/produkt.csv existiert
+Produktwindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/produktwindow.ui existiert

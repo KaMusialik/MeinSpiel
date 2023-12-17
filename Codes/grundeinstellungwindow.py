@@ -2,6 +2,7 @@
 import optionen as opt
 import protokoll as prot
 import pandas as pd
+import oeffnePDF as pdf
 
 import hilfe_system as hs
 
@@ -46,7 +47,12 @@ class GrundEinstelleungWindow():
             self.oprot.SchreibeInProtokoll(text)
             
         self.ohs = hs.ZahlenFormatieren()
-
+    
+        self.infoDict = {}
+        verzeichnis = f_dict.get('work_dir') + 'Dokumente/'
+        self.infoDict['RisikoInKapitalanlage'] = verzeichnis + 'Dialog_1_RisikoInDerKapitalanlage.pdf'
+        self.w.pushButton_Info_RisikoInKapitalanlage.clicked.connect(self.InfoRisikoInKapitalanlage)
+        
     def ZeigeStartWerte(self):
         
         ka_renten_sa = self.start_dict.get('ka_renten_sa')
@@ -251,7 +257,13 @@ class GrundEinstelleungWindow():
         ### Ende Nachreservierung
         
         self.SchliesseFenster()
-        
+    
+
+    def InfoRisikoInKapitalanlage(self):
+        filePDF = self.infoDict.get('RisikoInKapitalanlage')
+        opdf = pdf.OeffnePDF(filePDF)
+    
+    
     def SchliesseFenster(self):
         self.w.close()
         
