@@ -52,7 +52,8 @@ class GrundEinstelleungWindow():
         verzeichnis = f_dict.get('work_dir') + 'Dokumente/'
         self.infoDict['RisikoInKapitalanlage'] = verzeichnis + 'Dialog_1_RisikoInDerKapitalanlage.pdf'
         self.w.pushButton_Info_RisikoInKapitalanlage.clicked.connect(self.InfoRisikoInKapitalanlage)
-        
+        self.w.setWinwowTitle = 'Einstellungen'
+
     def ZeigeStartWerte(self):
         
         ka_renten_sa = self.start_dict.get('ka_renten_sa')
