@@ -1,3 +1,5 @@
 jahr;rl;avbg;name;wert
 2019;bilanz;999;eigenkapital_ende;100000
 2019;bilanz;999;kasse_ende;100000
+2020;bilanz;999;eigenkapital_anfang;100000.0
+2020;bilanz;999;kasse_anfang;100000.0

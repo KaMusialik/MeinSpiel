@@ -1,3 +1,4 @@
 Vertrieb/__Init__: File für die Angaben zum Neugeschäft festgelegt: /home/karol/Projekte/MeinSpiel/Dateien/vertrieb.csv
 Vertrieb/LegeFileVertrieb /home/karol/Projekte/MeinSpiel/Dateien/vertrieb.csv existiert bereits. Daher muss die Datein zuerst entfernt werden.
 Vertrieb/LegeTabelleVertriebAn: Tabelle fuer Vertrieb/Neugeschäft wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/vertrieb.csv
+Vertrieb/LeseNummer: Kein Eintrag in der Datei gefunden: /home/karol/Projekte/MeinSpiel/Dateien/vertrieb.csv
