@@ -4,5 +4,5 @@ provisionMarktRente;0.045
 anzahlMarktRente;1000.0
 provisionMarktBu;0.055
 anzahlMarktBu;15000.0
-streuungImNG;keine Streuung
+streuungImNG;normal
 nachreservierungJaNein;nein

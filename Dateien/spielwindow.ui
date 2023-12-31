@@ -295,7 +295,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -931,7 +931,7 @@
       <rect>
        <x>400</x>
        <y>160</y>
-       <width>181</width>
+       <width>251</width>
        <height>61</height>
       </rect>
      </property>
@@ -948,7 +948,7 @@
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>mit NG</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -973,7 +973,7 @@
       <rect>
        <x>400</x>
        <y>230</y>
-       <width>181</width>
+       <width>251</width>
        <height>41</height>
       </rect>
      </property>
@@ -990,7 +990,7 @@
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>mit NG</string>
       </property>
       <property name="checked">
        <bool>true</bool>
