@@ -201,9 +201,9 @@ class Vertrieb():
             nv = 1.0
         else:  # es wird eine Zuffalszahl generiert, mir der die erwarteten Markwerte bewertete werden
             ohs = hs.Hilfe_Statistik(stat_dict)
-            nv = ohs.MeineZufallszahl()
+            nv = 1.0 + ohs.MeineZufallszahl()
         
-        wert = erwarteteAnzahl / beitragZumMarkt * provisionZumMarkt * (1.0 + nv)
+        wert = erwarteteAnzahl / beitragZumMarkt * provisionZumMarkt * nv
         
         if wert < 0: #es werten nur positive Werte zugelassen:
             wert = 0

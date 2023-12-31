@@ -14,6 +14,7 @@ import statistikwindow as sW
 import produktwindow as pW
 import vertragswindow as vW
 import guvwindow as guvW
+import bilanzWindow
 import zeigedatenintabelle as zD
 
 import bilanz as bil
@@ -39,6 +40,7 @@ files_dict['statistikwindow_file'] = files_dict.get('work_dir')+'statistikwindow
 files_dict['produktwindow_file'] = files_dict.get('work_dir')+'produktwindow.ui'
 files_dict['vertragswindow_file'] = files_dict.get('work_dir')+'vertragswindow.ui'
 files_dict['guvwindow_file'] = files_dict.get('work_dir')+'guvwindow.ui'
+files_dict['bilanzWindow_file'] = files_dict.get('work_dir')+'bilanzWindow.ui'
 files_dict['fortschreibungwindow_file'] = files_dict.get('work_dir')+'fortschreibungwindow.ui'
 
 files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
@@ -52,6 +54,8 @@ files_dict['optionen_file_grundeinstellungwindow'] = files_dict.get('work_dir')+
 files_dict['protokoll_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'protokoll_grundeinstellungwindow.txt'
 
 files_dict['protokoll_file_guvwindow'] = files_dict.get('work_dir')+'protokoll_guvwindow.txt'
+files_dict['protokoll_file_bilanzWindow'] = files_dict.get('work_dir')+'protokoll_bilanzWindow.txt'
+
 
 files_dict['optionen_file_main'] = files_dict.get('work_dir')+'optionen_main.csv'
 files_dict['protokoll_file_main'] = files_dict.get('work_dir')+'protokoll_main.txt'
@@ -234,6 +238,7 @@ def LegeLaufzeitAuswahlBeiRentenFestInKa():
         wSpielwindow.comboBox_A3.insertItem(i, str(i)) 
 
 
+'''
 def LegeBilanzTabelleAn(obil):
     # hier werden die Ergebnisse der Bilanz in eine Tabelle im Dialog ausgegeben:
     jahr_beginn = files_dict.get('Startjahr_Simulation')
@@ -286,7 +291,7 @@ def LegeBilanzTabelleAn(obil):
             index_row-1, i, widgets.QTableWidgetItem(str(wert)))
 
     wSpielwindow.tableWidget_Bilanz.setVerticalHeaderLabels(vektor_namen)
-
+'''
 
 def LeseAusSpielfensterKA():
     # es werden aus dem Dialog die Eingaben zu Kapitalanlagen ausgelesen:
@@ -355,6 +360,11 @@ def ZeigeGrafik_Entwicklung_Renten():
 def ZeigeWindowGuv():
     oguvW = guvW.GuVWindow(files_dict)
     oguvW.RufeFensterAuf()
+
+
+def ZeigeWindowBilanz():
+    oWindow = bilanzWindow.BilanzWindow(files_dict)
+    oWindow.RufeFensterAuf()
 
 
 def ZeigeWindowStatistik():
@@ -534,7 +544,7 @@ def Steuerung():
     wSpielwindow.label_Jahr.setText(str(jahr))
 
     # die Tabelle im Dialog mit Ergebnissen der Bilanz wird angelegt:
-    LegeBilanzTabelleAn(obil)
+    #LegeBilanzTabelleAn(obil)
 
     # die Tabelle im Dialog mit Ergebnissen der GuV wird angelegt:
     ZeigeGuVTabelleAn()
@@ -595,7 +605,7 @@ def Steuerung():
 
         jahr += 1
         files_dict['jahr_aktuell'] = jahr
-        LegeBilanzTabelleAn(obil)  # Ergebnisse der Bilanz
+        #LegeBilanzTabelleAn(obil)  # Ergebnisse der Bilanz
         
         ZeigeGuVTabelleAn()  # Ergebnisse der GuV
         ZeigeStatistikTabelleAn() #Hier wird die Statistiktabelle angezeigt
@@ -643,6 +653,7 @@ if __name__ == "__main__":
     wSpielwindow.pushButton_vertrag.clicked.connect(ZeigeWindowVertrag)
     wSpielwindow.pushButton_GrundeinstellungWindow.clicked.connect(RufeGrundeinstellungAuf)
     wSpielwindow.pushButton_GuvWindow.clicked.connect(ZeigeWindowGuv)
+    wSpielwindow.pushButton_bilanzErgebnisse.clicked.connect(ZeigeWindowBilanz)
     wSpielwindow.pushButton_vertraegeAusFortschreibung.clicked.connect(ZeigeWindowVertraegeAusFortschreibung)
     
     wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(ZeigeGrafik_Entwicklung_Renten)

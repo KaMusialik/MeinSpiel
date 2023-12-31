@@ -3,151 +3,41 @@ jahr;rl;avbg;name;wert
 2019;bilanz;999;kasse_ende;100000
 2020;bilanz;999;eigenkapital_anfang;100000.0
 2020;bilanz;999;kasse_anfang;100000.0
-2020;bilanz; BG111_Rente;bil_derue1_ende;639787.9788610231
-2020;bilanz; BG113_Risiko;bil_derue1_ende;871059.0791416259
-2020;bilanz;999;bil_derue1_ende;1510847.0580026489
-2020;bilanz; BG111_Rente;bil_derue2_ende;639787.9788610231
-2020;bilanz; BG113_Risiko;bil_derue2_ende;871059.0791416259
-2020;bilanz;999;bil_derue2_ende;1510847.0580026489
-2020;bilanz; BG111_Rente;bil_derue3_ende;639787.9788610231
-2020;bilanz; BG113_Risiko;bil_derue3_ende;871059.0791416259
-2020;bilanz;999;bil_derue3_ende;1510847.0580026489
-2020;bilanz; BG111_Rente;bil_derue5_ende;639787.9788610231
-2020;bilanz; BG113_Risiko;bil_derue5_ende;871059.0791416259
-2020;bilanz;999;bil_derue5_ende;1510847.0580026489
-2020;bilanz; BG111_Rente;bil_derue7_ende;639787.9788610231
-2020;bilanz; BG113_Risiko;bil_derue7_ende;871059.0791416259
-2020;bilanz;999;bil_derue7_ende;1510847.0580026489
+2020;bilanz; BG111_Rente;bil_derue1_ende;526698.0
+2020;bilanz; BG113_Risiko;bil_derue1_ende;726480.0
+2020;bilanz;999;bil_derue1_ende;1253178.0
+2020;bilanz; BG111_Rente;bil_derue2_ende;526698.0
+2020;bilanz; BG113_Risiko;bil_derue2_ende;726480.0
+2020;bilanz;999;bil_derue2_ende;1253178.0
+2020;bilanz; BG111_Rente;bil_derue3_ende;526698.0
+2020;bilanz; BG113_Risiko;bil_derue3_ende;726480.0
+2020;bilanz;999;bil_derue3_ende;1253178.0
+2020;bilanz; BG111_Rente;bil_derue5_ende;526698.0
+2020;bilanz; BG113_Risiko;bil_derue5_ende;726480.0
+2020;bilanz;999;bil_derue5_ende;1253178.0
+2020;bilanz; BG111_Rente;bil_derue7_ende;526698.0
+2020;bilanz; BG113_Risiko;bil_derue7_ende;726480.0
+2020;bilanz;999;bil_derue7_ende;1253178.0
 2020;bilanz; BG111_Rente;nachreservierung_ende;0.0
 2020;bilanz; BG113_Risiko;nachreservierung_ende;0.0
 2020;bilanz;999;nachreservierung_ende;0.0
-2020;guv; BG111_Rente;bil_gebuchter_beitrag;728829.0202670484
-2020;guv; BG113_Risiko;bil_gebuchter_beitrag;5395559.211729595
-2020;guv;999;bil_gebuchter_beitrag;6124388.231996644
-2020;guv; BG111_Rente;bil_verdienter_beitrag_nw216;728829.0202670484
-2020;guv; BG113_Risiko;bil_verdienter_beitrag_nw216;5395559.211729595
-2020;guv;999;bil_verdienter_beitrag_nw216;6124388.231996644
-2020;guv; BG113_Risiko;ap;5935115.132902554
-2020;guv; BG111_Rente;ap;327973.05912017176
-2020;guv;999;ap;6263088.192022726
-2020;guv; BG111_Rente;iAK;116612.64324272772
-2020;guv; BG113_Risiko;iAK;1726578.9477534704
-2020;guv;999;iAK;1843191.5909961981
-2020;guv; BG111_Rente;VK_Stueck;36441.451013352416
-2020;guv; BG113_Risiko;VK_Stueck;539555.9211729595
-2020;guv;999;VK_Stueck;575997.3721863119
-2020;guv; BG111_Rente;bil_derue7_veraenderung;639787.9788610231
-2020;guv; BG113_Risiko;bil_derue7_veraenderung;871059.0791416259
-2020;guv;999;bil_derue7_veraenderung;1510847.0580026489
-2020;guv;999;jahresueberschuss;-4068735.981211241
-2020;bilanz;999;eigenkapital_ende;-3968735.981211241
-2021;bilanz;999;eigenkapital_anfang;-3968735.981211241
-2021;bilanz;999;kasse_anfang;0.0
-2021;bilanz; BG111_Rente;bil_derue1_anfang;639787.9788610231
-2021;bilanz; BG113_Risiko;bil_derue1_anfang;871059.0791416259
-2021;bilanz;999;bil_derue1_anfang;1510847.0580026489
-2021;bilanz; BG111_Rente;bil_derue2_anfang;639787.9788610231
-2021;bilanz; BG113_Risiko;bil_derue2_anfang;871059.0791416259
-2021;bilanz;999;bil_derue2_anfang;1510847.0580026489
-2021;bilanz; BG111_Rente;bil_derue3_anfang;639787.9788610231
-2021;bilanz; BG113_Risiko;bil_derue3_anfang;871059.0791416259
-2021;bilanz;999;bil_derue3_anfang;1510847.0580026489
-2021;bilanz; BG111_Rente;bil_derue5_anfang;639787.9788610231
-2021;bilanz; BG113_Risiko;bil_derue5_anfang;871059.0791416259
-2021;bilanz;999;bil_derue5_anfang;1510847.0580026489
-2021;bilanz; BG111_Rente;bil_derue7_anfang;639787.9788610231
-2021;bilanz; BG113_Risiko;bil_derue7_anfang;871059.0791416259
-2021;bilanz;999;bil_derue7_anfang;1510847.0580026489
-2021;bilanz; BG111_Rente;bil_derue1_ende;2050915.3405552665
-2021;bilanz; BG113_Risiko;bil_derue1_ende;2599132.5786989424
-2021;bilanz;999;bil_derue1_ende;4650047.919254209
-2021;bilanz; BG111_Rente;bil_derue2_ende;2050915.3405552665
-2021;bilanz; BG113_Risiko;bil_derue2_ende;2599132.5786989424
-2021;bilanz;999;bil_derue2_ende;4650047.919254209
-2021;bilanz; BG111_Rente;bil_derue3_ende;2050915.3405552665
-2021;bilanz; BG113_Risiko;bil_derue3_ende;2599132.5786989424
-2021;bilanz;999;bil_derue3_ende;4650047.919254209
-2021;bilanz; BG111_Rente;bil_derue5_ende;2050915.3405552665
-2021;bilanz; BG113_Risiko;bil_derue5_ende;2599132.5786989424
-2021;bilanz;999;bil_derue5_ende;4650047.919254209
-2021;bilanz; BG111_Rente;bil_derue7_ende;2050915.3405552665
-2021;bilanz; BG113_Risiko;bil_derue7_ende;2599132.5786989424
-2021;bilanz;999;bil_derue7_ende;4650047.919254209
-2021;bilanz; BG111_Rente;nachreservierung_ende;0.0
-2021;bilanz; BG113_Risiko;nachreservierung_ende;0.0
-2021;bilanz;999;nachreservierung_ende;0.0
-2021;guv; BG111_Rente;bil_gebuchter_beitrag;2336346.833162761
-2021;guv; BG113_Risiko;bil_gebuchter_beitrag;16099681.48351674
-2021;guv;999;bil_gebuchter_beitrag;18436028.3166795
-2021;guv; BG111_Rente;bil_verdienter_beitrag_nw216;2336346.833162761
-2021;guv; BG113_Risiko;bil_verdienter_beitrag_nw216;16099681.48351674
-2021;guv;999;bil_verdienter_beitrag_nw216;18436028.3166795
-2021;guv; BG113_Risiko;ap;5839419.366063303
-2021;guv; BG111_Rente;ap;395409.95668289886
-2021;guv;999;ap;6234829.322746202
-2021;guv; BG111_Rente;iAK;0.0
-2021;guv; BG113_Risiko;iAK;0.0
-2021;guv;999;iAK;0.0
-2021;guv; BG111_Rente;VK_Stueck;109324.35304005725
-2021;guv; BG113_Risiko;VK_Stueck;539555.9211729595
-2021;guv;999;VK_Stueck;648880.2742130167
-2021;guv; BG111_Rente;bil_derue7_veraenderung;1411127.3616942433
-2021;guv; BG113_Risiko;bil_derue7_veraenderung;1728073.4995573165
-2021;guv;999;bil_derue7_veraenderung;3139200.8612515596
-2021;guv;999;jahresueberschuss;8413117.858468723
-2021;bilanz;999;eigenkapital_ende;4444381.877257481
-2022;bilanz;999;eigenkapital_anfang;4444381.877257481
-2022;bilanz;999;kasse_anfang;0.0
-2022;bilanz; BG111_Rente;bil_derue1_anfang;2050915.3405552665
-2022;bilanz; BG113_Risiko;bil_derue1_anfang;2599132.5786989424
-2022;bilanz;999;bil_derue1_anfang;4650047.919254209
-2022;bilanz; BG111_Rente;bil_derue2_anfang;2050915.3405552665
-2022;bilanz; BG113_Risiko;bil_derue2_anfang;2599132.5786989424
-2022;bilanz;999;bil_derue2_anfang;4650047.919254209
-2022;bilanz; BG111_Rente;bil_derue3_anfang;2050915.3405552665
-2022;bilanz; BG113_Risiko;bil_derue3_anfang;2599132.5786989424
-2022;bilanz;999;bil_derue3_anfang;4650047.919254209
-2022;bilanz; BG111_Rente;bil_derue5_anfang;2050915.3405552665
-2022;bilanz; BG113_Risiko;bil_derue5_anfang;2599132.5786989424
-2022;bilanz;999;bil_derue5_anfang;4650047.919254209
-2022;bilanz; BG111_Rente;bil_derue7_anfang;2050915.3405552665
-2022;bilanz; BG113_Risiko;bil_derue7_anfang;2599132.5786989424
-2022;bilanz;999;bil_derue7_anfang;4650047.919254209
-2022;bilanz; BG111_Rente;bil_derue1_ende;3018694.3861237196
-2022;bilanz; BG113_Risiko;bil_derue1_ende;4496360.043992869
-2022;bilanz;999;bil_derue1_ende;7515054.430116588
-2022;bilanz; BG111_Rente;bil_derue2_ende;3018694.3861237196
-2022;bilanz; BG113_Risiko;bil_derue2_ende;4496360.043992869
-2022;bilanz;999;bil_derue2_ende;7515054.430116588
-2022;bilanz; BG111_Rente;bil_derue3_ende;3018694.3861237196
-2022;bilanz; BG113_Risiko;bil_derue3_ende;4496360.043992869
-2022;bilanz;999;bil_derue3_ende;7515054.430116588
-2022;bilanz; BG111_Rente;bil_derue5_ende;3018694.3861237196
-2022;bilanz; BG113_Risiko;bil_derue5_ende;4496360.043992869
-2022;bilanz;999;bil_derue5_ende;7515054.430116588
-2022;bilanz; BG111_Rente;bil_derue7_ende;3018694.3861237196
-2022;bilanz; BG113_Risiko;bil_derue7_ende;4496360.043992869
-2022;bilanz;999;bil_derue7_ende;7515054.430116588
-2022;bilanz; BG111_Rente;nachreservierung_ende;0.0
-2022;bilanz; BG113_Risiko;nachreservierung_ende;0.0
-2022;bilanz;999;nachreservierung_ende;0.0
-2022;guv; BG111_Rente;bil_gebuchter_beitrag;3438814.333212262
-2022;guv; BG113_Risiko;bil_gebuchter_beitrag;25839864.00746858
-2022;guv;999;bil_gebuchter_beitrag;29278678.340680845
-2022;guv; BG111_Rente;bil_verdienter_beitrag_nw216;3438814.333212262
-2022;guv; BG113_Risiko;bil_verdienter_beitrag_nw216;25839864.00746858
-2022;guv;999;bil_verdienter_beitrag_nw216;29278678.340680845
-2022;guv; BG111_Rente;ap;100700.41833937651
-2022;guv; BG113_Risiko;ap;4874781.410283721
-2022;guv;999;ap;4975481.828623097
-2022;guv; BG111_Rente;iAK;0.0
-2022;guv; BG113_Risiko;iAK;0.0
-2022;guv;999;iAK;0.0
-2022;guv; BG111_Rente;VK_Stueck;182207.2550667621
-2022;guv; BG113_Risiko;VK_Stueck;539555.9211729595
-2022;guv;999;VK_Stueck;721763.1762397216
-2022;guv; BG111_Rente;bil_derue7_veraenderung;967779.0455684531
-2022;guv; BG113_Risiko;bil_derue7_veraenderung;1897227.4652939262
-2022;guv;999;bil_derue7_veraenderung;2865006.5108623793
-2022;guv;999;jahresueberschuss;20716426.824955646
-2022;bilanz;999;eigenkapital_ende;25160808.702213127
+2020;guv; BG111_Rente;bil_gebuchter_beitrag;600000.0
+2020;guv; BG113_Risiko;bil_gebuchter_beitrag;4500000.0
+2020;guv;999;bil_gebuchter_beitrag;5100000.0
+2020;guv; BG111_Rente;bil_verdienter_beitrag_nw216;600000.0
+2020;guv; BG113_Risiko;bil_verdienter_beitrag_nw216;4500000.0
+2020;guv;999;bil_verdienter_beitrag_nw216;5100000.0
+2020;guv; BG111_Rente;ap;270000.0
+2020;guv; BG113_Risiko;ap;4950000.0
+2020;guv;999;ap;5220000.0
+2020;guv; BG111_Rente;iAK;96000.0
+2020;guv; BG113_Risiko;iAK;1440000.0
+2020;guv;999;iAK;1536000.0
+2020;guv; BG111_Rente;VK_Stueck;30000.0
+2020;guv; BG113_Risiko;VK_Stueck;450000.0
+2020;guv;999;VK_Stueck;480000.0
+2020;guv; BG111_Rente;bil_derue7_veraenderung;526698.0
+2020;guv; BG113_Risiko;bil_derue7_veraenderung;726480.0
+2020;guv;999;bil_derue7_veraenderung;1253178.0
+2020;guv;999;jahresueberschuss;-3389178.0
+2020;bilanz;999;eigenkapital_ende;-3289178.0

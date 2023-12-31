@@ -44,7 +44,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="GuV">
     <attribute name="title">
@@ -103,14 +103,17 @@
     <attribute name="title">
      <string>Bilanz</string>
     </attribute>
-    <widget class="QTableWidget" name="tableWidget_Bilanz">
+    <widget class="QPushButton" name="pushButton_bilanzErgebnisse">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>721</width>
-       <height>192</height>
+       <x>20</x>
+       <y>50</y>
+       <width>171</width>
+       <height>131</height>
       </rect>
+     </property>
+     <property name="text">
+      <string>zeige Bilanz ...</string>
      </property>
     </widget>
    </widget>
@@ -228,7 +231,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Verträge</string>
+      <string>Verträge (Liste der Verträge mit den Vertragswerten)</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_vertraegeAusFortschreibung">
@@ -943,7 +946,7 @@
        <rect>
         <x>20</x>
         <y>30</y>
-        <width>21</width>
+        <width>101</width>
         <height>21</height>
        </rect>
       </property>
@@ -959,12 +962,12 @@
        <rect>
         <x>140</x>
         <y>30</y>
-        <width>21</width>
+        <width>101</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>runoff</string>
       </property>
      </widget>
     </widget>
@@ -985,7 +988,7 @@
        <rect>
         <x>20</x>
         <y>11</y>
-        <width>21</width>
+        <width>91</width>
         <height>21</height>
        </rect>
       </property>
@@ -999,14 +1002,14 @@
      <widget class="QRadioButton" name="radioButton_Bu_Runoff">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>139</x>
         <y>10</y>
-        <width>21</width>
+        <width>101</width>
         <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>runoff</string>
       </property>
      </widget>
     </widget>
