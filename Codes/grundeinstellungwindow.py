@@ -236,6 +236,8 @@ class GrundEinstelleungWindow():
             streuungImNG = 'gross'
         elif self.w.radioButton_StreuungImNG_sehrgross.isChecked():
             streuungImNG = 'sehrgross'
+        elif self.w.radioButton_keineStreuungImNeugeschaeft.isChecked():
+            streuungImNG = 'keine Streuung'
         else:
             streuungImNG = 'normal'
             text = 'Grundeinstellungwindow/LeseDatenAusFenster: Die Streuung im Neugeschäft konnte nicht zugerdnet werden. Es wurde daher festgelegt: ' + str(streuungImNG)

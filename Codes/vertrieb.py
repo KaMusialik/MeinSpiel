@@ -20,7 +20,11 @@ class Vertrieb():
         self.optionen_file_grundeinstellungen = f_dict.get('optionen_file_grundeinstellungwindow') #hier stehen die Grunddaten bzw. Marktdaten
         
         self.provisionMarktBu = 0
-        self.provisionMarktRente = 0
+        self.provisionMarktRente = 0   
+        self.meinBeitragZumMarktBu = 0
+        self.meinBeitragZumMarktRente = 0
+        self.meineProvisionZumMarktBu = 0
+        self.meineProvisionZumMarktRente = 0
         self.erwarteteAnzahlRente = 0
         self.erwarteteAnzahlBu = 0
         self.streuungImNG = ''
@@ -48,25 +52,28 @@ class Vertrieb():
             
         return wert 
 
+    
     def LeseMarkDaten(self):
         file = self.optionen_file_grundeinstellungen
          
-        #Wert für erwartete Anzahl Bu:
+        #BU:
+        # Wert für erwartete Anzahl Bu im Markt, dh so viel wird aufgrunf des Markanteils erwartet:
         key = 'anzahlMarktBu'
         wert = self.LeseCsvOptinen(file, key)
         self.erwarteteAnzahlBu = wert
  
-        #Wert für Provison Bu:
+        #Wert für Provison Bu im Vergleich zum Markt:
         key = 'provisionMarktBu'
         wert = self.LeseCsvOptinen(file, key)
         self.provisionMarktBu = wert
- 
-        #Wert für Provison Renten:
+
+        #Rente:
+        #Wert für Provison Renten im Vergleich zum Markt:
         key = 'provisionMarktRente'
         wert = self.LeseCsvOptinen(file, key)
         self.provisionMarktRente = wert
-
-        #Wert für erwartete Anzahl Rente:
+        
+        # Wert für erwartete Anzahl der Rentenverträge im Markt, dh so viel wird aufgrunf des Markanteils erwartet:
         key = 'anzahlMarktRente'
         wert = self.LeseCsvOptinen(file, key)
         self.erwarteteAnzahlRente = wert
@@ -190,9 +197,12 @@ class Vertrieb():
         
         stat_dict = {}
         stat_dict['risiko'] = anzahl_dict.get('streuungImNG')
-        ohs = hs.Hilfe_Statistik(stat_dict)
-        zufallszahl = ohs.NeueZufallszahl()
-        nv = ohs.Phi(zufallszahl)
+        if stat_dict.get('risiko') == 'keine Streuung':  # kein Risiko == keine Streueung. Es sollen die erwartetetn Marktwerte produziert werden
+            nv = 1.0
+        else:  # es wird eine Zuffalszahl generiert, mir der die erwarteten Markwerte bewertete werden
+            ohs = hs.Hilfe_Statistik(stat_dict)
+            zufallszahl = ohs.NeueZufallszahl()
+            nv = ohs.Phi(zufallszahl)
         
         wert = erwarteteAnzahl / beitragZumMarkt * provisionZumMarkt * nv
         
@@ -203,24 +213,31 @@ class Vertrieb():
     
     def SchreibeNeugeschaeft(self, vertrieb_dict):
         #hier wird die Struktur und die Hoehe des Neugeschäfts festgeleht:
+        
         satz_dict={}
         jahr=int(vertrieb_dict.get('jahr'))
         nr=int(self.LeseNummer())
 
         anzahl_dict = {}
         
-        wert_s = vertrieb_dict.get('beitrag_RentenZumMarkt')
-        wert_f = float(wert_s)/100
+        #Rente:
+        # Meine Provision im Vergleich zum Markt:
+        key = 'provision_RentenZumMarkt'
+        wert_s = vertrieb_dict.get(key)
+        wert_f = float(wert_s)/100.0
         wert_s = str(wert_f)
-        anzahl_dict['beitragZumMarkt'] = wert_s
-        
-        anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlRente
-        
-        wert_s = vertrieb_dict.get('provision_RentenZumMarkt')
-        wert_f = float(wert_s)/100
-        wert_s = str(wert_f)
+        self.meineProvisionZumMarktRente = wert_f
         anzahl_dict['provisionZumMarkt'] = wert_s
-        
+
+        key = 'beitrag_RentenZumMarkt'
+        wert_s = vertrieb_dict.get(key)
+        wert_f = float(wert_s)/100.0
+        wert_s = str(wert_f)
+        self.meinBeitragZumMarktRente = wert_f
+        anzahl_dict['beitragZumMarkt'] = wert_s
+    
+        anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlRente
+                
         anzahl_dict['streuungImNG'] = self.streuungImNG
         
         if vertrieb_dict.get('neugeschaeft_Rente') == True:
@@ -294,16 +311,23 @@ class Vertrieb():
             satz_dict['wert'] = wert_s
             self.SchreibeInTabelleVertrieb(satz_dict)
         
-        wert_s = vertrieb_dict.get('beitrag_BuZumMarkt')
-        wert_f = float(wert_s)/100
+        
+        #BU:
+        key = 'beitrag_BuZumMarkt'
+        wert_s = vertrieb_dict.get(key)
+        wert_f = float(wert_s)/100.0
         wert_s = str(wert_f)
+        self.meinBeitragZumMarktBu = wert_f
         anzahl_dict['beitragZumMarkt'] = wert_s
         
         anzahl_dict['erwaerteteAnzahl'] = self.erwarteteAnzahlBu
         
-        wert_s = vertrieb_dict.get('provision_BuZumMarkt')
-        wert_f = float(wert_s)/100
+        # Meine Provision im Vergleich zum Markt:
+        key = 'provision_BuZumMarkt'
+        wert_s = vertrieb_dict.get(key)
+        wert_f = float(wert_s)/100.0
         wert_s = str(wert_f)
+        self.meineProvisionZumMarktRente = wert_f
         anzahl_dict['provisionZumMarkt'] = wert_s
         
         anzahl_dict['streuungImNG'] = self.streuungImNG

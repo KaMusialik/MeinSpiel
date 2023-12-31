@@ -37,11 +37,11 @@ class StatistikWindow():
             
         self.listeStatistikPositionen_dict = {}
     
-    def LesePositionenAusStatistikCSV(self):
+    def LesePositionenAusStatistikCSV(self, feld):
         datei=self.file_statistik
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_statistik_dict)
                 
-        df1 = df.groupby(['name'], as_index=False)['wert'].sum()
+        df1 = df.groupby([feld], as_index=False)['wert'].sum()
         
         pos_liste = []
         
@@ -51,14 +51,14 @@ class StatistikWindow():
         else:
             for index, row in df1.iterrows():
                 
-                name = row['name']
+                name = str(row[feld])
                 pos_liste.append(name)
         
         return pos_liste
               
     def BereiteWerteFuerTableVor(self, filter_dict):
         name = filter_dict.get('position')
-        avbg = filter_dict.get('avbg')
+        produkt = int(filter_dict.get('produkt'))
         
         #hier wird die Statistik in die Tabelle reigeschrieben:
         datei=self.file_statistik
@@ -69,7 +69,11 @@ class StatistikWindow():
         row_labels = ['Anfang', 'Zugang', 'Abgang', 'Ende']
 
         #zuerst müssen die Jahre ermittelt werden, die in der Tabelle existieren
-        df1=df[(df.name == name)].groupby('bis', as_index=False).count()
+        if produkt == 999:  # also alle Produkte müssen betrachtet werden
+            df1=df[(df.name == name)].groupby('bis', as_index=False).count()
+        else:  # hier erfolgt die Einschränkung auf Produkte
+            df1=df[(df.name == name) & (df.produkt == produkt)].groupby('bis', as_index=False).count()
+        
         df2=df1[['bis']]
     
         for index, row in df2.iterrows():
@@ -94,8 +98,13 @@ class StatistikWindow():
                 bis=int(wert_dict.get('bis'))
                 pos=wert_dict.get('position')
                 
-                df1=df[((df.name==name) & (df.von==von) & (df.bis==bis) & (df.position==pos))]
-                df2=df1[['von', 'bis', 'position', 'name', 'wert']].groupby(['von', 'bis', 'position', 'name'], as_index=False).sum()
+                if produkt == 999:  # also alle Produkte müssen betrachtet werden
+                    df1=df[((df.name==name) & (df.von==von) & (df.bis==bis) & (df.position==pos))]
+                    df2=df1[['von', 'bis', 'position', 'name', 'wert']].groupby(['von', 'bis', 'position', 'name'], as_index=False).sum()
+                else:  # hier erfolgt die Einschränkung auf Produkte
+                    df1=df[((df.name==name) & (df.produkt==produkt) &(df.von==von) & (df.bis==bis) & (df.position==pos))]
+                    df2=df1[['von', 'bis', 'position', 'name', 'produkt', 'wert']].groupby(['von', 'bis', 'position', 'name', 'produkt'], as_index=False).sum()
+                
                 
                 if df2.__len__() == 0:
                     #keine Werte gefunden. Es ist nicht schlim. Es kann schon sein:
@@ -163,21 +172,36 @@ class StatistikWindow():
         filter_dict = {}
         position = self.w.comboBox_auswahl.currentText()
         filter_dict['position'] = position
-        avbg = self.w.comboBox_Produktgruppe.currentText()
-        filter_dict['avbg'] = avbg
+        produkt = self.w.comboBox_Produktgruppe.currentText()
+        filter_dict['produkt'] = produkt
         werte = {}
-        werte= self.BereiteWerteFuerTableVor(filter_dict)
+        werte = self.BereiteWerteFuerTableVor(filter_dict)
         self.WerteInTabelle(werte)
     
-    def BestimmeListeStatistikPosiotionen(self):
-        
-        pos_liste = []
-        pos_liste = self.LesePositionenAusStatistikCSV()
-        self.w.comboBox_auswahl.addItems(pos_liste)
     
+    def BestimmeListeStatistikPosiotionen(self):
+        # die Combobox mit den Positionen der Statistik wird befüllt
+        pos_liste = []
+        pos_liste = self.LesePositionenAusStatistikCSV('name')  # hier werden alle existierenden Einträge zu den Positionen gelesen
+        self.w.comboBox_auswahl.addItems(pos_liste)  # und in die Combobox gesetzt
+
+        pos_liste.clear()
+        pos_liste = self.LesePositionenAusStatistikCSV('produkt')  # hier werden alle existierenden Einträge zu den Produkten gelesen
+        # es kann sein, dass die Liste floatwerte enthält. Daher müssen die Nachkomastellen abgeschnietten werden:
+        pos_liste_neu = []
+        pos_liste_neu.append('999')
+        for x in pos_liste:
+            wertListe = x.split('.')
+            pos_liste_neu.append(wertListe[0])
+
+        self.w.comboBox_Produktgruppe.addItems(pos_liste_neu)  # und in die Combobox gesetzt
+
+    
+
     def SchliesseFenster(self):
         self.w.close()
         
+    
     def RufeFensterAuf(self):
         self.w.pushButton_weiter.clicked.connect(self.SchliesseFenster)
         self.w.comboBox_auswahl.activated.connect(self.LeseStatistik)

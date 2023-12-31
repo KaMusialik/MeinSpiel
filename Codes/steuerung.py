@@ -191,6 +191,7 @@ def LegeDefoultEinstellungenfest():
     wSpielwindow.pushButton_GuvWindow.setIcon(gui.QIcon(files_dict.get('file_icon_guvwindow')))
     wSpielwindow.pushButton_GuvWindow.setIconSize(core.QSize(100, 100))
 
+
 def ZeigeGuVTabelleAn():
     
     tabelle = wSpielwindow.tableWidget_GuV
@@ -198,12 +199,14 @@ def ZeigeGuVTabelleAn():
     file_daten = files_dict.get('file_bilanz')
     ozD.SchreibeDatenIntabelle(file_daten)
 
+
 def ZeigeStatistikTabelleAn():
     #Hier wird die Statistik CSV angezeigt
     tabelle = wSpielwindow.tableWidget_StatistikCSV
     ozD = zD.ZeigeDatnInTabelle(tabelle)
     file_daten = files_dict.get('file_system_statistik')
     ozD.SchreibeDatenIntabelle(file_daten)
+
 
 def ZeigeKostenModellTabelleAn():
     #Hier wird die Kosten-Optionentabelle angezeigt
@@ -229,6 +232,7 @@ def LegeLaufzeitAuswahlBeiRentenFestInKa():
         wSpielwindow.comboBox_A1.insertItem(i, str(i))        
         wSpielwindow.comboBox_A2.insertItem(i, str(i))        
         wSpielwindow.comboBox_A3.insertItem(i, str(i)) 
+
 
 def LegeBilanzTabelleAn(obil):
     # hier werden die Ergebnisse der Bilanz in eine Tabelle im Dialog ausgegeben:
@@ -347,26 +351,32 @@ def ZeigeGrafik_Entwicklung_Renten():
     file = files_dict.get('grafik_file_entwicklung_renten')
     ZeigeGrafik(file)
 
+
 def ZeigeWindowGuv():
     oguvW = guvW.GuVWindow(files_dict)
     oguvW.RufeFensterAuf()
+
 
 def ZeigeWindowStatistik():
     osW = sW.StatistikWindow(files_dict)
     osW.RufeFensterAuf()
 
+
 def ZeigeWindowProdukt():
     opW = pW.ProduktWindow(files_dict)
     opW.RufeFensterAuf()
     
+
 def ZeigeWindowVertrag():
     ovW = vW.VertragsWindow(files_dict)
     ovW.RufeFensterAuf()
+
 
 def ZeigeWindowVertraegeAusFortschreibung():
     objekt = vertraegeausfortschreibungwindow.VertraegeAusFortschreibungWindow(files_dict)
     jahr = int(files_dict.get('jahr_aktuell'))
     objekt.RufeFensterAuf(jahr)
+
 
 def LeseAusFensterSpielVertriebEingaben():
     # hier werden die Eingaben zum Thema Neugeschäft aus dem Dialog Spiel ausgelesen:
