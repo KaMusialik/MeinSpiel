@@ -4,7 +4,14 @@ jahr;topf;name;wert
 2020;renten;anfang;0
 2020;renten;anfang;70000.0
 2020;aktien;anfang;30000.0
-2020;renten;ende;70273.88602451341
-2020;renten;zins;273.886024513409
+2020;renten;ende;70439.55593596696
+2020;renten;zins;439.555935966966
 2020;renten;zugang;70000.0
 2020;renten;ablauf;0.0
+2020;999;beitraege;5100000.0
+2020;999;provisionen_ap;5220000.0
+2020;999;kosten;2016000.0
+2020;999;cashflow;-2136000.0
+2020;999;kasse_ende;-2136000.0
+2020;999;kapitalanlagen_ende;70439.55593596696
+2020;999;kapitalertraege;439.555935966966

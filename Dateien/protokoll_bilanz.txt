@@ -31,8 +31,8 @@ bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwe
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'bis': '20201231', 'jahr': 2020, 'rl': 'guv', 'name': 'bil_verdienter_beitrag_nw216', 'avbg': ' BG111_Rente', 'wert': 600000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'bis': '20201231', 'jahr': 2020, 'rl': 'guv', 'name': 'bil_verdienter_beitrag_nw216', 'avbg': ' BG113_Risiko', 'wert': 4500000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'bis': '20201231', 'jahr': 2020, 'rl': 'guv', 'name': 'bil_verdienter_beitrag_nw216', 'avbg': '999', 'wert': 5100000.0}
-bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'ap', 'avbg': ' BG111_Rente', 'wert': '270000.0'}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'ap', 'avbg': ' BG113_Risiko', 'wert': '4950000.0'}
+bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'ap', 'avbg': ' BG111_Rente', 'wert': '270000.0'}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'ap', 'avbg': '999', 'wert': 5220000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'iAK', 'avbg': ' BG111_Rente', 'wert': 96000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'iAK', 'avbg': ' BG113_Risiko', 'wert': 1440000.0}
@@ -40,6 +40,7 @@ bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwe
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'VK_Stueck', 'avbg': ' BG111_Rente', 'wert': 30000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'VK_Stueck', 'avbg': ' BG113_Risiko', 'wert': 450000.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'jahr': 2020, 'name': 'VK_Stueck', 'avbg': '999', 'wert': 480000.0}
+bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'topf': '999', 'jahr': 2020, 'name': 'kapitalanlagen_ende', 'name_fuer_bilanz_csv': 'kapitalanlagen_ende', 'rl': 'bilanz', 'avbg': '999', 'wert': 70439.55593596696}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'jahr': 2020, 'rl': 'bilanz', 'name': 'bil_derue7_anfang', 'avbg': ' BG111_Rente'}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'jahr': 2020, 'rl': 'guv', 'name': 'bil_derue7_veraenderung', 'avbg': ' BG111_Rente', 'wert': 526698.0}
 bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'jahr': 2020, 'rl': 'bilanz', 'name': 'bil_derue7_anfang', 'avbg': ' BG113_Risiko', 'wert': 526698.0}

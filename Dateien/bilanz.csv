@@ -27,8 +27,8 @@ jahr;rl;avbg;name;wert
 2020;guv; BG111_Rente;bil_verdienter_beitrag_nw216;600000.0
 2020;guv; BG113_Risiko;bil_verdienter_beitrag_nw216;4500000.0
 2020;guv;999;bil_verdienter_beitrag_nw216;5100000.0
-2020;guv; BG111_Rente;ap;270000.0
 2020;guv; BG113_Risiko;ap;4950000.0
+2020;guv; BG111_Rente;ap;270000.0
 2020;guv;999;ap;5220000.0
 2020;guv; BG111_Rente;iAK;96000.0
 2020;guv; BG113_Risiko;iAK;1440000.0
@@ -36,6 +36,7 @@ jahr;rl;avbg;name;wert
 2020;guv; BG111_Rente;VK_Stueck;30000.0
 2020;guv; BG113_Risiko;VK_Stueck;450000.0
 2020;guv;999;VK_Stueck;480000.0
+2020;bilanz;999;kapitalanlagen_ende;70439.55593596696
 2020;guv; BG111_Rente;bil_derue7_veraenderung;526698.0
 2020;guv; BG113_Risiko;bil_derue7_veraenderung;726480.0
 2020;guv;999;bil_derue7_veraenderung;1253178.0

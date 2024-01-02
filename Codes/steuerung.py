@@ -43,9 +43,18 @@ files_dict['guvwindow_file'] = files_dict.get('work_dir')+'guvwindow.ui'
 files_dict['bilanzWindow_file'] = files_dict.get('work_dir')+'bilanzWindow.ui'
 files_dict['fortschreibungwindow_file'] = files_dict.get('work_dir')+'fortschreibungwindow.ui'
 
+# icons:
 files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
 files_dict['file_icon_statistikwindow'] = files_dict.get('work_dir')+'iconStatistikWindow.png'
 files_dict['file_icon_guvwindow'] = files_dict.get('work_dir')+'iconGuvWindow.png'
+
+# Kapitalanlagen:
+files_dict['protokoll_file_kapitalanlagen'] = files_dict.get('work_dir') + 'protokoll_kapitalanlagen.txt'
+files_dict['file_kapitalanlagen_csv'] = files_dict.get('work_dir') + 'kapitalanlagen.csv'
+files_dict['file_kapitalanlagen_csv_struktur'] = {'jahr': int, 'topf': str, 'name': str, 'wert': float}
+files_dict['file_kapitalanlagen_renten_csv'] = files_dict.get('work_dir') + 'ka_renten.csv'
+files_dict['file_kapitalanlagen_aktien_csv'] = files_dict.get('work_dir') + 'ka_aktien.csv'
+files_dict['file_kapitalanlagen_sa_csv'] = files_dict.get('work_dir') + 'ka_sa.csv'
 
 files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'
 files_dict['grafik_file_entwicklung_renten'] = files_dict.get('work_dir')+'grafik_renten.png'
@@ -598,6 +607,9 @@ def Steuerung():
         oprovision.BerechneAP(jahr) #hier wird die AP für die policiereten Verträge berechnet
 
         okosten.ErmittleKosten(jahr) #hier werden die Kosten ermittelt
+
+        okap.ErmittleStandKasseAmEnde(jahr)  # hier wird der Stand in der Kasse am Jahresende ermittelt
+        okap.KonsolidiereDieKapitalanlageEnde(jahr)  # hier werden die End-Werte der Kapitalanlage der Aktien und Renten konsoliediert
         
         obil.ErstelleBilanzEnde(jahr)
 

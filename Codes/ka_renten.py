@@ -96,11 +96,11 @@ class KA_Renten(object):
         self.ozsk.Init_ZSK(satz_dict)
     
     def ZeichneRenten(self):
-        datei=self.file_renten_tabelle
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
-        nr=999
-        df1=df[(df.nr == nr) & (df.name == 'anfang')]
-        jahr=[]
+        datei = self.file_renten_tabelle
+        df = pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
+        nr = 999
+        df1 = df[(df.nr == nr) & (df.name == 'anfang')]
+        jahr = []
         for i in range(len(df1.index)):
             index=df1.index[i]
             jjjj=int(df1.at[index, 'jahr'])
@@ -169,7 +169,7 @@ class KA_Renten(object):
         
         fig.tight_layout()
 
-        plt.show()
+        #plt.show()
         file = self.file_renten_grafik
         fig.savefig(file)
     

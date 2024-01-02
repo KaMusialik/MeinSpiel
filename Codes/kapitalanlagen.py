@@ -8,16 +8,25 @@ import ka_renten as ka_rente
 class Kapitalanlagen:
         
     def __init__(self, f_dict):
-        work_dir=f_dict.get('work_dir')
-        file_protokoll=work_dir+'protokoll_kapitalanlagen.txt'
+        file_protokoll = f_dict.get('protokoll_file_kapitalanlagen')
         self.oprot = prot.Protokoll(file_protokoll)
 
-        self.file_kapitalanlagen=work_dir+'kapitalanlagen.csv'
-        self.file_renten_tabelle=work_dir+'ka_renten.csv'
-        self.file_aktien_tabelle=work_dir+'ka_aktien.csv'
-        self.file_sa_tabelle=work_dir+'ka_sa.csv'
+        self.file_kapitalanlagen = f_dict.get('file_kapitalanlagen_csv')
+        self.file_kapitalanlagen_struktur = f_dict.get('file_kapitalanlagen_csv_struktur')
+        self.file_renten_tabelle = f_dict.get('file_kapitalanlagen_renten_csv')
+        self.file_aktien_tabelle = f_dict.get('file_kapitalanlagen_aktien_csv')
+        self.file_sa_tabelle = f_dict.get('file_kapitalanlagen_sa_csv')
+
+        self.file_system_fortschreibung = f_dict.get('file_system_fortschreibung')
+        self.dtype_fortschteibung = f_dict.get('file_system_fortschreibung_struktur')
         
-        self.file_bilanz=f_dict.get('file_bilanz')
+        self.file_provision = f_dict.get('file_provision')
+        self.file_provision_struktur = f_dict.get('file_provision_struktur')
+
+        self.file_kosten = f_dict.get('file_kosten')
+        self.file_kosten_struktur = f_dict.get('file_kosten_struktur')
+
+        self.file_bilanz = f_dict.get('file_bilanz')
 
         self.oka_renten = ka_rente.KA_Renten(f_dict)
         
@@ -30,6 +39,7 @@ class Kapitalanlagen:
     def Init_KA(self, jahr):
         pass
         
+    
     def Init_SA(self, eintrag_dict):
         jahr=eintrag_dict.get('jahr')
         
@@ -70,8 +80,10 @@ class Kapitalanlagen:
         self.SchreibeInSACSV(satz)
         satz.clear()
         
+    
     def ZeichneKapitalanlagen(self, jahr):
         self.oka_renten.ZeichneRenten()
+    
     
     def Fortschreibung(self, jahr):
         self.oka_renten.Fortschreibung(jahr)
@@ -124,6 +136,181 @@ class Kapitalanlagen:
         key_dict['wert']=wert
         self.SchreibeInKapitalanlagenCSV(key_dict)
 
+    
+    def LeseAusFortschreibung(self,key_dict):
+        datei = self.file_system_fortschreibung
+        df = pd.read_csv(datei, sep=";", dtype=self.dtype_fortschteibung)
+        
+        bis = key_dict.get('bis')
+        name = key_dict.get('name')
+
+        #es werden nur die relevanten Positionen genommen:
+        df1 = df[(df.name == name) | (df.name == 'anzahl')]
+
+        #nur die datensätze mit richtigem bis:
+        df2 = df1[df1.bis == int(bis)][['vsnr', 'name', 'wert']]        
+
+        #die Tabelle wird transpniert:
+        df3 = pd.pivot_table(df2, values = 'wert', index = 'vsnr', columns = 'name', aggfunc = 'sum')
+        
+        #aus der pivot-Tabelle wird dateframe erstellet:
+        df4 = df3.reset_index()
+        
+        #Berechnung pro vertrag von dem ausgewählten Feld "name" * anzahl:
+        df5 = df4.assign( wert =  pd.to_numeric(df4[name])* pd.to_numeric(df4['anzahl']))
+        
+        #und jetz in dem Feld wert summieren:
+        wert = df5['wert'].sum()
+
+        return wert        
+
+    
+    def LeseAusProvisionAP(self, key_dict):
+        datei = self.file_provision
+        df = pd.read_csv(datei, sep=";", dtype=self.file_provision_struktur)
+        
+        jahr= int(key_dict.get('jahr'))
+        name = key_dict.get('name')
+        
+        #welche verträge sind betroffen:
+        df1 = df[ ( (df.jahr == jahr) & (df.gevo == 'Neuzugang') & (df.name == name) ) ]
+        df1 = df1.astype({'wert':float})  # Umwandlung des Feldes wert in float
+        wert = df1['wert'].sum()
+
+        return wert
+
+    def KonsolidiereDieKapitalanlageEnde(self, jahr):  # hier werde die Werte der Kapitalanlage zum Ende des Jahres aus Aktien und Renten addiert
+        key_dict = {}
+        
+        # Stände zum Ende des Jahres:
+        # Renten:
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'ende'
+        key_dict['topf'] = 'renten'
+        renten = self.LeseKapitalanlageCSV(key_dict)
+    
+        kapitalanlage_ende = renten  # hier fehlen noch Aktien
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'kapitalanlagen_ende'
+        key_dict['topf'] = '999'
+        key_dict['wert'] = kapitalanlage_ende
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+        # Zinsen bzw. Veränderung der Kapitalanlagen:
+        # Renten:
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'zins'
+        key_dict['topf'] = 'renten'
+        zinsenRenten = self.LeseKapitalanlageCSV(key_dict)
+
+        kapitalertraege = zinsenRenten  # hier fehlen noch Aktien
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'kapitalertraege'
+        key_dict['topf'] = '999'
+        key_dict['wert'] = kapitalertraege
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+    def LeseAusKosten(self, key_dict):
+        datei = self.file_kosten
+        df = pd.read_csv(datei, sep=";", dtype=self.file_kosten_struktur)
+        
+        jahr= int(key_dict.get('jahr'))
+        name = key_dict.get('name')
+        
+        #welche verträge sind betroffen:
+        df1 = df[ ( (df.jahr == jahr) & (df.name == name) ) ]
+        df1 = df1.astype({'wert':float})  # Umwandlung des Feldes wert in float
+        wert = df1['wert'].sum()
+
+        return wert
+
+
+
+    def ErmittleKosten(self, jahr):  # hier werden die Kosten für cf ermittelt
+        key_dict = {}
+        
+        # interne AK (iAK):
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'iAK'
+        iAK = self.LeseAusKosten(key_dict)
+        
+        # Verwaltungskosten (VK_Stück):
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'VK_Stueck'
+        vk_Stueck = self.LeseAusKosten(key_dict)
+
+        wert = iAK + vk_Stueck
+        return wert
+
+    
+    def ErmittleProvisionen(self, jahr):  # hier werden die im GJ gezahlten Provisionen ermittelt 
+        key_dict = {}
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'ap'
+        
+        wert = self.LeseAusProvisionAP(key_dict)
+        return wert
+
+    def ErmittleBeitraege(self, jahr):  # hier werden die Beiträge im GJ ermittelt
+        key_dict = {}
+        
+        bis = str(jahr)+'12'+'31'
+        key_dict['bis'] = bis
+        key_dict['jahr'] = jahr
+        key_dict['name']='bil_verdienter_beitrag_nw216'
+        wert = self.LeseAusFortschreibung(key_dict)  # hier wird der Wert aus der Tabelle Fortschreibung der einzelnen Verträge gelesen
+        return wert
+    
+    
+    def ErmittleStandKasseAmEnde(self, jahr):  # das cashflow des Jahres wird in die Kasse am Ende geschrieben
+        key_dict={}
+
+        #Beiträge:
+        beitraege = self.ErmittleBeitraege(jahr)
+        name='beitraege'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] = beitraege
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+    
+        # Provisionen:
+        provisionen = self.ErmittleProvisionen(jahr)
+        name = 'provisionen_ap'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] = provisionen
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+        # Kosten:
+        kosten = self.ErmittleKosten(jahr)
+        name = 'kosten'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] =kosten
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+        # Cash flow:
+        cf = beitraege - provisionen - kosten
+        name = 'cashflow'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] = cf
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+        # Kasse am Ende des Jahres:
+        name = 'kasse_ende'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] = cf
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+
+
 
     def LeseSACSV(self, key_dict):
         datei=self.file_sa_tabelle
@@ -144,6 +331,7 @@ class Kapitalanlagen:
    
         return wert   
         
+    
     def ZeileLoeschenInSACSV(self, key_dict):
         datei=self.file_sa_tabelle
         
@@ -158,6 +346,7 @@ class Kapitalanlagen:
             text='Kapitalanlage: Eintrag in der Tabelle SA geloescht: jahr='+str(jahr)+' name='+str(name)
             self.oprot.SchreibeInProtokoll(text)
 
+    
     def SchreibeInSACSV(self, eintrag_dict):
         datei=self.file_sa_tabelle
         
@@ -173,6 +362,7 @@ class Kapitalanlagen:
         f.write(text)    
         f.close()       
         
+    
     def LegeKapitalanlagenAn(self):
         datei=self.file_kapitalanlagen
         ocsv=pd.DataFrame()
@@ -439,7 +629,7 @@ class Kapitalanlagen:
 
             
     def SchreibeInKapitalanlagenCSV(self, key_dict):
-        datei=self.file_kapitalanlagen
+        datei = self.file_kapitalanlagen
         
         jahr=key_dict.get('jahr')
         topf=key_dict.get('topf')
@@ -455,15 +645,14 @@ class Kapitalanlagen:
         f.close()       
 
     def LeseKapitalanlageCSV(self, key_dict):
-        datei=self.file_kapitalanlagen
-        df=pd.read_csv(datei, sep=";")
-        df[['jahr', 'topf', 'name', 'wert']] = df[['jahr', 'topf', 'name', 'wert']].astype(str)
+        datei = self.file_kapitalanlagen
+        df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlagen_struktur)
        
         jahr=key_dict.get('jahr')
         topf=key_dict.get('topf')
         name=key_dict.get('name')
  
-        df1 = df[(df.jahr == str(jahr)) & (df.topf==str(topf)) & (df.name==str(name))]
+        df1 = df[(df.jahr == int(jahr)) & (df.topf==str(topf)) & (df.name==str(name))]
         if df1.__len__() == 0:
             wert=0
             text='kapitalanlagen/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin='+str(print(key_dict))

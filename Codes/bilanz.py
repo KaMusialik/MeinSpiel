@@ -40,6 +40,9 @@ class Bilanz(object):
         self.file_kosten = f_dict.get('file_kosten')
         self.file_kosten_struktur = f_dict.get('file_kosten_struktur')
         
+        self.file_kapitalanlagen_csv = f_dict.get('file_kapitalanlagen_csv')
+        self.file_kapitalanlagen_csv_struktur = f_dict.get('file_kapitalanlagen_csv_struktur')
+
         self.LegeBilanzAn()
         
     def Init_Bilanz(self, jahr):
@@ -80,10 +83,12 @@ class Bilanz(object):
         text='Bilanz/LegeBilanzAn: bilanztabelle wurde angelegt: '+str(self.file_bilanz)
         self.oprot.SchreibeInProtokoll(text)
     
+    
     def ErstelleBilanzAnfang(self, jahr):
         self.Eigenkapital_Anfang(jahr)
         self.BilDK_Anfang(jahr)
         
+    
     def LeseBilanzVorjahr(self, key_dict):
         name_alt=key_dict['name']
         name=name_alt+'_ende'
@@ -151,6 +156,7 @@ class Bilanz(object):
         self.SchreibeInBilanzCSV(key_dict)
         #******************************************
             
+    
     def BilDK_Anfang(self, jahr):
         key_dict={}
         key_dict['jahr']=jahr
@@ -180,18 +186,22 @@ class Bilanz(object):
         key_dict['name']='bil_unisex_nachreservierung'
         self.LeseBilanzVorjahr(key_dict)
         
+    
     def ErstelleBilanzEnde(self, jahr):
         self.BilanzPositionenAusFortschreibung(jahr)
         
         self.BilanzPositionenAusProvision(jahr)
         self.BilanzPositionenAusKosten(jahr)
         
+        self.BilanzPositionenAusKapitalanlagen(jahr)  # Kapitalanlagen für die Aktivseite
+
         self.Veraenderungspositionen(jahr)
         
         self.Jahresueberschuss(jahr)
         
         self.Eigenkapital_Ende(jahr)
         
+    
     def Jahresueberschuss(self, jahr):
         key_dict={}
         
@@ -222,12 +232,14 @@ class Bilanz(object):
         key_dict['wert'] = jahresueberschuss
         self.SchreibeInBilanzCSV(key_dict)
     
+    
     def Veraenderungspositionen(self, jahr):
         #hir werden die Positionen festgelegt, für die die Veränderung zum Vorjahr bestimmt werden sollte
         
         name='bil_derue7'
         self.VeraenderungspositionenName(jahr, name)
         
+    
     def VeraenderungspositionenName(self, jahr, name_quelle):
         #hier wird für eine Bilanzposition 'name_quelle' die Veränderung zum Vorjahr ermittelt:
         datei=self.file_bilanz
@@ -271,6 +283,7 @@ class Bilanz(object):
         key_dict['avbg']='999'
         self.SchreibeInBilanzCSV(key_dict)
     
+    
     def BilanzPositionenAusProvision(self, jahr):
         key_dict = {}
         key_dict['rl'] = 'guv'
@@ -279,6 +292,30 @@ class Bilanz(object):
         
         self.LeseAusProvisionAP(key_dict)
 
+    
+    def BilanzPositionenAusKapitalanlagen(self, jahr):
+        key_dict = {}
+        
+        # Stand der Kapitalanlagen am Ende des Jahres:
+        key_dict['topf'] = '999'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'kapitalanlagen_ende'
+        key_dict['name_fuer_bilanz_csv'] = 'kapitalanlagen_ende'
+        key_dict['rl'] = 'bilanz'
+        key_dict['avbg'] = '999'
+        self.LeseAusKapitalanlagen(key_dict)
+
+        # Kapitalerträge:
+        key_dict['topf'] = '999'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'kapitalertraege'
+        key_dict['name_fuer_bilanz_csv'] = 'kapitalertraege'
+        key_dict['rl'] = 'guv'
+        key_dict['avbg'] = '999'
+        self.LeseAusKapitalanlagen(key_dict)
+
+
+    
     def BilanzPositionenAusKosten(self, jahr):
         key_dict = {}
         key_dict['rl'] = 'guv'
@@ -338,7 +375,7 @@ class Bilanz(object):
         df1 = df[(df.jahr == jahr) & (df.rl==str(rl)) & (df.avbg!='999') &(df.name==str(name))]
         
         if df1.empty:
-            wert = 0
+            wert = 0.0
             text = 'Bilanz/KumuliereAlleAvbgInBilanz: Eintrag in der Tabelle nicht gefunden. Keine Kumulierung möglich!'
             self.oprot.SchreibeInProtokoll(text)
         else:
@@ -384,6 +421,35 @@ class Bilanz(object):
         key_dict['avbg']='999'
         self.SchreibeInBilanzCSV(key_dict)
     
+    
+    def LeseAusKapitalanlagen(self, key_dict):
+        datei = self.file_kapitalanlagen_csv
+        df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlagen_csv_struktur)
+
+        jahr = int(key_dict.get('jahr'))
+        topf = key_dict.get('topf')
+        name = key_dict.get('name')
+
+        df1 = df[( (df.jahr == jahr) & (df.name == name) & (df.topf == topf) )]
+
+        if df1.empty:
+            wert = 0.0
+            text = 'bilanz/LeseAusKapitalanlagen: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: '+str(key_dict)
+            self.oprot.SchreibeInProtokoll(text)
+        else:
+            if df1.__len__() != 1:
+                wert = 999999999
+                text = 'bilanz/LeseAusKapitalanlagen: mehrere Eintraeg in der Tabelle gefunden. Es wurde ein Wert von '+str(wert)+ ' verwendet: '+str(key_dict)
+                self.oprot.SchreibeInProtokoll(text)
+            else:
+                index = df1.index[0]
+                wert = df1.at[index, 'wert']
+
+        key_dict['wert'] = wert
+        key_dict['name'] = key_dict.get('name_fuer_bilanz_csv')
+        self.SchreibeInBilanzCSV(key_dict)
+
+
     def LeseAusProvisionAP(self, key_dict):
         datei = self.file_provision
         df = pd.read_csv(datei, sep=";", dtype=self.file_provision_struktur)
