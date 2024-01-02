@@ -114,8 +114,7 @@ files_dict['protokoll_file_vertragswindow'] = files_dict.get('work_dir')+'protok
 
 #Dialog für Verträge aus der Fortschreibung:
 files_dict['protokoll_file_vertraegeausderfortschreibungwindow'] = files_dict.get('work_dir')+'protokoll_vertraegeausderfortschreibungwindow.txt'
-    
-    
+        
 #Kosten:
 files_dict['optionen_file_kosten'] = files_dict.get('work_dir')+'optionen_kosten.csv'
 files_dict['protokoll_file_kosten'] = files_dict.get('work_dir')+'protokoll_kosten.txt'
@@ -463,29 +462,36 @@ def AnteilImSliderRenten():
     wSpielwindow.label_Anteil_Renten.setText(str(wert_renten))
     wSpielwindow.label_Anteil_Aktien.setText(str(wert_aktien))
     
+
 def BeitragProdukteRentenZumMarktmSlider():
     beitrag = wSpielwindow.horizontalSlider_ProduktRenteZumMarkt.value()
     wSpielwindow.label_BeitragRenteZumMarkt.setText(str(beitrag))
+
 
 def BeitragProdukteBuZumMarktmSlider():
     beitrag = wSpielwindow.horizontalSlider_ProduktBuZumMarkt.value()
     wSpielwindow.label_BeitragBuZumMarkt.setText(str(beitrag))
 
+
 def ProvisionRenteZumMarktmSlider():
     beitrag = wSpielwindow.horizontalSlider_ProvisionRenteZumMarkt.value()
     wSpielwindow.label_ProvisionRenteZumMarkt.setText(str(beitrag))
+
 
 def ProvisionBuZumMarktmSlider():
     beitrag = wSpielwindow.horizontalSlider_ProvisionBuZumMarkt.value()
     wSpielwindow.label_ProvisionBuZumMarkt.setText(str(beitrag))
 
+
 def LaufzeitRenteSlider():
     laufzeit = wSpielwindow.horizontalSlider_LaufzeitRente.value()
     wSpielwindow.label_LaufzeitRente.setText(str(laufzeit))
 
+
 def LaufzeitBuSlider():
     laufzeit = wSpielwindow.horizontalSlider_LaufzeitBu.value()
     wSpielwindow.label_LaufzeitBu.setText(str(laufzeit))
+
 
 def KontrolleAnteilRentenInKa():
     anteil1 = wSpielwindow.comboBox_A1.currentText()
@@ -588,7 +594,7 @@ def Steuerung():
 
         okap.Init_SA(ka_sa_dict)
 
-        obil.ErstelleBilanzAnfang(jahr)
+        obil.ErstelleBilanzAnfang(jahr)  # die Endwerte des Vorjahres werden auf den Anfanf des aktuellen GJ fortgetragen
 
         overtrieb.SchreibeNeugeschaeft(vertrieb_dict)
 

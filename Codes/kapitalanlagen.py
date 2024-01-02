@@ -28,14 +28,43 @@ class Kapitalanlagen:
 
         self.file_bilanz = f_dict.get('file_bilanz')
 
+        self.optionen_file_grundeinstellungen = f_dict.get('optionen_file_grundeinstellungwindow')  # hier stehen die Grunddaten
+        self.darlehenszins = 0.0  #dieser Wert wird dann aus den Optionen gelesen und damit verändert
+
         self.oka_renten = ka_rente.KA_Renten(f_dict)
         
         self.LegeKapitalanlagenAn()
         
         self.LegeAktienTabelleAn()
         self.LegeSATabelleAn()
+        self.LeseDatenAusGrundeinstellungen()
 
         
+    def LeseCsvOptinen(self, file, key):
+        df = pd.read_csv(file, sep=";")
+        df1 = df[df.key == key]
+        
+        if df1.empty:
+            wert = 0
+            text = 'Kapitalanlagen/LeseCsvOptinen: Kein Eintrag gefunden. Es wurde null verwendet: key='+str(print(key))
+            print(text)
+        else:
+            index=df1.index[0]
+            wert=df1.at[index, 'wert']
+            
+        return wert 
+
+    
+    def LeseDatenAusGrundeinstellungen(self):
+        file = self.optionen_file_grundeinstellungen
+         
+        # Darlehenszins:
+        key = 'darlehenszins'
+        wert = self.LeseCsvOptinen(file, key)
+        self.darlehenszins = float(wert)
+
+    
+    
     def Init_KA(self, jahr):
         pass
         
@@ -179,6 +208,7 @@ class Kapitalanlagen:
 
         return wert
 
+    
     def KonsolidiereDieKapitalanlageEnde(self, jahr):  # hier werde die Werte der Kapitalanlage zum Ende des Jahres aus Aktien und Renten addiert
         key_dict = {}
         
@@ -225,7 +255,6 @@ class Kapitalanlagen:
         return wert
 
 
-
     def ErmittleKosten(self, jahr):  # hier werden die Kosten für cf ermittelt
         key_dict = {}
         
@@ -251,6 +280,7 @@ class Kapitalanlagen:
         wert = self.LeseAusProvisionAP(key_dict)
         return wert
 
+    
     def ErmittleBeitraege(self, jahr):  # hier werden die Beiträge im GJ ermittelt
         key_dict = {}
         
@@ -302,14 +332,32 @@ class Kapitalanlagen:
         self.SchreibeInKapitalanlagenCSV(key_dict)
 
         # Kasse am Ende des Jahres:
+        
+        # erstmal wird der Kassesatnd zu Beginn des Jahres gelesen:
+        name = 'kasse_anfang'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        kasse_anfang = float(self.LeseKapitalanlageCSV(key_dict))
+
+        # Zinsen, fass die Kasse zu Beginn negativ war:
+        zinsenAufKasse = kasse_anfang * self.darlehenszins
+        name = 'zinsenAufKasse'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = name
+        key_dict['topf'] = '999'
+        key_dict['wert'] = zinsenAufKasse
+        self.SchreibeInKapitalanlagenCSV(key_dict)
+
+        kasse_endeVorCF = kasse_anfang + zinsenAufKasse
+        kasse_ende = kasse_endeVorCF + cf
+        
         name = 'kasse_ende'
         key_dict['jahr'] = jahr
         key_dict['name'] = name
         key_dict['topf'] = '999'
-        key_dict['wert'] = cf
+        key_dict['wert'] = kasse_ende
         self.SchreibeInKapitalanlagenCSV(key_dict)
-
-
 
 
     def LeseSACSV(self, key_dict):
@@ -376,6 +424,7 @@ class Kapitalanlagen:
         text='Kapitalanlegen: Tabelle fuer die Kapitalanlagen wurde angelegt: '+str(self.file_kapitalanlagen)
         self.oprot.SchreibeInProtokoll(text)
 
+    
     def LegeAktienTabelleAn(self):
         datei=self.file_aktien_tabelle
         ocsv=pd.DataFrame()
@@ -390,6 +439,7 @@ class Kapitalanlagen:
         
         text='Kapitalanlegen: Tabelle fuer die Aktien wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)
+    
     
     def LeseAktienCSV(self, key_dict):
         datei=self.file_aktien_tabelle
@@ -410,6 +460,7 @@ class Kapitalanlagen:
        
         return float(wert)   
 
+    
     def ZeileLoeschenInAktienCSV(self, key_dict):
         datei=self.file_aktien_tabelle
         
@@ -427,6 +478,7 @@ class Kapitalanlagen:
             text='Kapitalanlage: Eintrag in der Bilanztabelle geloescht: jahr='+str(jahr)+' von='+str(von)+' bis='+str(bis)+' status='+str(status)+' name='+str(name)
             self.oprot.SchreibeInProtokoll(text)
 
+    
     def SchreibeInAktienCSV(self, eintrag_dict):
         datei=self.file_aktien_tabelle
         
@@ -446,6 +498,7 @@ class Kapitalanlagen:
         f.write(text)    
         f.close()       
 
+    
     def LegeSATabelleAn(self):
         datei=self.file_sa_tabelle
         ocsv=pd.DataFrame()
@@ -458,88 +511,94 @@ class Kapitalanlagen:
         text='Kapitalanlegen: Tabelle fuer die SA wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)
 
-    def Beginn(self, jahr):
+    
+    def Beginn(self, jahr):  # Hier werden die Anfangswerte der Bilanz der Kapitalanlage zusammengestellt
         self.oka_renten.Beginn(jahr)
         
         key_dict={}
         key_ka_dict={}
         key_renten_dict={}
         
-        name='kasse_anfang'
-        key_dict['rl']='bilanz'
-        key_dict['name']=name
-        key_dict['jahr']=jahr
-        key_dict['avbg']='999'
+        # Kasse_anfang. Dieser Wert steht schon in der Bilanz_Anfang 
+        name = 'kasse_anfang'
+        key_dict['rl'] = 'bilanz'
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr
+        key_dict['avbg'] = '999'
         kasse_anfang=self.LeseBilanzCSV(key_dict)
         
-        key_ka_dict['jahr']=jahr
-        key_ka_dict['name']=name
-        key_ka_dict['topf']='999'
-        key_ka_dict['wert']=kasse_anfang
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = name
+        key_ka_dict['topf'] = '999'
+        key_ka_dict['wert'] = kasse_anfang
         self.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
         name='umbuchung_von_kasse_zu_ka_zugang'
-        key_ka_dict['jahr']=jahr
-        key_ka_dict['name']=name
-        key_ka_dict['topf']='999'
-        key_ka_dict['wert']=kasse_anfang
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = name
+        key_ka_dict['topf'] = '999'
+        if kasse_anfang > 0:  # nur wenn etwas positives in der Kasse ist, wird es in die KA umgebucht
+            key_ka_dict['wert'] = kasse_anfang
+        else:
+            key_ka_dict['wert'] = 0
+
         self.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
         bis_vj = str(int(jahr-1))+'1231'
         von_vj = str(int(jahr-1))+'0101'
         
-        key_renten_dict['jahr']=int(jahr)-1
-        key_renten_dict['nr']=999
-        key_renten_dict['von']=von_vj
-        key_renten_dict['bis']=bis_vj
-        key_renten_dict['name']='ende'
-        wert= self.oka_renten.WertAusRentenTabelle(key_renten_dict)
-        name='anfang'
-        key_ka_dict['jahr']=jahr
-        key_ka_dict['name']=name
-        key_ka_dict['topf']='renten'
-        key_ka_dict['wert']=wert
+        key_renten_dict['jahr'] = int(jahr)-1
+        key_renten_dict['nr'] = 999
+        key_renten_dict['von'] = von_vj
+        key_renten_dict['bis'] = bis_vj
+        key_renten_dict['name'] = 'ende'
+        wert = self.oka_renten.WertAusRentenTabelle(key_renten_dict)
+        name = 'anfang'
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = name
+        key_ka_dict['topf'] = 'renten'
+        key_ka_dict['wert'] = wert
         self.SchreibeInKapitalanlagenCSV(key_ka_dict)
 
         self.UmschichteKapitalanlagen(jahr)
     
     def UmschichteKapitalanlagen(self, jahr):
-        ka_dict={}
-        ka_renten_dict={}
-        ka_aktien_dict={}
-        sa_dict={}
+        ka_dict = {}
+        ka_renten_dict = {}
+        ka_aktien_dict = {}
+        sa_dict = {}
         
-        ka_dict['jahr']=jahr
-        ka_dict['name']='umbuchung_von_kasse_zu_ka_zugang'
-        ka_dict['topf']='999'
+        ka_dict['jahr'] = jahr
+        ka_dict['name'] = 'umbuchung_von_kasse_zu_ka_zugang'
+        ka_dict['topf'] = '999'
         umbuchung=self.LeseKapitalanlageCSV(ka_dict)
 
-        ka_dict['jahr']=jahr
-        ka_dict['name']='anfang'
-        ka_dict['topf']='999'
-        ka_dict['topf']='renten'
+        ka_dict['jahr'] = jahr
+        ka_dict['name'] = 'anfang'
+        ka_dict['topf'] = '999'
+        ka_dict['topf'] = 'renten'
         ka_renten_anfang=self.LeseKapitalanlageCSV(ka_dict)
 
-        ka_dict['jahr']=jahr
-        ka_dict['name']='anfang'
-        ka_dict['topf']='aktien'
-        ka_aktien_anfang=self.LeseKapitalanlageCSV(ka_dict)
+        ka_dict['jahr'] = jahr
+        ka_dict['name'] = 'anfang'
+        ka_dict['topf'] = 'aktien'
+        ka_aktien_anfang = self.LeseKapitalanlageCSV(ka_dict)
     
-        sa_dict['jahr']=jahr
-        sa_dict['name']='anteil_renten'
-        anteil_renten=float(self.LeseSACSV(sa_dict))
+        sa_dict['jahr'] = jahr
+        sa_dict['name'] = 'anteil_renten'
+        anteil_renten = float(self.LeseSACSV(sa_dict))
         sa_dict.clear()        
 
-        sa_dict['jahr']=jahr
-        sa_dict['name']='anteil_aktien'
-        anteil_aktien=float(self.LeseSACSV(sa_dict))
+        sa_dict['jahr'] = jahr
+        sa_dict['name'] = 'anteil_aktien'
+        anteil_aktien = float(self.LeseSACSV(sa_dict))
         sa_dict.clear()        
         
-        ka_anfang=ka_renten_anfang+ka_aktien_anfang+umbuchung
-        umbuchung_renten=anteil_renten*umbuchung
-        umbuchung_aktien=anteil_aktien*umbuchung
+        ka_anfang = ka_renten_anfang + ka_aktien_anfang + umbuchung
+        umbuchung_renten = anteil_renten * umbuchung
+        umbuchung_aktien = anteil_aktien * umbuchung
         
-        max_betrag_aktien=anteil_aktien*ka_anfang
+        max_betrag_aktien = anteil_aktien * ka_anfang
         if ka_aktien_anfang+umbuchung_aktien <= max_betrag_aktien:
             #man kann noch mehr zu aktien verschieben:
             verschiebung_zu_aktien=max(max_betrag_aktien-(ka_aktien_anfang+umbuchung_aktien), 0)
@@ -587,9 +646,11 @@ class Kapitalanlagen:
             self.oka_renten.KaufeRenten(jahr, umbuchung_renten)
         else:
             self.VerkaufeRenten(jahr, umbuchung_renten)
-            
+
+
     def VerkaufeAktien(self, jahr, betrag):
         pass
+    
     
     def KaufeAktien(self, jahr, betrag):
         aktien_dict={}
@@ -644,6 +705,7 @@ class Kapitalanlagen:
         f.write(text)    
         f.close()       
 
+    
     def LeseKapitalanlageCSV(self, key_dict):
         datei = self.file_kapitalanlagen
         df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlagen_struktur)

@@ -1,2 +1,26 @@
 GuVWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/bilanz.csv existiert
 GuVWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/guvwindow.ui existiert
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2020', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG111_Rente', 'jahr': '2021', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2020', 'name': 'jahresueberschuss'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'kapitalertraege'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'zinsAufKasse'}
+guvwindow/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: {'rl': 'guv', 'avbg': ' BG113_Risiko', 'jahr': '2021', 'name': 'jahresueberschuss'}

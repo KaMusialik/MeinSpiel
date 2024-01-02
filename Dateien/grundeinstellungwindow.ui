@@ -19,7 +19,7 @@
      <x>9</x>
      <y>170</y>
      <width>952</width>
-     <height>15</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="font">
@@ -276,7 +276,7 @@
     <rect>
      <x>9</x>
      <y>30</y>
-     <width>952</width>
+     <width>261</width>
      <height>117</height>
     </rect>
    </property>
@@ -383,6 +383,61 @@
    <property name="icon">
     <iconset>
      <normaloff>iconInfo.png</normaloff>iconInfo.png</iconset>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>394</x>
+     <y>30</y>
+     <width>141</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Der Darlehenszins wird nur dann benötigt, wenn die Kasse zu Beginn der Geschäftsjahr negativ ist. Die Kasse wird mit diesem Wert verzinst. Es stellt also eine Art Darlehen dar. Mit einem positiven cash flow wird das Darlehen getilgt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string>Darlehenszins:</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider_Darlehenszins">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>60</y>
+     <width>160</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_Darlehenszins">
+   <property name="geometry">
+    <rect>
+     <x>556</x>
+     <y>55</y>
+     <width>41</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>606</x>
+     <y>55</y>
+     <width>68</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>in %</string>
    </property>
   </widget>
  </widget>

@@ -87,7 +87,8 @@ class Bilanz(object):
     def ErstelleBilanzAnfang(self, jahr):
         self.Eigenkapital_Anfang(jahr)
         self.BilDK_Anfang(jahr)
-        
+        self.Kapitalanlagen_Anfang(jahr)        
+    
     
     def LeseBilanzVorjahr(self, key_dict):
         name_alt=key_dict['name']
@@ -117,6 +118,46 @@ class Bilanz(object):
                 self.SchreibeInBilanzCSV(key_dict)
                 
     
+    def Kapitalanlagen_Anfang(self, jahr):  # Initialisierung der Bilanz zum Beginn des GJ
+        key_dict={}
+        
+        #kasse_ende:
+        key_dict.clear()
+        name = 'kasse_ende'
+        avbg = '999'
+        rl = 'bilanz'
+        key_dict['name'] = name
+        key_dict['avbg'] = avbg
+        key_dict['jahr'] = jahr-1 
+        key_dict['rl'] = rl
+        key_dict['wert'] = self.LeseBilanzCSV(key_dict)
+
+        name='kasse_anfang'
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr
+
+        self.SchreibeInBilanzCSV(key_dict)
+        #******************************************
+   
+        # Kapitalanlagen_ende:
+        key_dict.clear()
+        name = 'kapitalanlagen_ende'
+        avbg = '999'
+        rl = 'bilanz'
+        key_dict['name'] = name
+        key_dict['avbg'] = avbg
+        key_dict['jahr'] = jahr-1 
+        key_dict['rl'] = rl
+        key_dict['wert'] = self.LeseBilanzCSV(key_dict)
+
+        name='kapitalanlagen_anfang'
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr
+
+        self.SchreibeInBilanzCSV(key_dict)
+        #******************************************
+
+
     def Eigenkapital_Anfang(self, jahr):       
         key_dict={}
 
@@ -138,24 +179,6 @@ class Bilanz(object):
         self.SchreibeInBilanzCSV(key_dict)
         #*******************************************
         
-        #kasse_ende:
-        key_dict.clear()
-        name='kasse_ende'
-        avbg='999'
-        rl='bilanz'
-        key_dict['name']=name
-        key_dict['avbg']=avbg
-        key_dict['jahr']=jahr-1 
-        key_dict['rl']=rl
-        key_dict['wert']=self.LeseBilanzCSV(key_dict)
-
-        name='kasse_anfang'
-        key_dict['name']=name
-        key_dict['jahr']=jahr
-
-        self.SchreibeInBilanzCSV(key_dict)
-        #******************************************
-            
     
     def BilDK_Anfang(self, jahr):
         key_dict={}
@@ -224,9 +247,14 @@ class Bilanz(object):
         key_dict['name'] = 'VK_Stueck'
         VK_Stueck = float(self.LeseBilanzCSV(key_dict))
         
-        
-        
-        jahresueberschuss = gebbtg - veranderung_derue - ap - iAK - VK_Stueck
+        key_dict['name'] = 'kapitalertraege'
+        kapitalertraege = float(self.LeseBilanzCSV(key_dict))
+
+        key_dict['name'] = 'zinsAufKasse'
+        zinsAufKasse = float(self.LeseBilanzCSV(key_dict))
+
+    
+        jahresueberschuss = gebbtg - veranderung_derue - ap - iAK - VK_Stueck + kapitalertraege + zinsAufKasse
         
         key_dict['name'] = 'jahresueberschuss'
         key_dict['wert'] = jahresueberschuss
@@ -305,6 +333,15 @@ class Bilanz(object):
         key_dict['avbg'] = '999'
         self.LeseAusKapitalanlagen(key_dict)
 
+        # Stand Kasse am Ende des Jahres:
+        key_dict['topf'] = '999'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'kasse_ende'
+        key_dict['name_fuer_bilanz_csv'] = 'kasse_ende'
+        key_dict['rl'] = 'bilanz'
+        key_dict['avbg'] = '999'
+        self.LeseAusKapitalanlagen(key_dict)
+
         # Kapitalerträge:
         key_dict['topf'] = '999'
         key_dict['jahr'] = jahr
@@ -313,7 +350,15 @@ class Bilanz(object):
         key_dict['rl'] = 'guv'
         key_dict['avbg'] = '999'
         self.LeseAusKapitalanlagen(key_dict)
-
+        
+        # Kapitalerträge/Darlehenszins auf Kasse zu Beginn des Jahres:
+        key_dict['topf'] = '999'
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'zinsAufKasse'
+        key_dict['name_fuer_bilanz_csv'] = 'zinsAufKasse'
+        key_dict['rl'] = 'guv'
+        key_dict['avbg'] = '999'
+        self.LeseAusKapitalanlagen(key_dict)
 
     
     def BilanzPositionenAusKosten(self, jahr):
@@ -393,6 +438,7 @@ class Bilanz(object):
        
         return wert   
     
+
     def LeseAusKosten(self, key_dict):
         datei = self.file_kosten
         struktur = self.file_kosten_struktur
@@ -492,6 +538,7 @@ class Bilanz(object):
         key_dict['avbg']='999'
         self.SchreibeInBilanzCSV(key_dict)
 
+
     def LeseAusFortschreibung(self,key_dict):
         datei = self.file_system_fortschreibung
         df = pd.read_csv(datei, sep=";", dtype=self.dtype_fortschteibung)
@@ -556,6 +603,7 @@ class Bilanz(object):
         
         self.SchreibeInBilanzCSV(key_dict)
         
+
     def LeseBilanzCSV(self, key_dict):
         datei=self.file_bilanz
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
@@ -582,6 +630,7 @@ class Bilanz(object):
 
         return float(wert)   
 
+
     def LeseStartBilanzCSV(self, key_dict):
         datei=self.file_bilanz_start
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic_start)
@@ -602,6 +651,7 @@ class Bilanz(object):
        
         return wert   
     
+
     def SchreibeInBilanzCSV(self, key_dict):
         datei=self.file_bilanz
         
@@ -619,6 +669,7 @@ class Bilanz(object):
         f.write(text)    
         f.close()       
         
+
     def ZeileLoeschenInBilanzCSV(self, key_dict):
         datei=self.file_bilanz
         

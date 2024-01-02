@@ -46,6 +46,8 @@ class GuVWindow():
                                    'interne AK':('iAK', 51),
                                    'VK Stueck':('VK_Stueck', 52),
                                    'Veränderung der Deckungsrückstellung': ('bil_derue7_veraenderung', 100),
+                                   'Kapitalerträge': ('kapitalertraege', 201),
+                                   'Darlehenszins': ('zinsAufKasse', 202),
                                    'Jahresüberschuss':('jahresueberschuss', 999)
                                    }
 

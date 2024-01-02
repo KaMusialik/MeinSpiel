@@ -48,11 +48,24 @@ class GrundEinstelleungWindow():
             
         self.ohs = hs.ZahlenFormatieren()
     
+        startwertDarlehenszins = 5
+        self.w.horizontalSlider_Darlehenszins.setMinimum(0)
+        self.w.horizontalSlider_Darlehenszins.setMaximum(10)
+        self.w.horizontalSlider_Darlehenszins.setValue(int(startwertDarlehenszins))
+        self.w.horizontalSlider_Darlehenszins.valueChanged.connect(self.DarlehenszinsSlider)
+        self.w.label_Darlehenszins.setText(str(startwertDarlehenszins))
+
+
         self.infoDict = {}
         verzeichnis = f_dict.get('work_dir') + 'Dokumente/'
         self.infoDict['RisikoInKapitalanlage'] = verzeichnis + 'Dialog_1_RisikoInDerKapitalanlage.pdf'
         self.w.pushButton_Info_RisikoInKapitalanlage.clicked.connect(self.InfoRisikoInKapitalanlage)
         self.w.setWindowTitle = 'Einstellungen/Startparameter'
+
+    
+    def DarlehenszinsSlider(self):
+        betrag = self.w.horizontalSlider_Darlehenszins.value()
+        self.w.label_Darlehenszins.setText(str(betrag))
 
     def ZeigeStartWerte(self):
         
@@ -258,6 +271,16 @@ class GrundEinstelleungWindow():
         self.oopt.SchreibeInOptionen(key, text)
         
         ### Ende Nachreservierung
+        
+        ### Darlehenszins:
+        key = 'darlehenszins'
+        wert = float(self.w.label_Darlehenszins.text())/100.0
+        text = str(wert)   
+        self.oopt.SchreibeInOptionen(key, text)
+
+        ### Ende Darlehenszins
+        
+        
         
         self.SchliesseFenster()
     

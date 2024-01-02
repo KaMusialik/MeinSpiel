@@ -44,7 +44,8 @@ class BilanzWindow():
         self.listeDerPositionenPassivSeite = {'Eigenkapital': ('eigenkapital_ende', 1),
                                             'Deckungsrüuekstellung':('bil_derue7_ende', 100),
                                             }
-        self.listeDerPositionenAktivSeite = {'Kapitalanlagen': ('kapitalanlagen_ende', 1001)
+        self.listeDerPositionenAktivSeite = {'Kapitalanlagen': ('kapitalanlagen_ende', 1001),
+                                             'Kasse': ('kasse_ende', 1101)
                                             }
         
         self.w.setWindowTitle('Ergebnisse der Bilanz')
@@ -97,7 +98,7 @@ class BilanzWindow():
         anzahlDerJahre = len(jahre_dict)
         self.w.tableWidget_Bilanz.setColumnCount(anzahlDerJahre+1)
         
-        anzahlDerPositionen = len(self.listeDerPositionenPassivSeite) + 1 + len(self.listeDerPositionenAktivSeite)
+        anzahlDerPositionen = len(self.listeDerPositionenPassivSeite) + 2 + len(self.listeDerPositionenAktivSeite)
         self.w.tableWidget_Bilanz.setRowCount(anzahlDerPositionen+1)
         
         key_dict = {}
@@ -127,6 +128,26 @@ class BilanzWindow():
             self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
             self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor(193, 255, 193))
 
+        # Summe der Passivseite einfügen:
+        irow += 1
+        wert = 'Summe Passiva'
+        self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
+        self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor('gray'))
+
+        #Überschriften für die Positione der Aktivseite:
+        for keyPosition, wertPosition in self.listeDerPositionenAktivSeite.items():    
+            irow += 1
+            wert = keyPosition
+            self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
+            self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor(193, 255, 193))
+
+        # Summe der Aktivseite einfügen:
+        irow += 1
+        wert = 'Summe aktiva'
+        self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
+        self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor('gray'))
+        
+        
         #Werte in die Tabelle schreiben:       
         irow = 0
         icol = 0      
@@ -136,13 +157,38 @@ class BilanzWindow():
             icol += 1
             irow = 0
         
+            # Passiseite:
+            summe = 0.0
             for keyPosition, wertPosition in self.listeDerPositionenPassivSeite.items():
                 irow += 1
                 key_dict['name'] = wertPosition[0]
                 wert_f = float(self.LeseBilanzCSV(key_dict))
+                summe += wert_f
                 wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
                 self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(wert_s))
             
+            # Summer der Passiva ausgeben:
+            irow += 1
+            wert = ohs.FloatZuStgMitTausendtrennzeichen(summe, 1)
+            self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
+            self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor('gray'))
+    
+            # Aktivseite:    
+            summe = 0.0
+            for keyPosition, wertPosition in self.listeDerPositionenAktivSeite.items():
+                irow += 1
+                key_dict['name'] = wertPosition[0]
+                wert_f = float(self.LeseBilanzCSV(key_dict))
+                summe += wert_f
+                wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+                self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(wert_s))
+            
+            # Summer der Aktivseite ausgeben:
+            irow += 1
+            wert = ohs.FloatZuStgMitTausendtrennzeichen(summe, 1)
+            self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))
+            self.w.tableWidget_Bilanz.item(irow, icol).setBackground(QtGui.QColor('gray'))
+
     
     def LeseBilanzCSV(self, key_dict):
         datei = self.file_bilanz
