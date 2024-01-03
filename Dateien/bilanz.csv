@@ -37,16 +37,16 @@ jahr;rl;avbg;name;wert
 2020;guv; BG111_Rente;VK_Stueck;30000.0
 2020;guv; BG113_Risiko;VK_Stueck;450000.0
 2020;guv;999;VK_Stueck;480000.0
-2020;bilanz;999;kapitalanlagen_ende;100856.48471697592
+2020;bilanz;999;kapitalanlagen_ende;100707.79434570111
 2020;bilanz;999;kasse_ende;-2031000.0
-2020;guv;999;kapitalertraege;856.48471697592
+2020;guv;999;kapitalertraege;707.7943457011299
 2020;guv;999;zinsAufKasse;0.0
 2020;guv; BG111_Rente;bil_derue7_veraenderung;526698.0
 2020;guv; BG113_Risiko;bil_derue7_veraenderung;726480.0
 2020;guv;999;bil_derue7_veraenderung;1253178.0
-2020;guv;999;jahresueberschuss;-3388321.515283024
-2020;bilanz;999;eigenkapital_ende;-3288321.515283024
-2021;bilanz;999;eigenkapital_anfang;-3288321.515283024
+2020;guv;999;jahresueberschuss;-3388470.205654299
+2020;bilanz;999;eigenkapital_ende;-3288470.205654299
+2021;bilanz;999;eigenkapital_anfang;-3288470.205654299
 2021;bilanz; BG111_Rente;bil_derue1_anfang;526698.0
 2021;bilanz; BG113_Risiko;bil_derue1_anfang;726480.0
 2021;bilanz;999;bil_derue1_anfang;1253178.0
@@ -63,7 +63,7 @@ jahr;rl;avbg;name;wert
 2021;bilanz; BG113_Risiko;bil_derue7_anfang;726480.0
 2021;bilanz;999;bil_derue7_anfang;1253178.0
 2021;bilanz;999;kasse_anfang;-2031000.0
-2021;bilanz;999;kapitalanlagen_anfang;100856.48471697592
+2021;bilanz;999;kapitalanlagen_anfang;100707.79434570111
 2021;bilanz; BG111_Rente;bil_derue1_ende;1580094.0
 2021;bilanz; BG113_Risiko;bil_derue1_ende;2179440.0
 2021;bilanz;999;bil_derue1_ende;3759534.0
@@ -97,12 +97,12 @@ jahr;rl;avbg;name;wert
 2021;guv; BG111_Rente;VK_Stueck;30000.0
 2021;guv; BG113_Risiko;VK_Stueck;1350000.0
 2021;guv;999;VK_Stueck;1380000.0
-2021;bilanz;999;kapitalanlagen_ende;101721.67609715596
+2021;bilanz;999;kapitalanlagen_ende;101421.96942226031
 2021;bilanz;999;kasse_ende;8700000.0
-2021;guv;999;kapitalertraege;865.1913801800532
+2021;guv;999;kapitalertraege;714.1750765591948
 2021;guv;999;zinsAufKasse;0.0
 2021;guv; BG111_Rente;bil_derue7_veraenderung;1053396.0
 2021;guv; BG113_Risiko;bil_derue7_veraenderung;1452960.0
 2021;guv;999;bil_derue7_veraenderung;2506356.0
-2021;guv;999;jahresueberschuss;6194509.19138018
-2021;bilanz;999;eigenkapital_ende;2906187.6760971565
+2021;guv;999;jahresueberschuss;6194358.175076559
+2021;bilanz;999;eigenkapital_ende;2905887.9694222603

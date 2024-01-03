@@ -21,6 +21,7 @@ class Kosten():
         self.file_system_fortfreibung = f_dict.get('file_system_fortschreibung')
         self.file_system_fortschteibung_struktur = f_dict.get('file_system_fortschreibung_struktur')
     
+    
     def LegeTabelleKostenAn(self):
         datei = self.file_kosten
         ocsv = pd.DataFrame()
@@ -36,6 +37,7 @@ class Kosten():
         text='Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)
         
+    
     def LegeFileKosten(self):
         datei= Path(self.file_kosten)
         if datei.is_file():
@@ -70,6 +72,7 @@ class Kosten():
                     
         return liste
     
+    
     def LeseVertragAusFortschreibung(self, vtg_dict):
         datei = self.file_system_fortfreibung
         struktur = self.file_system_fortschteibung_struktur
@@ -92,6 +95,7 @@ class Kosten():
 
         return vtg_dict
     
+    
     def LeseAusOptionenCSV(self, key_dict):
         datei = self.optionen_file_kosten
         df = pd.read_csv(datei, sep=";")
@@ -111,6 +115,7 @@ class Kosten():
  
         return wert
 
+    
     def LeseAusKostenCSV(self, key_dict):
         datei = self.file_kosten
         struktur = self.file_kosten_struktur
@@ -134,6 +139,7 @@ class Kosten():
  
         return wert
     
+    
     def Rechne_iAK(self, vtg_dict):
         key_dict = {}
         key_dict['avbg'] = vtg_dict.get('avbg')
@@ -147,6 +153,7 @@ class Kosten():
  
         
         return vtg_dict
+    
     
     def SchreibeInKosten(self, eintrag_dict):
         datei = self.file_kosten
@@ -163,6 +170,7 @@ class Kosten():
         f.write(text)    
         f.close()     
 
+    
     def RechneVerwaltungskostenStueck(self, vtg_dict):
         key_dict = {}
         key_dict['avbg'] = vtg_dict.get('avbg')
@@ -176,17 +184,16 @@ class Kosten():
         return vtg_dict
 
     
-    
     def ErmittleKosten(self, jahr):
         listeVertraege = []
-        listeVertraege = self.ErmittleListeDerAktivenVertraege(jahr)
+        listeVertraege = self.ErmittleListeDerAktivenVertraege(jahr)  # Liste aller aktiven Verträge
         
         eintrag_dict = {}
         vtg_dict = {}    
         vtg_dict['jahr'] = str(jahr)
         eintrag_dict['jahr'] = str(jahr)
         
-        for vsnr in listeVertraege:
+        for vsnr in listeVertraege:  # jetzt werden aller aktiven aus der Liste nacheinander abgearbeitet:
             vtg_dict['vsnr'] = str(vsnr)
             eintrag_dict['vsnr'] = str(vsnr)
             vtg_dict = self.LeseVertragAusFortschreibung(vtg_dict)

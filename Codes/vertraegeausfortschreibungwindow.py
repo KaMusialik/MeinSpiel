@@ -42,9 +42,45 @@ class VertraegeAusFortschreibungWindow():
             text = 'VertraegeAusFortschreibungWindow/init: Die Datei ' +self.file_ui+ ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
 
+        self.w.setWindowTitle('Verträge aus der Fortschreibung')
+
+    
+    def VsnrDictZuTree(self, vsnrDict):
+        anzahlDerEintraege = len(vsnrDict)
+        if anzahlDerEintraege == 0:
+            print(f"VsnrDictZuTree: keine Einträge vorhanden: {vsnrDict}")
+            return
+
+        self.w.treeWidget_vsnrDict.clear()
+        self.w.treeWidget_vsnrDict.setHeaderLabels(["Name", "Wert"])
+
+        items = []
+        for key, value in vsnrDict.items():
+            item = self.GetChildTreeAusDict(key, value)
+            items.append(item)
+
+        self.w.treeWidget_vsnrDict.insertTopLevelItems(0, items)
+
+    def GetChildTreeAusDict(self, key, myDict):
+        if isinstance(myDict, dict):
+            
+            item = QtWidgets.QTreeWidgetItem([key])
+
+            for keyDict, valueDict in myDict.items():
+                child = self.GetChildTreeAusDict(keyDict, valueDict)
+                item.addChild(child)
+
+            return item
+
+        else:
+            #print(f'GetChildTreeAusDict: es wird ein Dictonary erwartet. Es wurde aber übertragen: {myDict}')
+            item = QtWidgets.QTreeWidgetItem([key, str(myDict)])
+            return item
+        
+        
     def LeseVertrag(self):
         #hier werden alle gefilterte Informationen zum Vertrag ausgegeben:
-        
+    
         #lese Filter:    
         vsnr = str(self.w.comboBox_vertrag.currentText())
         
@@ -54,13 +90,29 @@ class VertraegeAusFortschreibungWindow():
         df = pd.read_csv(datei, sep=";", dtype = struktur)
         df1 = df[( (df.vsnr == vsnr) )]
         
-        df2 = df1.groupby((['von','bis'])).count().reset_index()
-        
-        #------> hier muss man noch weitermachen ........
+        # die Daten aud demDateframe müssen in ein Dict gebracht werden, damit sie später in ein Tree im Dialog angezeigt werden:
+        vertragDict = {}
+        vertragDict[vsnr] = {}
+        listeDict = []
+        i = 0
+        for index, row in df1.iterrows():
+            von = str(row['von'])
+            bis = str(row['bis'])
+            keyDict = von + '_' + bis
+            if keyDict not in vertragDict[vsnr]:
+                vertragDict[vsnr][keyDict] =  {}
 
+            name = row['name']
+            wert = row['wert']
+
+            vertragDict[vsnr][keyDict][name] = wert
+
+        self.VsnrDictZuTree(vertragDict)
+    
     def SchliesseFenster(self):
         self.w.close()
         
+    
     def ErmittleListeDerAktivenVertraege(self):
         datei = self.file_fortschreibung
         struktur = self.file_fortschreibung_struktur
