@@ -4,6 +4,9 @@
 import protokoll as prot
 import pandas as pd
 import ka_renten as ka_rente
+import kapitalanlagenCSV
+import bilanzCSV
+import ka_rentenCSV
 
 class Kapitalanlagen:
         
@@ -39,7 +42,11 @@ class Kapitalanlagen:
         self.LegeSATabelleAn()
         self.LeseDatenAusGrundeinstellungen()
 
+        self.kapitalanlagenCSV = kapitalanlagenCSV.KapitalanlagenCSV(f_dict)  # Funktionen, um die Daten in der Kapitalanlage-CSV zu bearbeiten
+        self.bilanzCSV = bilanzCSV.BilanzCSV(f_dict)  # Funktionen, um die Daten in der Bilanz-CSV zu bearbeiten
+        self.ka_rentenCSV = ka_rentenCSV.KA_rentenCSV(f_dict)  # Funktionen, um die Daten in der Renten-CSV zu bearbeiten
         
+    
     def LeseCsvOptinen(self, file, key):
         df = pd.read_csv(file, sep=";")
         df1 = df[df.key == key]
@@ -135,7 +142,7 @@ class Kapitalanlagen:
         key_dict['name']=name
         key_dict['topf']='renten'
         key_dict['wert']=wert
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         key_renten_dict['name']='zins'
         wert= self.oka_renten.WertAusRentenTabelle(key_renten_dict)
@@ -144,7 +151,7 @@ class Kapitalanlagen:
         key_dict['name']=name
         key_dict['topf']='renten'
         key_dict['wert']=wert
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         key_renten_dict['name']='zugang'
         wert= self.oka_renten.WertAusRentenTabelle(key_renten_dict)
@@ -153,7 +160,7 @@ class Kapitalanlagen:
         key_dict['name']=name
         key_dict['topf']='renten'
         key_dict['wert']=wert
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         key_renten_dict['name']='ablauf'
         wert= self.oka_renten.WertAusRentenTabelle(key_renten_dict)
@@ -162,7 +169,7 @@ class Kapitalanlagen:
         key_dict['name']=name
         key_dict['topf']='renten'
         key_dict['wert']=wert
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
     
     def LeseAusFortschreibung(self,key_dict):
@@ -212,32 +219,36 @@ class Kapitalanlagen:
         key_dict = {}
         
         # Stände zum Ende des Jahres:
-        # Renten:
+        # lese Renten:
         key_dict['jahr'] = jahr
         key_dict['name'] = 'ende'
-        key_dict['topf'] = 'renten'
-        renten = self.LeseKapitalanlageCSV(key_dict)
+        key_dict['nr'] = 999
+        bis = str(jahr)+'12'+'31'
+        key_dict['bis'] = int(bis)
+        von = str(jahr)+'01'+'01'
+        key_dict['von'] = int(von)
+        renten = self.ka_rentenCSV.LeseRentenCSV(key_dict)
     
         kapitalanlage_ende = renten  # hier fehlen noch Aktien
         key_dict['jahr'] = jahr
         key_dict['name'] = 'kapitalanlagen_ende'
         key_dict['topf'] = '999'
         key_dict['wert'] = kapitalanlage_ende
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         # Zinsen bzw. Veränderung der Kapitalanlagen:
         # Renten:
         key_dict['jahr'] = jahr
         key_dict['name'] = 'zins'
         key_dict['topf'] = 'renten'
-        zinsenRenten = self.LeseKapitalanlageCSV(key_dict)
+        zinsenRenten = self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_dict)
 
         kapitalertraege = zinsenRenten  # hier fehlen noch Aktien
         key_dict['jahr'] = jahr
         key_dict['name'] = 'kapitalertraege'
         key_dict['topf'] = '999'
         key_dict['wert'] = kapitalertraege
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
     
     def LeseAusKosten(self, key_dict):
@@ -302,7 +313,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] = beitraege
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
     
         # Provisionen:
         provisionen = self.ErmittleProvisionen(jahr)
@@ -311,7 +322,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] = provisionen
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         # Kosten:
         kosten = self.ErmittleKosten(jahr)
@@ -320,7 +331,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] =kosten
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         # Cash flow:
         cf = beitraege - provisionen - kosten
@@ -329,7 +340,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] = cf
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         # Kasse am Ende des Jahres:
         
@@ -338,7 +349,7 @@ class Kapitalanlagen:
         key_dict['jahr'] = jahr
         key_dict['name'] = name
         key_dict['topf'] = '999'
-        kasse_anfang_nach_umbuchung_von_kasse_zu_ka = float(self.LeseKapitalanlageCSV(key_dict))
+        kasse_anfang_nach_umbuchung_von_kasse_zu_ka = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_dict))
 
         # Zinsen, fass die Kasse zu Beginn negativ war:
         zinsenAufKasse = kasse_anfang_nach_umbuchung_von_kasse_zu_ka * self.darlehenszins
@@ -347,7 +358,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] = zinsenAufKasse
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
         kasse_endeVorCF = kasse_anfang_nach_umbuchung_von_kasse_zu_ka + zinsenAufKasse
         kasse_ende = kasse_endeVorCF + cf
@@ -357,7 +368,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['topf'] = '999'
         key_dict['wert'] = kasse_ende
-        self.SchreibeInKapitalanlagenCSV(key_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
 
     def LeseSACSV(self, key_dict):
@@ -515,23 +526,24 @@ class Kapitalanlagen:
     def Beginn(self, jahr):  # Hier werden die Anfangswerte der Bilanz der Kapitalanlage zusammengestellt
         self.oka_renten.Beginn(jahr)
         
-        key_dict={}
-        key_ka_dict={}
-        key_renten_dict={}
+        key_dict = {}
+        key_bilanz_dict = {}
+        key_ka_dict = {}
+        key_renten_dict = {}
         
-        # Kasse_anfang. Dieser Wert steht schon in der Bilanz_Anfang 
+        # Kasse_anfang. Dieser Wert steht schin in der Bilanz-CSV
         name = 'kasse_anfang'
-        key_dict['rl'] = 'bilanz'
-        key_dict['name'] = name
-        key_dict['jahr'] = jahr
-        key_dict['avbg'] = '999'
-        kasse_anfang = float(self.LeseBilanzCSV(key_dict))
-        
+        key_bilanz_dict['name'] = name
+        key_bilanz_dict['rl'] = 'bilanz'
+        key_bilanz_dict['jahr'] = jahr
+        key_bilanz_dict['avbg'] = '999'
+        wert = self.bilanzCSV.LeseBilanzCSV(key_bilanz_dict)
+        kasse_anfang = wert
         key_ka_dict['jahr'] = jahr
         key_ka_dict['name'] = name
         key_ka_dict['topf'] = '999'
         key_ka_dict['wert'] = kasse_anfang
-        self.SchreibeInKapitalanlagenCSV(key_ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
         name = 'umbuchung_von_kasse_zu_ka_zugang'
         key_ka_dict['jahr'] = jahr
@@ -544,7 +556,7 @@ class Kapitalanlagen:
             umbuchung_von_kasse_zu_ka_zugang = 0.0
             key_ka_dict['wert'] = umbuchung_von_kasse_zu_ka_zugang
 
-        self.SchreibeInKapitalanlagenCSV(key_ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
 
         name = 'kasse_anfang_nach_umbuchung_von_kasse_zu_ka'
         wert = kasse_anfang - umbuchung_von_kasse_zu_ka_zugang
@@ -552,7 +564,7 @@ class Kapitalanlagen:
         key_ka_dict['name'] = name
         key_ka_dict['topf'] = '999'
         key_ka_dict['wert'] = wert
-        self.SchreibeInKapitalanlagenCSV(key_ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
         bis_vj = str(int(jahr-1))+'1231'
         von_vj = str(int(jahr-1))+'0101'
@@ -568,7 +580,7 @@ class Kapitalanlagen:
         key_ka_dict['name'] = name
         key_ka_dict['topf'] = 'renten'
         key_ka_dict['wert'] = wert
-        self.SchreibeInKapitalanlagenCSV(key_ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
 
         self.UmschichteKapitalanlagen(jahr)
     
@@ -581,18 +593,18 @@ class Kapitalanlagen:
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'umbuchung_von_kasse_zu_ka_zugang'
         ka_dict['topf'] = '999'
-        umbuchung=self.LeseKapitalanlageCSV(ka_dict)
+        umbuchung=self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
 
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'anfang'
         ka_dict['topf'] = '999'
         ka_dict['topf'] = 'renten'
-        ka_renten_anfang=self.LeseKapitalanlageCSV(ka_dict)
+        ka_renten_anfang=self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
 
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'anfang'
         ka_dict['topf'] = 'aktien'
-        ka_aktien_anfang = self.LeseKapitalanlageCSV(ka_dict)
+        ka_aktien_anfang = self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
     
         sa_dict['jahr'] = jahr
         sa_dict['name'] = 'anteil_renten'
@@ -634,7 +646,7 @@ class Kapitalanlagen:
         ka_dict['name']='anfang'
         ka_dict['topf']='renten'
         ka_dict['wert']=ka_renten_anfang_nach_reallokation
-        self.SchreibeInKapitalanlagenCSV(ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(ka_dict)
         
         #***********************************************
         
@@ -644,7 +656,7 @@ class Kapitalanlagen:
         ka_dict['name']='anfang'
         ka_dict['topf']='aktien'
         ka_dict['wert']=ka_aktien_anfang_nach_reallokation
-        self.SchreibeInKapitalanlagenCSV(ka_dict)
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(ka_dict)
         #************************************************
         
         if umbuchung_aktien>0:
@@ -699,78 +711,6 @@ class Kapitalanlagen:
         pass
 
             
-    def SchreibeInKapitalanlagenCSV(self, key_dict):
-        datei = self.file_kapitalanlagen
-        
-        jahr=key_dict.get('jahr')
-        topf=key_dict.get('topf')
-        name=key_dict.get('name')
-        wert=key_dict.get('wert')
-        
-        if self.LeseKapitalanlageCSV(key_dict) != 0:
-            self.ZeileLoeschenInKapitalanlageCSV(key_dict)
-        
-        text=str(jahr)+';'+str(topf)+';'+str(name)+';'+str(wert)+'\n'
-        f=open(datei, "a")
-        f.write(text)    
-        f.close()       
-
-    
-    def LeseKapitalanlageCSV(self, key_dict):
-        datei = self.file_kapitalanlagen
-        df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlagen_struktur)
-       
-        jahr=key_dict.get('jahr')
-        topf=key_dict.get('topf')
-        name=key_dict.get('name')
- 
-        df1 = df[(df.jahr == int(jahr)) & (df.topf==str(topf)) & (df.name==str(name))]
-        if df1.__len__() == 0:
-            wert=0
-            text='kapitalanlagen/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin='+str(print(key_dict))
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
-       
-        return float(wert)   
-
-    def ZeileLoeschenInKapitalanlageCSV(self, key_dict):
-        datei=self.file_kapitalanlagen
-        
-        jahr=key_dict.get('jahr')
-        topf=key_dict.get('topf')
-        name=key_dict.get('name')
-        
-        if self.LeseKapitalanlageCSV(key_dict) != 0:
-            df = pd.read_csv(datei, sep=';')
-            df1=df[(df['jahr'] != jahr) & (df['topf']!=topf) & (df['name']!=name)]
-            df1.to_csv(datei, ';', index=False)
-            
-            text='Kapitalanlage: Eintrag in der Bilanztabelle geloescht: jahr='+str(jahr)+' topf='+str(topf)+' name='+str(name)
-            self.oprot.SchreibeInProtokoll(text)
-    
-    
-    def LeseBilanzCSV(self, key_dict):
-        datei=self.file_bilanz
-        df=pd.read_csv(datei, sep=";")
-        df[['jahr', 'rl', 'avbg', 'name', 'wert']] = df[['jahr', 'rl', 'avbg', 'name', 'wert']].astype(str)
-       
-        jahr=key_dict.get('jahr')
-        rl=key_dict.get('rl')
-        avbg=key_dict.get('avbg')
-        name=key_dict.get('name')
- 
-        df1 = df[(df.jahr == str(jahr)) & (df.rl==str(rl)) & (df.avbg==str(avbg)) & (df.name==str(name))]
-        if df1.__len__() == 0:
-            wert=0
-            text='kapitalanlagen/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin='+str(print(key_dict))
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
-       
-        return float(wert)   
     
 
 
