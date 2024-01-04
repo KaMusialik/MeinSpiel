@@ -64,7 +64,6 @@ class Kapitalanlagen:
         self.darlehenszins = float(wert)
 
     
-    
     def Init_KA(self, jahr):
         pass
         
@@ -335,14 +334,14 @@ class Kapitalanlagen:
         # Kasse am Ende des Jahres:
         
         # erstmal wird der Kassesatnd zu Beginn des Jahres gelesen:
-        name = 'kasse_anfang'
+        name = 'kasse_anfang_nach_umbuchung_von_kasse_zu_ka'
         key_dict['jahr'] = jahr
         key_dict['name'] = name
         key_dict['topf'] = '999'
-        kasse_anfang = float(self.LeseKapitalanlageCSV(key_dict))
+        kasse_anfang_nach_umbuchung_von_kasse_zu_ka = float(self.LeseKapitalanlageCSV(key_dict))
 
         # Zinsen, fass die Kasse zu Beginn negativ war:
-        zinsenAufKasse = kasse_anfang * self.darlehenszins
+        zinsenAufKasse = kasse_anfang_nach_umbuchung_von_kasse_zu_ka * self.darlehenszins
         name = 'zinsenAufKasse'
         key_dict['jahr'] = jahr
         key_dict['name'] = name
@@ -350,7 +349,7 @@ class Kapitalanlagen:
         key_dict['wert'] = zinsenAufKasse
         self.SchreibeInKapitalanlagenCSV(key_dict)
 
-        kasse_endeVorCF = kasse_anfang + zinsenAufKasse
+        kasse_endeVorCF = kasse_anfang_nach_umbuchung_von_kasse_zu_ka + zinsenAufKasse
         kasse_ende = kasse_endeVorCF + cf
         
         name = 'kasse_ende'
@@ -526,7 +525,7 @@ class Kapitalanlagen:
         key_dict['name'] = name
         key_dict['jahr'] = jahr
         key_dict['avbg'] = '999'
-        kasse_anfang=self.LeseBilanzCSV(key_dict)
+        kasse_anfang = float(self.LeseBilanzCSV(key_dict))
         
         key_ka_dict['jahr'] = jahr
         key_ka_dict['name'] = name
@@ -534,15 +533,25 @@ class Kapitalanlagen:
         key_ka_dict['wert'] = kasse_anfang
         self.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
-        name='umbuchung_von_kasse_zu_ka_zugang'
+        name = 'umbuchung_von_kasse_zu_ka_zugang'
         key_ka_dict['jahr'] = jahr
         key_ka_dict['name'] = name
         key_ka_dict['topf'] = '999'
         if kasse_anfang > 0:  # nur wenn etwas positives in der Kasse ist, wird es in die KA umgebucht
-            key_ka_dict['wert'] = kasse_anfang
+            umbuchung_von_kasse_zu_ka_zugang = kasse_anfang
+            key_ka_dict['wert'] = umbuchung_von_kasse_zu_ka_zugang
         else:
-            key_ka_dict['wert'] = 0
+            umbuchung_von_kasse_zu_ka_zugang = 0.0
+            key_ka_dict['wert'] = umbuchung_von_kasse_zu_ka_zugang
 
+        self.SchreibeInKapitalanlagenCSV(key_ka_dict)
+
+        name = 'kasse_anfang_nach_umbuchung_von_kasse_zu_ka'
+        wert = kasse_anfang - umbuchung_von_kasse_zu_ka_zugang
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = name
+        key_ka_dict['topf'] = '999'
+        key_ka_dict['wert'] = wert
         self.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
         bis_vj = str(int(jahr-1))+'1231'

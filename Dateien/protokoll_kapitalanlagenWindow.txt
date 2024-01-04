@@ -6,3 +6,8 @@ KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunde
 KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
 KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
 KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None

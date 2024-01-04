@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>762</width>
-    <height>545</height>
+    <width>969</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QScrollArea" name="scrollArea">
      <property name="widgetResizable">
@@ -24,13 +24,13 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>742</width>
-        <height>487</height>
+        <width>949</width>
+        <height>556</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTableWidget" name="tableWidget_kapitalanlagenWindow"/>
+        <widget class="QTableWidget" name="tableWidget_rentenWindow"/>
        </item>
       </layout>
      </widget>
@@ -39,14 +39,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_rentenWindow">
-       <property name="text">
-        <string>Renten</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

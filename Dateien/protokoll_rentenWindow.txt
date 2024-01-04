@@ -1,0 +1,2 @@
+RentenWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/ka_renten.csv existiert
+RentenWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/rentenWindow.ui existiert

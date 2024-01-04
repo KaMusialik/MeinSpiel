@@ -2,6 +2,7 @@
 
 import protokoll as prot
 import pandas as pd
+import rentenWindow
 
 from pathlib import Path
 
@@ -15,7 +16,8 @@ from PyQt5 import QtGui
 class KapitalanlagenWindow():
     
     def __init__(self, f_dict):
-        
+
+        self.f_dict = f_dict         
         self.oprot = prot.Protokoll(f_dict.get('protokoll_file_kapitalanlagenWindow'))      
 
         self.file_bilanz = f_dict.get('file_bilanz')
@@ -52,15 +54,27 @@ class KapitalanlagenWindow():
             text = 'KapitalanlagenWindow/init: Die Datei ' +self.file_ui+ ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
 
-        self.listeDerPositionen = { 'Kapitalanlagen Anfang': ('kapitalanlagen_anfang', 1),
-                                    '+ Zufhrung aus Kasse':('umbuchung_kasse', 101),
-                                    '+ Veränderung/Zinsen':('zinsen', 201),
+        self.listeDerPositionenKapitalanlagen = { 'Kapitalanlagen Anfang': ('kapitalanlagen_anfang', 1,),
+                                    '+ Zufhrung aus Kasse':('umbuchung_von_kasse_zu_ka_zugang', 101,),
+                                    '+ Veränderung/Zinsen':('kapitalertraege', 201),
                                     '- Abgang':('abgang', 301),
                                     '= Kapitalanlage Ende':('kapitalanlage_ende', 1001)
                                   }
+
+        self.listeDerPositionenKasse = { 'Kasse Anfang': ('kasse_anfang', 2001,),
+                                    '- Umbuchung / Zuführung zur Kapitalanlagen':('umbuchung_von_kasse_zu_ka_zugang', 2201),
+                                    '= Kasse nach Umbuchung zur Kapitalanlagen':('kasse_anfang_nach_umbuchung_von_kasse_zu_ka', 2210),
+                                    '+ Zinsen / Darlehenszinsen':('zinsenAufKasse', 2301),
+                                    '+ cash flow':('cashflow', 2401),
+                                    '= Kasse Ende':('kasse_ende', 2501)
+                                  }
         
         self.w.setWindowTitle('Kapitalanlage ...')
-
+        self.w.pushButton_rentenWindow.clicked.connect(self.ZeigeWindowRenten)
+    
+    def ZeigeWindowRenten(self):
+            oWindow = rentenWindow.RentenWindow(self.f_dict)
+            oWindow.RufeFensterAuf()    
     
     def ErmittleJahreFuerTableVor(self, jahre_dict):
  
@@ -92,7 +106,7 @@ class KapitalanlagenWindow():
         anzahlDerJahre = len(jahre_dict)
         objekt.setColumnCount(anzahlDerJahre+1)
         
-        anzahlDerPositionen = len(self.listeDerPositionen)
+        anzahlDerPositionen = len(self.listeDerPositionenKapitalanlagen) + 1 + len(self.listeDerPositionenKasse)
         objekt.setRowCount(anzahlDerPositionen+1)
         
         key_dict = {}
@@ -109,15 +123,27 @@ class KapitalanlagenWindow():
             objekt.setItem(irow, icol, QTableWidgetItem(jahr))
             objekt.item(irow, icol).setBackground(QtGui.QColor(151, 255, 255))
 
-        #Überschriften für die Positione:
+        #Überschriften für die Positione der Kapitalanlagen:
         irow = 0
         icol = 0      
-        for keyPosition, wertPosition in self.listeDerPositionen.items():    
+        for keyPosition, wertPosition in self.listeDerPositionenKapitalanlagen.items():    
             irow += 1
             wert = keyPosition
             objekt.setItem(irow, icol, QTableWidgetItem(str(wert)))
             objekt.item(irow, icol).setBackground(QtGui.QColor(193, 255, 193))        
         
+        irow += 1
+        wert = ''
+        objekt.setItem(irow, icol, QTableWidgetItem(str(wert)))
+        objekt.item(irow, icol).setBackground(QtGui.QColor('gray'))        
+
+        for keyPosition, wertPosition in self.listeDerPositionenKasse.items():    
+            irow += 1
+            wert = keyPosition
+            objekt.setItem(irow, icol, QTableWidgetItem(str(wert)))
+            objekt.item(irow, icol).setBackground(QtGui.QColor(193, 255, 193))        
+
+
         #Werte in die Tabelle schreiben:       
         irow = 0
         icol = 0      
@@ -127,14 +153,29 @@ class KapitalanlagenWindow():
             icol += 1
             irow = 0
             
-            for keyPosition, wertPosition in self.listeDerPositionen.items():
+            #Kapitalanlagen:
+            for keyPosition, wertPosition in self.listeDerPositionenKapitalanlagen.items():
                 irow += 1
                 key_dict['name'] = wertPosition[0]
                 wert_f = float(self.LeseKapitalanlageCSV(key_dict))
                 wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
                 objekt.setItem(irow, icol, QTableWidgetItem(wert_s))
-            
 
+            # eine leere Zeile
+            irow += 1
+            wert = ''
+            objekt.setItem(irow, icol, QTableWidgetItem(str(wert)))
+            objekt.item(irow, icol).setBackground(QtGui.QColor('gray'))        
+
+            #Kasse:
+            for keyPosition, wertPosition in self.listeDerPositionenKasse.items():
+                irow += 1
+                key_dict['name'] = wertPosition[0]
+                wert_f = float(self.LeseKapitalanlageCSV(key_dict))
+                wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+                objekt.setItem(irow, icol, QTableWidgetItem(wert_s))
+
+    
     def LeseKapitalanlageCSV(self, key_dict):
         datei = self.file_kapitalanlage
         df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlage_struktur)
