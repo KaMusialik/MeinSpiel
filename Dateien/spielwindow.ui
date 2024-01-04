@@ -34,7 +34,7 @@
     <rect>
      <x>30</x>
      <y>471</y>
-     <width>741</width>
+     <width>761</width>
      <height>291</height>
     </rect>
    </property>
@@ -44,7 +44,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="GuV">
     <attribute name="title">
@@ -177,8 +177,8 @@
       <rect>
        <x>0</x>
        <y>10</y>
-       <width>321</width>
-       <height>241</height>
+       <width>181</width>
+       <height>171</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -197,10 +197,10 @@
     <widget class="QPushButton" name="pushButton_Entwicklung_Renten">
      <property name="geometry">
       <rect>
-       <x>330</x>
+       <x>190</x>
        <y>10</y>
-       <width>321</width>
-       <height>241</height>
+       <width>171</width>
+       <height>171</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -214,6 +214,32 @@
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_cashflowWindow">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>20</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>cash flow</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_kapitalanlagenWindow">
+     <property name="geometry">
+      <rect>
+       <x>390</x>
+       <y>60</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Veränderung</string>
      </property>
     </widget>
    </widget>

@@ -1,0 +1,3 @@
+CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/bilanz.csv existiert
+CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/kapitalanlagen.csv existiert
+CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/cashflowWindow.ui existiert

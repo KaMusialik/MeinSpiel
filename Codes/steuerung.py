@@ -26,7 +26,8 @@ import provision
 import nachreservierung
 import kosten
 import vertraegeausfortschreibungwindow
-
+import cashflowWindow
+import kapitalanlagenWindow
 
 files_dict = {}
 # work directory:
@@ -42,6 +43,8 @@ files_dict['vertragswindow_file'] = files_dict.get('work_dir')+'vertragswindow.u
 files_dict['guvwindow_file'] = files_dict.get('work_dir')+'guvwindow.ui'
 files_dict['bilanzWindow_file'] = files_dict.get('work_dir')+'bilanzWindow.ui'
 files_dict['fortschreibungwindow_file'] = files_dict.get('work_dir')+'fortschreibungwindow.ui'
+files_dict['cashflowWindow_file'] = files_dict.get('work_dir')+'cashflowWindow.ui'
+files_dict['kapitalanlagenWindow_file'] = files_dict.get('work_dir')+'kapitalanlagenWindow.ui'
 
 # icons:
 files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
@@ -55,6 +58,9 @@ files_dict['file_kapitalanlagen_csv_struktur'] = {'jahr': int, 'topf': str, 'nam
 files_dict['file_kapitalanlagen_renten_csv'] = files_dict.get('work_dir') + 'ka_renten.csv'
 files_dict['file_kapitalanlagen_aktien_csv'] = files_dict.get('work_dir') + 'ka_aktien.csv'
 files_dict['file_kapitalanlagen_sa_csv'] = files_dict.get('work_dir') + 'ka_sa.csv'
+files_dict['protokoll_file_cashflowWindow'] = files_dict.get('work_dir') + 'protokoll_cashflowWindow.txt'
+files_dict['protokoll_file_kapitalanlagenWindow'] = files_dict.get('work_dir') + 'protokoll_kapitalanlagenWindow.txt'
+
 
 files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'
 files_dict['grafik_file_entwicklung_renten'] = files_dict.get('work_dir')+'grafik_renten.png'
@@ -246,61 +252,6 @@ def LegeLaufzeitAuswahlBeiRentenFestInKa():
         wSpielwindow.comboBox_A3.insertItem(i, str(i)) 
 
 
-'''
-def LegeBilanzTabelleAn(obil):
-    # hier werden die Ergebnisse der Bilanz in eine Tabelle im Dialog ausgegeben:
-    jahr_beginn = files_dict.get('Startjahr_Simulation')
-    jahr_aktuell = files_dict.get('jahr_aktuell')
-
-    anzahl_jahre = int(jahr_aktuell)-int(jahr_beginn)
-
-    wSpielwindow.tableWidget_Bilanz.setColumnCount(anzahl_jahre+1)
-    wSpielwindow.tableWidget_Bilanz.setRowCount(1)
-
-    vektor_jahre = []
-    for i in range(0, anzahl_jahre+1):
-        jahr = str(jahr_beginn+i-1)
-        vektor_jahre.append(jahr)
-
-    wSpielwindow.tableWidget_Bilanz.setHorizontalHeaderLabels(vektor_jahre)
-
-    vektor_namen = []
-    index_row = 0
-    namen = {}
-
-    key_bilanz = {}
-    key_bilanz['rl'] = 'Bilanz'
-    key_bilanz['avbg'] = '999'
-
-    name = 'eigenkapital_ende'
-    key_bilanz['name'] = name
-    namen[name] = 'Eigenkapital'
-    index_row += 1
-    wSpielwindow.tableWidget_Bilanz.setRowCount(index_row)
-    vektor_namen.append(namen.get(name))
-    for i in range(0, anzahl_jahre+1):
-        jahr = str(jahr_beginn+i-1)
-        key_bilanz['jahr'] = jahr
-        wert = obil.LeseBilanzCSV(key_bilanz)
-        wSpielwindow.tableWidget_Bilanz.setItem(
-            index_row-1, i, widgets.QTableWidgetItem(str(wert)))
-
-    name = 'bil_derue7_ende'
-    key_bilanz['name'] = name
-    namen[name] = 'Bilanz Deckungsrückstellung auf Risiko VU'
-    index_row += 1
-    wSpielwindow.tableWidget_Bilanz.setRowCount(index_row)
-    vektor_namen.append(namen.get(name))
-    for i in range(0, anzahl_jahre+1):
-        jahr = str(jahr_beginn+i-1)
-        key_bilanz['jahr'] = jahr
-        wert = obil.LeseBilanzCSV(key_bilanz)
-        wSpielwindow.tableWidget_Bilanz.setItem(
-            index_row-1, i, widgets.QTableWidgetItem(str(wert)))
-
-    wSpielwindow.tableWidget_Bilanz.setVerticalHeaderLabels(vektor_namen)
-'''
-
 def LeseAusSpielfensterKA():
     # es werden aus dem Dialog die Eingaben zu Kapitalanlagen ausgelesen:
 
@@ -372,6 +323,16 @@ def ZeigeWindowGuv():
 
 def ZeigeWindowBilanz():
     oWindow = bilanzWindow.BilanzWindow(files_dict)
+    oWindow.RufeFensterAuf()
+
+
+def ZeigeWindowCashflow():
+    oWindow = cashflowWindow.CashflowWindow(files_dict)
+    oWindow.RufeFensterAuf()
+
+
+def ZeigeWindowKapitalanlagen():
+    oWindow = kapitalanlagenWindow.KapitalanlagenWindow(files_dict)
     oWindow.RufeFensterAuf()
 
 
@@ -673,7 +634,10 @@ if __name__ == "__main__":
     wSpielwindow.pushButton_GuvWindow.clicked.connect(ZeigeWindowGuv)
     wSpielwindow.pushButton_bilanzErgebnisse.clicked.connect(ZeigeWindowBilanz)
     wSpielwindow.pushButton_vertraegeAusFortschreibung.clicked.connect(ZeigeWindowVertraegeAusFortschreibung)
-    
+    wSpielwindow.pushButton_cashflowWindow.clicked.connect(ZeigeWindowCashflow)
+    wSpielwindow.pushButton_kapitalanlagenWindow.clicked.connect(ZeigeWindowKapitalanlagen)
+
+
     wSpielwindow.pushButton_Entwicklung_Renten.clicked.connect(ZeigeGrafik_Entwicklung_Renten)
     wSpielwindow.horizontalSlider_Renten.valueChanged.connect(AnteilImSliderRenten)
     

@@ -184,6 +184,7 @@ class BilanzWindow():
                 self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(wert_s))
             
             # Summer der Aktivseite ausgeben:
+            # Summer der Aktivseite ausgeben:
             irow += 1
             wert = ohs.FloatZuStgMitTausendtrennzeichen(summe, 1)
             self.w.tableWidget_Bilanz.setItem(irow, icol, QTableWidgetItem(str(wert)))

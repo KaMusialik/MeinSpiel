@@ -73,7 +73,7 @@ class Kosten():
         return liste
     
     
-    def LeseVertragAusFortschreibung(self, vtg_dict):
+    def LeseVertragAusFortschreibung(self, vtg_dict, jahr):
         datei = self.file_system_fortfreibung
         struktur = self.file_system_fortschteibung_struktur
         
@@ -81,7 +81,7 @@ class Kosten():
         
         vsnr = str(vtg_dict.get('vsnr'))
         
-        jahr = vtg_dict.get('jahr')        
+        #jahr = vtg_dict.get('jahr')        
         bis_s = str(jahr) + '12' + '31'
         bis_i = int(bis_s)
         
@@ -190,13 +190,14 @@ class Kosten():
         
         eintrag_dict = {}
         vtg_dict = {}    
-        vtg_dict['jahr'] = str(jahr)
-        eintrag_dict['jahr'] = str(jahr)
         
         for vsnr in listeVertraege:  # jetzt werden aller aktiven aus der Liste nacheinander abgearbeitet:
+            vtg_dict.clear()
+            eintrag_dict.clear()
             vtg_dict['vsnr'] = str(vsnr)
             eintrag_dict['vsnr'] = str(vsnr)
-            vtg_dict = self.LeseVertragAusFortschreibung(vtg_dict)
+            eintrag_dict['jahr'] = str(jahr)
+            vtg_dict = self.LeseVertragAusFortschreibung(vtg_dict, jahr)
             
             #interne Abschlusskosten:
             eintrag_dict['name'] = 'iAK'

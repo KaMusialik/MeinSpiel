@@ -240,6 +240,7 @@ class Kapitalanlagen:
         key_dict['wert'] = kapitalertraege
         self.SchreibeInKapitalanlagenCSV(key_dict)
 
+    
     def LeseAusKosten(self, key_dict):
         datei = self.file_kosten
         df = pd.read_csv(datei, sep=";", dtype=self.file_kosten_struktur)

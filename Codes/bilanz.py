@@ -581,25 +581,25 @@ class Bilanz(object):
     def Eigenkapital_Ende(self, jahr):
         key_dict={}
         
-        name='eigenkapital_anfang'
-        avbg='999'
-        key_dict['name']=name
-        key_dict['avbg']=avbg
-        key_dict['jahr']=jahr
-        key_dict['rl']='bilanz'
-        ek_anfang=self.LeseBilanzCSV(key_dict)
+        name = 'eigenkapital_anfang'
+        avbg = '999'
+        key_dict['name'] = name
+        key_dict['avbg'] = avbg
+        key_dict['jahr'] = jahr
+        key_dict['rl'] = 'bilanz'
+        ek_anfang = float(self.LeseBilanzCSV(key_dict))
         
-        name='jahresueberschuss'
-        key_dict['name']=name
-        key_dict['rl']='guv'
+        name = 'jahresueberschuss'
+        key_dict['name'] = name
+        key_dict['rl'] = 'guv'
 
-        jue=self.LeseBilanzCSV(key_dict)
+        jue = float(self.LeseBilanzCSV(key_dict))
 
-        ek_ende=ek_anfang+jue
-        key_dict['wert']=ek_ende
-        name='eigenkapital_ende'
-        key_dict['rl']='bilanz'
-        key_dict['name']=name
+        ek_ende = ek_anfang + jue
+        key_dict['wert'] = ek_ende
+        name = 'eigenkapital_ende'
+        key_dict['rl'] = 'bilanz'
+        key_dict['name'] = name
         
         self.SchreibeInBilanzCSV(key_dict)
         
