@@ -1,14 +1,5 @@
 Kapitalanlegen: Tabelle fuer die Kapitalanlagen wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/kapitalanlagen.csv
-Kapitalanlegen: Tabelle fuer die Aktien wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/ka_aktien.csv
 Kapitalanlegen: Tabelle fuer die SA wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/ka_sa.csv
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone

@@ -54,6 +54,7 @@ files_dict['file_icon_guvwindow'] = files_dict.get('work_dir')+'iconGuvWindow.pn
 
 # Kapitalanlagen:
 files_dict['protokoll_file_kapitalanlagen'] = files_dict.get('work_dir') + 'protokoll_kapitalanlagen.txt'
+files_dict['protokoll_file_aktien'] = files_dict.get('work_dir') + 'protokoll_aktien.txt'
 files_dict['file_kapitalanlagen_csv'] = files_dict.get('work_dir') + 'kapitalanlagen.csv'
 files_dict['file_kapitalanlagen_csv_struktur'] = {'jahr': int, 'topf': str, 'name': str, 'wert': float}
 files_dict['file_kapitalanlagen_renten_csv'] = files_dict.get('work_dir') + 'ka_renten.csv'
@@ -63,6 +64,7 @@ files_dict['protokoll_file_cashflowWindow'] = files_dict.get('work_dir') + 'prot
 files_dict['protokoll_file_kapitalanlagenWindow'] = files_dict.get('work_dir') + 'protokoll_kapitalanlagenWindow.txt'
 files_dict['protokoll_file_rentenWindow'] = files_dict.get('work_dir') + 'protokoll_rentenWindow.txt'
 files_dict['file_renten_csv_struktur'] = {'jahr':int, 'nr':int, 'von':int, 'bis':int, 'name':str, 'wert':str}
+files_dict['file_aktien_csv_struktur'] = {'jahr':int, 'name':str, 'wert':str}
 
 
 files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'

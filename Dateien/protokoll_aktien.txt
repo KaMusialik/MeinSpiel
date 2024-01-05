@@ -1,0 +1,1 @@
+KA_Aktien/LegeAktienTabelleAn: Tabelle fuer die Aktien wurde angelegt: /home/karol/Projekte/MeinSpiel/Dateien/ka_aktien.csv

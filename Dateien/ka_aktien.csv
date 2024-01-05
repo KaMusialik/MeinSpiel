@@ -1,5 +1,11 @@
-jahr;von;bis;status;name;wert
-2020;20200101;20201231;offen;anlage_betrag;30000.0
-2020;20200101;20201231;offen;vola_aktien;0.1
-2022;20220101;20221231;offen;anlage_betrag;1602360.0
-2022;20220101;20221231;offen;vola_aktien;0.1
+jahr;name;wert
+2019;kurs_ende;100.0
+2020;aktien_anfang;0.0
+2020;kurs_anfang;100.0
+2020;anteile_anfang;0.0
+2020;anlage_betrag;30000.0
+2020;anteile_neu;300.0
+2020;anteile_ende;300.0
+2020;kurs_ende;100.0
+2020;aktien_ende;30000.0
+2020;kursertraege;0.0
