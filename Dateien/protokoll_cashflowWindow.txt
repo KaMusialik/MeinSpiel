@@ -1,3 +1,7 @@
 CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/bilanz.csv existiert
 CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/kapitalanlagen.csv existiert
 CashflowWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/cashflowWindow.ui existiert
+CashflowWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+CashflowWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+CashflowWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
+CashflowWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None

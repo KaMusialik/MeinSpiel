@@ -1,13 +1,3 @@
 KapitalanlagenWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/bilanz.csv existiert
 KapitalanlagenWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/kapitalanlagen.csv existiert
 KapitalanlagenWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/kapitalanlagenWindow.ui existiert
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None
-KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin=None

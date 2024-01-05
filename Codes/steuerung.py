@@ -559,10 +559,11 @@ def Steuerung():
         okap.Init_SA(ka_sa_dict)
 
         obil.ErstelleBilanzAnfang(jahr)  # die Endwerte des Vorjahres werden auf den Anfanf des aktuellen GJ fortgetragen
+        okap.ErstelleKapitalanlagenAnfang(jahr)  # die Endwerte des Vorjahres werden auf den Anfanf des aktuellen GJ fortgetragen
 
         overtrieb.SchreibeNeugeschaeft(vertrieb_dict)
 
-        okap.Beginn(jahr)
+        okap.UmschichtungInDerKapitalanlage(jahr)  # hier werden die Kapitalanlagen zum Beginn des Jahres umgeschichtet
         okap.Fortschreibung(jahr)
 
         onachres.StelleNachreservierungFest(jahr) #hier wird eine potentielle Nachreservierung festgelegt

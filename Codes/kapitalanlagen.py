@@ -63,16 +63,31 @@ class Kapitalanlagen:
 
     
     def LeseDatenAusGrundeinstellungen(self):
-        file = self.optionen_file_grundeinstellungen
-         
+
+        file = self.optionen_file_grundeinstellungen 
         # Darlehenszins:
         key = 'darlehenszins'
         wert = self.LeseCsvOptinen(file, key)
         self.darlehenszins = float(wert)
 
     
-    def Init_KA(self, jahr):
-        pass
+    def Init_KA(self, jahr):  # hier wird die Kapitalanlage aus der Startbilanz vorbereitet:
+        key_bilanz_dict = {}
+        key_ka_dict = {}
+        
+        # Kasse_ende wird aus der Bialnz geholt. Dieser Wert steht bereits in der Bilanztabelle und muss nur abgeholt werden:
+        name = 'kasse_ende'
+        key_bilanz_dict['jahr'] = jahr - 1
+        key_bilanz_dict['rl'] = 'bilanz'
+        key_bilanz_dict['avbg'] = '999'
+        key_bilanz_dict['name'] = name
+        wert = float(self.bilanzCSV.LeseBilanzCSV(key_bilanz_dict))
+
+        key_ka_dict['name'] = name
+        key_ka_dict['topf'] = '999'
+        key_ka_dict['jahr'] = jahr - 1
+        key_ka_dict['wert'] = wert
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
         
     
     def Init_SA(self, eintrag_dict):
@@ -227,7 +242,7 @@ class Kapitalanlagen:
         key_dict['bis'] = int(bis)
         von = str(jahr)+'01'+'01'
         key_dict['von'] = int(von)
-        renten = self.ka_rentenCSV.LeseRentenCSV(key_dict)
+        renten = float(self.ka_rentenCSV.LeseRentenCSV(key_dict))
     
         kapitalanlage_ende = renten  # hier fehlen noch Aktien
         key_dict['jahr'] = jahr
@@ -523,7 +538,38 @@ class Kapitalanlagen:
         self.oprot.SchreibeInProtokoll(text)
 
     
-    def Beginn(self, jahr):  # Hier werden die Anfangswerte der Bilanz der Kapitalanlage zusammengestellt
+    def ErstelleKapitalanlagenAnfang(self, jahr):  # hier wird die Kapitalanlage zum Beginn des Jahres vorbereitet
+        key_ka_dict = {}
+        
+        # Stand der Kapitalanlage vom Vorjahr:
+        key_ka_dict['jahr'] = jahr - 1
+        key_ka_dict['name'] = 'kapitalanlagen_ende'
+        key_ka_dict['topf'] = '999'
+        wert = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_ka_dict))
+        key_ka_dict['wert'] = wert
+        # .... und schreiben den Anfangswert in die Tabelle rein:
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = 'kapitalanlagen_anfang'
+        key_ka_dict['topf'] = '999'
+        key_ka_dict['wert'] = wert
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
+    
+        key_ka_dict.clear()
+        # Stand der Kasse vom Vorjahr:
+        key_ka_dict['jahr'] = jahr - 1
+        key_ka_dict['name'] = 'kasse_ende'
+        key_ka_dict['topf'] = '999'
+        wert = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_ka_dict))
+        key_ka_dict['wert'] = wert
+        # .... und schreiben den Anfangswert in die Tabelle rein:
+        key_ka_dict['jahr'] = jahr
+        key_ka_dict['name'] = 'kasse_anfang'
+        key_ka_dict['topf'] = '999'
+        key_ka_dict['wert'] = wert
+        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
+
+
+    def UmschichtungInDerKapitalanlage(self, jahr):  # Hier werden die Anfangswerte der Bilanz der Kapitalanlage zusammengestellt
         self.oka_renten.Beginn(jahr)
         
         key_dict = {}
@@ -531,19 +577,13 @@ class Kapitalanlagen:
         key_ka_dict = {}
         key_renten_dict = {}
         
-        # Kasse_anfang. Dieser Wert steht schin in der Bilanz-CSV
+        # Kasse_anfang wird geholt. Dieser Wert steht bereits in der tabelle und muss nur abgeholt werden:
         name = 'kasse_anfang'
-        key_bilanz_dict['name'] = name
-        key_bilanz_dict['rl'] = 'bilanz'
-        key_bilanz_dict['jahr'] = jahr
-        key_bilanz_dict['avbg'] = '999'
-        wert = self.bilanzCSV.LeseBilanzCSV(key_bilanz_dict)
-        kasse_anfang = wert
-        key_ka_dict['jahr'] = jahr
         key_ka_dict['name'] = name
         key_ka_dict['topf'] = '999'
-        key_ka_dict['wert'] = kasse_anfang
-        self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_ka_dict)
+        key_ka_dict['jahr'] = jahr
+        wert = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_ka_dict))
+        kasse_anfang = wert
         
         name = 'umbuchung_von_kasse_zu_ka_zugang'
         key_ka_dict['jahr'] = jahr
@@ -593,13 +633,13 @@ class Kapitalanlagen:
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'umbuchung_von_kasse_zu_ka_zugang'
         ka_dict['topf'] = '999'
-        umbuchung=self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
+        umbuchung = self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)  # dieser Wert soll von der Kasse in die KA umgeschichtet werden
 
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'anfang'
         ka_dict['topf'] = '999'
         ka_dict['topf'] = 'renten'
-        ka_renten_anfang=self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
+        ka_renten_anfang = self.kapitalanlagenCSV.LeseKapitalanlageCSV(ka_dict)
 
         ka_dict['jahr'] = jahr
         ka_dict['name'] = 'anfang'
@@ -620,6 +660,7 @@ class Kapitalanlagen:
         umbuchung_renten = anteil_renten * umbuchung
         umbuchung_aktien = anteil_aktien * umbuchung
         
+        '''
         max_betrag_aktien = anteil_aktien * ka_anfang
         if ka_aktien_anfang+umbuchung_aktien <= max_betrag_aktien:
             #man kann noch mehr zu aktien verschieben:
@@ -631,6 +672,7 @@ class Kapitalanlagen:
             verschiebung_zu_renten=ka_aktien_anfang+umbuchung_aktien-max_betrag_aktien
             umbuchung_renten= umbuchung_renten+verschiebung_zu_renten
             umbuchung_aktien= umbuchung_aktien-verschiebung_zu_renten
+        '''
             
         ka_renten_anfang_nach_reallokation=ka_renten_anfang+umbuchung_renten
         ka_aktien_anfang_nach_reallokation=ka_aktien_anfang+umbuchung_aktien
@@ -642,20 +684,20 @@ class Kapitalanlagen:
         bis = str(jahr)+'1231'
 
         ka_dict.clear()
-        ka_dict['jahr']=jahr
-        ka_dict['name']='anfang'
-        ka_dict['topf']='renten'
-        ka_dict['wert']=ka_renten_anfang_nach_reallokation
+        ka_dict['jahr'] = jahr
+        ka_dict['name'] = 'anfang'
+        ka_dict['topf'] = 'renten'
+        ka_dict['wert'] = ka_renten_anfang_nach_reallokation
         self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(ka_dict)
         
         #***********************************************
         
         #Schreibe Aktien:
         ka_dict.clear()
-        ka_dict['jahr']=jahr
-        ka_dict['name']='anfang'
-        ka_dict['topf']='aktien'
-        ka_dict['wert']=ka_aktien_anfang_nach_reallokation
+        ka_dict['jahr'] = jahr
+        ka_dict['name'] = 'anfang'
+        ka_dict['topf'] = 'aktien'
+        ka_dict['wert'] = ka_aktien_anfang_nach_reallokation
         self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(ka_dict)
         #************************************************
         

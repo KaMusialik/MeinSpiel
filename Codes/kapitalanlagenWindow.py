@@ -3,6 +3,7 @@
 import protokoll as prot
 import pandas as pd
 import rentenWindow
+import kapitalanlagenCSV
 
 from pathlib import Path
 
@@ -58,7 +59,7 @@ class KapitalanlagenWindow():
                                     '+ Zufhrung aus Kasse':('umbuchung_von_kasse_zu_ka_zugang', 101,),
                                     '+ Veränderung/Zinsen':('kapitalertraege', 201),
                                     '- Abgang':('abgang', 301),
-                                    '= Kapitalanlage Ende':('kapitalanlage_ende', 1001)
+                                    '= Kapitalanlage Ende':('kapitalanlagen_ende', 1001)
                                   }
 
         self.listeDerPositionenKasse = { 'Kasse Anfang': ('kasse_anfang', 2001,),
@@ -71,6 +72,7 @@ class KapitalanlagenWindow():
         
         self.w.setWindowTitle('Kapitalanlage ...')
         self.w.pushButton_rentenWindow.clicked.connect(self.ZeigeWindowRenten)
+        self.kapitalanlagenCSV = kapitalanlagenCSV.KapitalanlagenCSV(f_dict)
     
     def ZeigeWindowRenten(self):
             oWindow = rentenWindow.RentenWindow(self.f_dict)
@@ -157,7 +159,7 @@ class KapitalanlagenWindow():
             for keyPosition, wertPosition in self.listeDerPositionenKapitalanlagen.items():
                 irow += 1
                 key_dict['name'] = wertPosition[0]
-                wert_f = float(self.LeseKapitalanlageCSV(key_dict))
+                wert_f = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_dict))
                 wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
                 objekt.setItem(irow, icol, QTableWidgetItem(wert_s))
 
@@ -171,30 +173,10 @@ class KapitalanlagenWindow():
             for keyPosition, wertPosition in self.listeDerPositionenKasse.items():
                 irow += 1
                 key_dict['name'] = wertPosition[0]
-                wert_f = float(self.LeseKapitalanlageCSV(key_dict))
+                wert_f = float(self.kapitalanlagenCSV.LeseKapitalanlageCSV(key_dict))
                 wert_s = ohs.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
                 objekt.setItem(irow, icol, QTableWidgetItem(wert_s))
 
-    
-    def LeseKapitalanlageCSV(self, key_dict):
-        datei = self.file_kapitalanlage
-        df = pd.read_csv(datei, sep=";", dtype=self.file_kapitalanlage_struktur)
-       
-        jahr=key_dict.get('jahr')
-        topf=key_dict.get('topf')
-        name=key_dict.get('name')
- 
-        df1 = df[(df.jahr == int(jahr)) & (df.topf==str(topf)) & (df.name==str(name))]
-        if df1.__len__() == 0:
-            wert=0
-            text='KapitalanlagenWindow/LeseKapitalanlagenCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: termin='+str(print(key_dict))
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
-       
-        return float(wert)   
-    
     
     def SchliesseFenster(self):
         self.w.close()
