@@ -410,29 +410,31 @@ class Bilanz(object):
 
 
     def KumuliereAlleAvbgInBilanz(self, key_dict):
-        datei=self.file_bilanz
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
+        datei = self.file_bilanz
+        df = pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
         
-        jahr=int(key_dict.get('jahr'))
-        rl=str(key_dict.get('rl'))
-        name=key_dict.get('name')
+        jahr = int(key_dict.get('jahr'))
+        rl = str(key_dict.get('rl'))
+        name = key_dict.get('name')
 
-        df1 = df[(df.jahr == jahr) & (df.rl==str(rl)) & (df.avbg!='999') &(df.name==str(name))]
+        df1 = df[(df.jahr == jahr) & (df.rl == rl) & ( df.avbg != '999') & ( df.name == str(name))]
         
         if df1.empty:
             wert = 0.0
             text = 'Bilanz/KumuliereAlleAvbgInBilanz: Eintrag in der Tabelle nicht gefunden. Keine Kumulierung möglich!'
             self.oprot.SchreibeInProtokoll(text)
+            print(text)
         else:
-            df2=df1[['name', 'wert']]
+            df2 = df1[['name', 'wert']]
             df2['wert'] = pd.to_numeric(df2['wert']) 
 
-            df3=df2.groupby('name')['wert'].sum()
+            df3 = df2.groupby('name')['wert'].sum()
             
             if len(df3) != 1:
-                wert = 0
+                wert = 0.0
                 text = 'Bilanz/KumuliereAlleAvbgInBilanz: Unerwartete anzahl der kummulierten Sätze!' + str(df3)
                 self.oprot.SchreibeInProtokoll(text)
+                print(text)
             else:
                 wert = df3[0]
        

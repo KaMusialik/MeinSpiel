@@ -1,7 +1,9 @@
 import protokoll as prot
 import pandas as pd
 import ka_aktienCSV
-
+import optionen_grundeinstellungCSV
+from statistics import NormalDist
+import random
 
 class KA_Aktien:
         
@@ -15,6 +17,26 @@ class KA_Aktien:
         self.LegeAktienTabelleAn()
         self.ka_aktienCSV = ka_aktienCSV.KA_AktienCSV(f_dict)
     
+        self.ogrundCSV = optionen_grundeinstellungCSV.Optionen_GrundeinstellungCSV(f_dict)
+        self.ka_aktien_sa = ''
+        self.ex_aktien = 0.0072  # durchnittliche Aktienentwicklung pro Monat. Dazu gibt es ein Excel
+        self.sigma_aktien = 0.050822496  # errechnetes Sigma aus den Daten vom DAX. dazu gibt es ein Excel
+        self.sigma = 0.0
+
+    def BestimmeSigmaAktien(self):  # hier wird das Sigma ggf. gestreckt.
+        self.risiko = self.ka_aktien_sa
+        sigma = self.sigma_aktien
+        
+        if self.risiko == 'normal':
+            self.sigma = sigma
+        elif self.risiko == 'risky' or self.risiko == 'gross':
+            self.sigma = 2.0 * sigma
+        elif self.risiko == 'high_risky' or self.risiko == 'sehrgross':
+            self.sigma = 3.0 * sigma
+        else:
+            self.sigma = 5.0 * sigma
+
+    
     def LegeAktienTabelleAn(self):  # Tabelle für Aktien wird angelegt
         datei = self.file_aktien_csv
         ocsv = pd.DataFrame()
@@ -26,7 +48,25 @@ class KA_Aktien:
         text = 'KA_Aktien/LegeAktienTabelleAn: Tabelle fuer die Aktien wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)
 
+    
+    def LeseGrundeinstellung(self):  # hier werden die Grundeinstellungen zu den Aktien gelesen:
+        key_dict = {}
+        
+        # wir riskant soll sollen die Aktien angelegt werden: 
+        key = 'ka_aktien_sa'
+        key_dict['key'] = key
+        wert = self.ogrundCSV.LeseWertAusCSV(key_dict)
+        self.ka_aktien_sa = wert
+
+        stat_dict = {}
+        stat_dict['risiko'] = self.ka_aktien_sa
+    
+    
     def Init_Aktien(self, jahr):  # hier werden die Aktien zu Beginn des GJ initialisiert
+        
+        self.LeseGrundeinstellung()
+        self.BestimmeSigmaAktien()
+
         key_aktien_dict = {}
         
         # kurs_ende im Startjahr -1
@@ -37,6 +77,7 @@ class KA_Aktien:
         self.ka_aktienCSV.SchreibeInCSV(key_aktien_dict)
         key_aktien_dict.clear()
 
+    
     def ErstelleStandZumAnfangGJ(self, jahr):  # hier wird die Kapitalanlage zum Beginn des Jahres vorbereitet
         key_aktien_dict = {}
 
@@ -136,6 +177,15 @@ class KA_Aktien:
         self.ka_aktienCSV.SchreibeInCSV(key_aktien_dict)
         key_aktien_dict.clear()
 
+        # Kursveränderung:
+        name = 'kurs_veraenderung'
+        kurs_veraenderung = kurs_ende - kurs_anfang
+        key_aktien_dict['jahr'] = jahr
+        key_aktien_dict['name'] = name
+        key_aktien_dict['wert'] = kurs_veraenderung
+        self.ka_aktienCSV.SchreibeInCSV(key_aktien_dict)
+        key_aktien_dict.clear()
+
         # aktien_ende:
         name = 'aktien_ende'
         aktien_ende = anteile_ende * kurs_ende
@@ -156,6 +206,13 @@ class KA_Aktien:
         
 
     def KursEnde(self, kurs_anfang):
+            
+            for i in range(0,12):  #monatliche Fortschreibung der Aktienkurse
+                zufallszahl = random.random()
+                xi = NormalDist(mu=self.ex_aktien, sigma=self.sigma).inv_cdf(zufallszahl)
+                kurs_anfang = kurs_anfang * (1 + xi)
+                print('KA_Aktien:KursEnde: i= ' + str(i) + 'aktien_kurs= ' +str(kurs_anfang))    
+            
             return kurs_anfang
 
 

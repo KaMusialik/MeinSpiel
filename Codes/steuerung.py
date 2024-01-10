@@ -46,6 +46,7 @@ files_dict['fortschreibungwindow_file'] = files_dict.get('work_dir')+'fortschrei
 files_dict['cashflowWindow_file'] = files_dict.get('work_dir')+'cashflowWindow.ui'
 files_dict['kapitalanlagenWindow_file'] = files_dict.get('work_dir')+'kapitalanlagenWindow.ui'
 files_dict['rentenWindow_file'] = files_dict.get('work_dir')+'rentenWindow.ui'
+files_dict['ui_ka_aktienWindow_file'] = files_dict.get('work_dir')+'ka_aktienWindow.ui'
 
 # icons:
 files_dict['file_icon_grundeinstellungwindow'] = files_dict.get('work_dir')+'iconGrundeinstellungWindow.png'
@@ -63,6 +64,7 @@ files_dict['file_kapitalanlagen_sa_csv'] = files_dict.get('work_dir') + 'ka_sa.c
 files_dict['protokoll_file_cashflowWindow'] = files_dict.get('work_dir') + 'protokoll_cashflowWindow.txt'
 files_dict['protokoll_file_kapitalanlagenWindow'] = files_dict.get('work_dir') + 'protokoll_kapitalanlagenWindow.txt'
 files_dict['protokoll_file_rentenWindow'] = files_dict.get('work_dir') + 'protokoll_rentenWindow.txt'
+files_dict['protokoll_file_ka_aktienWindow'] = files_dict.get('work_dir') + 'protokoll_ka_aktienWindow.txt'
 files_dict['file_renten_csv_struktur'] = {'jahr':int, 'nr':int, 'von':int, 'bis':int, 'name':str, 'wert':str}
 files_dict['file_aktien_csv_struktur'] = {'jahr':int, 'name':str, 'wert':str}
 
@@ -71,6 +73,7 @@ files_dict['file_grafik_zsk'] = files_dict.get('work_dir')+'grafik_zsk.png'
 files_dict['grafik_file_entwicklung_renten'] = files_dict.get('work_dir')+'grafik_renten.png'
 
 files_dict['optionen_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'optionen_grundeinstellungwindow.csv'
+files_dict['optionen_file_grundeinstellungwindow_struktur'] = {'key':str, 'wert':str}
 files_dict['protokoll_file_grundeinstellungwindow'] = files_dict.get('work_dir')+'protokoll_grundeinstellungwindow.txt'
 
 files_dict['protokoll_file_guvwindow'] = files_dict.get('work_dir')+'protokoll_guvwindow.txt'

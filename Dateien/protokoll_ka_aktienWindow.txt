@@ -1,0 +1,2 @@
+KA_AktienWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/ka_aktien.csv existiert
+KA_AktienWindow/init: Die Datei /home/karol/Projekte/MeinSpiel/Dateien/ka_aktienWindow.ui existiert

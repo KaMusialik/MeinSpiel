@@ -218,6 +218,10 @@ class GrundEinstelleungWindow():
         key = 'ka_renten_sa'
         text = str(ka_renten_sa)   
         self.oopt.SchreibeInOptionen(key, text)
+
+        key = 'ka_aktien_sa'
+        text = str(ka_renten_sa)   
+        self.oopt.SchreibeInOptionen(key, text)
         
         wert_s = self.w.lineEdit_ProvisionRente.text()
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000

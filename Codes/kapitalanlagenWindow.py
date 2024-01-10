@@ -2,7 +2,10 @@
 
 import protokoll as prot
 import pandas as pd
+
 import rentenWindow
+import ka_aktienWindow
+
 import kapitalanlagenCSV
 
 from pathlib import Path
@@ -72,7 +75,13 @@ class KapitalanlagenWindow():
         
         self.w.setWindowTitle('Kapitalanlage ...')
         self.w.pushButton_rentenWindow.clicked.connect(self.ZeigeWindowRenten)
+        self.w.pushButton_ka_aktienWindow.clicked.connect(self.ZeigeWindowAktien)
         self.kapitalanlagenCSV = kapitalanlagenCSV.KapitalanlagenCSV(f_dict)
+    
+    def ZeigeWindowAktien(self):
+            oWindow = ka_aktienWindow.KA_AktienWindow(self.f_dict)
+            oWindow.RufeFensterAuf()    
+
     
     def ZeigeWindowRenten(self):
             oWindow = rentenWindow.RentenWindow(self.f_dict)
