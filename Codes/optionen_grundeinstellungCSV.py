@@ -68,14 +68,23 @@ class Optionen_GrundeinstellungCSV():
         
         if self.LeseWertAusCSV(key_dict) != 0:  # da ist schon etwas in der Tabelle
             df = pd.read_csv(datei, sep=';', dtype=self.file_struktur)  # in diesem df muss der eine Datensatz gelöscht werden 
-            index = self.ErmillteIndexZumLoeschen(df, key_dict)
-            if index == 0:  # die Zeile zum löschen wurde nicht eindeutig gefunden
+            indexListe = []
+            indexListe = self.ErmillteIndexZumLoeschen(df, key_dict)
+            if len(indexListe) == 0:  # die Zeile zum löschen wurde nicht eindeutig gefunden
                 text='Optionen_GrundeinstellungCSV/ZeileLoeschenInCSV: Eintrag in der Optionen_GrundeinstellungCSV konnte nicht gelöscht werden. Daten: key='+str(key)
                 print(text)
                 return
             else:
-                df1 = df.drop([index])
-                df1.to_csv(datei, ';', index=False)
+                df1 = df.drop(indexListe)
+                df1.to_csv(path_or_buf=datei, sep=';', index=False)
                 text='Optionen_GrundeinstellungCSV/ZeileLoeschenInCSV: Eintrag in der Optionen_GrundeinstellungCSV geloescht: key='+str(key)
                 print(text)
 
+    def ErmillteIndexZumLoeschen(self, df, key_dict):
+
+        key = str(key_dict.get('key'))
+
+        df1 = df[(df['key'] == key)]
+        wert = df1.index
+
+        return wert

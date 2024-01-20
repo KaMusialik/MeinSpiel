@@ -43,7 +43,7 @@ class KA_Aktien:
         ocsv['jahr'] = None
         ocsv['name'] = None
         ocsv["wert"] = None
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text = 'KA_Aktien/LegeAktienTabelleAn: Tabelle fuer die Aktien wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)

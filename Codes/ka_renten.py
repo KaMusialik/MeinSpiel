@@ -520,7 +520,7 @@ class KA_Renten(object):
         ocsv['name']=None
         ocsv["wert"]=None
         ocsv[['jahr', 'nr', 'von', 'bis', 'name', 'wert']] = ocsv[['jahr', 'nr', 'von', 'bis', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='ka_renten/LegeRentenTabelleAn: Tabelle fuer die Renten wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)
@@ -535,7 +535,7 @@ class KA_Renten(object):
         ocsv['name']=None
         ocsv["wert"]=None
         ocsv[['jahr', 'nr', 'von', 'bis', 'name', 'wert']] = ocsv[['jahr', 'nr', 'von', 'bis', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='ka_renten_sa: Tabelle fuer die Renten_SA wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)

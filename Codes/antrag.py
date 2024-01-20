@@ -29,7 +29,7 @@ class Antrag():
         ocsv["name"]=None
         ocsv["wert"]=None
         ocsv[['antragsnummer', 'name', 'wert']] = ocsv[['antragsnummer', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
     
     def LegeVerriebstabelleFest(self, file_vertrieb):
         self.file_vertrieb = file_vertrieb

@@ -216,7 +216,7 @@ class Zinsstrukturkurve(object):
             index=index+1
 
         ocsv[satz] = ocsv[satz].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
     
     def LegeZinskurveTabelleAn(self):
@@ -249,7 +249,7 @@ class Zinsstrukturkurve(object):
             index=index+1
         
         ocsv[satz] = ocsv[satz].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
 
     def LeseZinskurveStart(self):
         #aus der Zisnstrukturkurvetabelle (quelle) werden die relevanten Werte der letzten Jahre ausgelesen

@@ -78,7 +78,7 @@ class Bilanz(object):
         ocsv["name"]=None
         ocsv["wert"]=None
         ocsv[['jahr', 'rl', 'avbg', 'name', 'wert']] = ocsv[['jahr', 'rl', 'avbg', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='Bilanz/LegeBilanzAn: bilanztabelle wurde angelegt: '+str(self.file_bilanz)
         self.oprot.SchreibeInProtokoll(text)

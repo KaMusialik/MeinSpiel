@@ -32,7 +32,7 @@ class Nachreservierung():
         ocsv["wert"] = None
         
         ocsv[['jahr', 'tkz', 'name', 'wert']] = ocsv[['jahr', 'tkz', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='nachreservierun/LegeTabelleVertriebAn: Tabelle fuer Vertrieb/Neugeschäft wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)

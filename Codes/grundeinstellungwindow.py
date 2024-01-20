@@ -3,6 +3,7 @@ import optionen as opt
 import protokoll as prot
 import pandas as pd
 import oeffnePDF as pdf
+import optionen_grundeinstellungCSV
 
 import hilfe_system as hs
 
@@ -25,9 +26,9 @@ class GrundEinstelleungWindow():
             text = 'Die Datei ' + f_opt+ ' existiert und die vorhandenen Daten werden als Startdaten ausgelesen.'
             self.oprot.SchreibeInProtokoll(text)
             self.start_dict['file'] = f_opt
-            self.LeseStartDatenAusOptionen()
+        
             
-        self.oopt = opt.Optionen(f_dict.get('optionen_file_grundeinstellungwindow'))  
+        #self.oopt = opt.Optionen(f_dict.get('optionen_file_grundeinstellungwindow'))  
         
         self.file_ui = f_dict.get('grundeinstellungwindow_file')
         
@@ -48,6 +49,8 @@ class GrundEinstelleungWindow():
             
         self.ohs = hs.ZahlenFormatieren()
     
+        self.optionenCSV = optionen_grundeinstellungCSV.Optionen_GrundeinstellungCSV(f_dict)
+        
         startwertDarlehenszins = 5
         self.w.horizontalSlider_Darlehenszins.setMinimum(0)
         self.w.horizontalSlider_Darlehenszins.setMaximum(10)
@@ -62,10 +65,43 @@ class GrundEinstelleungWindow():
         self.w.pushButton_Info_RisikoInKapitalanlage.clicked.connect(self.InfoRisikoInKapitalanlage)
         self.w.setWindowTitle = 'Einstellungen/Startparameter'
 
-    
+        # fix-Kosten:
+        self.w.horizontalSlider_fixkosten.setMinimum(0)
+        self.w.horizontalSlider_fixkosten.setMaximum(10)
+        self.w.horizontalSlider_fixkosten.setValue(int(2))
+        self.w.horizontalSlider_fixkosten.valueChanged.connect(self.HorizontalSlider_fixkosten)
+        # iAK:
+        self.w.horizontalSlider_iak.setMinimum(0)
+        self.w.horizontalSlider_iak.setMaximum(20)
+        self.w.horizontalSlider_iak.setValue(int(10))
+        self.w.horizontalSlider_iak.valueChanged.connect(self.HorizontalSlider_iak)
+        # fix-Kosten:
+        self.w.horizontalSlider_vk_stueck.setMinimum(0)
+        self.w.horizontalSlider_vk_stueck.setMaximum(50)
+        self.w.horizontalSlider_vk_stueck.setValue(int(20))
+        self.w.horizontalSlider_vk_stueck.valueChanged.connect(self.HorizontalSlider_vk_stueck)
+
+        self.LeseStartDatenAusOptionen()
+
+    def HorizontalSlider_fixkosten(self):
+        betrag = self.w.horizontalSlider_fixkosten.value()
+        self.w.label_fixkosten.setText(str(betrag))
+
+
+    def HorizontalSlider_vk_stueck(self):
+        betrag = self.w.horizontalSlider_vk_stueck.value()
+        self.w.label_vk_stueck.setText(str(betrag))
+
+
+    def HorizontalSlider_iak(self):
+        betrag = self.w.horizontalSlider_iak.value()
+        self.w.label_iak.setText(str(betrag))
+
+
     def DarlehenszinsSlider(self):
         betrag = self.w.horizontalSlider_Darlehenszins.value()
         self.w.label_Darlehenszins.setText(str(betrag))
+
 
     def ZeigeStartWerte(self):
         
@@ -137,68 +173,122 @@ class GrundEinstelleungWindow():
         self.w.lineEdit_ProvisionBu.setText(wert_s)
 
         wert_s = self.start_dict.get('anzahlMarktBu')
-        if wert_s == '':
+        if wert_s == '' or wert_s == None:
             wert_s = '0'
 
         wert_f = float(wert_s)
         wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
         self.w.lineEdit_AnzahlBu.setText(wert_s)
+
+        # Wert für Fixkosten:
+        key = 'fixkosten'
+        wert_s = self.start_dict.get(key)
+        if wert_s == '' or wert_s == None:
+            wert_s = '0.0'
+        
+        wert_f = float(wert_s) / 1000000.0
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.label_fixkosten.setText(wert_s)
+    
+        # Wert für iAK:
+        key = 'iak'
+        wert_s = self.start_dict.get(key)
+        if wert_s == '' or wert_s == None:
+            wert_s = '0.0'
+        
+        wert_f = float(wert_s) * 1000.0
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.label_iak.setText(wert_s)
+
+        # Wert für vk_stueck:
+        key = 'vk_stueck'
+        wert_s = self.start_dict.get(key)
+        if wert_s == '' or wert_s == None:
+            wert_s = '0.0'
+        
+        wert_f = float(wert_s)
+        wert_s = self.ohs.FloatZuStgMitTausendtrennzeichen(wert_f,1)
+        self.w.label_vk_stueck.setText(wert_s)
     
     
     def LeseStartDatenAusOptionen(self):
-        file = self.start_dict.get('file')
+        keyDict = {}
         
         #Wert für Kapitalanlagen Renten:
+        
         key = 'ka_renten_sa'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
 
         #Streuung im Neugeschäft:
         key = 'streuungImNG'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
         
         #Wert für Provison Renten:
         key = 'provisionMarktBu'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
 
         #Wert für Provison Renten:
         key = 'provisionMarktRente'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
 
         #Wert für Anzahl Renten:
         key = 'anzahlMarktRente'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
 
         #Wert für Anzahl BU:
         key = 'anzahlMarktBu'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
+        keyDict.clear()
 
         #Wert für Anzahl BU:
         key = 'nachreservierungJaNein'
-        wert = self.LeseCsvOptinen(file, key)
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
-    
-    def LeseCsvOptinen(self, file, key):
-        wert = ""
-        df=pd.read_csv(file, sep=";")
-        df1 = df[df.key == key]
+        keyDict.clear()
+
+        #Wert für Fixkosten:
+        key = 'fixkosten'
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
+        self.start_dict[key] = wert
+        keyDict.clear()
+
+        #Wert für iAK:
+        key = 'iAK'
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
+        self.start_dict[key] = wert
+        keyDict.clear()
         
-        if df1.empty:
-            wert=""
-            text='Grundeinstellungwindow/LeseCsvOptinen: Kein Eintrag gefunden. Es wurde null verwendet: key='+str(print(key))
-            print(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
-        
-        return wert       
+        #Wert für vk_Stueck:
+        key = 'vk_stueck'
+        keyDict['key'] = key
+        wert = self.optionenCSV.LeseWertAusCSV(keyDict)
+        self.start_dict[key] = wert
+        keyDict.clear()
+
     
     def LeseDatenAusFenster(self):
+        
+        keyDict = {}  # hier werden die Daten abgelegt, die in die Tabelle Optionen reingeschrieben müssen
         
         #hier werden die Informationen aus dem Dialog ausgelesen und in die Datei Optionen reingeschrieben:
         if self.w.radioButton_KA_Risiko_normal.isChecked():
@@ -215,37 +305,57 @@ class GrundEinstelleungWindow():
         text = 'Grundeinstellungwindow/LeseDatenAusFenster: Das Risiko in der Kapitalanlage in den Renten wurde festgelegt: ' + str(ka_renten_sa)   
         self.oprot.SchreibeInProtokoll(text)
         
+        # einstellung zu den Rentenpapieren:
         key = 'ka_renten_sa'
         text = str(ka_renten_sa)   
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
 
+        # Einstellung zu Aktien:
         key = 'ka_aktien_sa'
         text = str(ka_renten_sa)   
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
         
         wert_s = self.w.lineEdit_ProvisionRente.text()
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000
         key = 'provisionMarktRente'
         text = str(wert_f)
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
 
         wert_s = self.w.lineEdit_AnzahlRente.text()
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) 
         key = 'anzahlMarktRente'
         text = str(wert_f)
-        self.oopt.SchreibeInOptionen(key, text)
-        
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
+       
         wert_s = self.w.lineEdit_ProvisionBu.text()
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000
         key = 'provisionMarktBu'
         text = str(wert_f)
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
 
         wert_s = self.w.lineEdit_AnzahlBu.text()
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) 
         key = 'anzahlMarktBu'
         text = str(wert_f)
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
         
         if self.w.radioButton_StreuungImNG_normal.isChecked():
             streuungImNG = 'normal'
@@ -262,7 +372,10 @@ class GrundEinstelleungWindow():
             
         key = 'streuungImNG'
         text = str(streuungImNG)   
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
         
         ### Nachreservierung:
         key = 'nachreservierungJaNein'
@@ -272,7 +385,10 @@ class GrundEinstelleungWindow():
             nachreservierungJaNein= 'nein'
             
         text = str(nachreservierungJaNein)   
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
         
         ### Ende Nachreservierung
         
@@ -280,9 +396,46 @@ class GrundEinstelleungWindow():
         key = 'darlehenszins'
         wert = float(self.w.label_Darlehenszins.text())/100.0
         text = str(wert)   
-        self.oopt.SchreibeInOptionen(key, text)
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
 
         ### Ende Darlehenszins
+
+        ### Kosten:
+        # Fixkosten:
+        key = 'fixkosten'
+        wert_s = str(self.w.label_fixkosten.text())
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) * 1000000.0  # Wert auf der Maske ist in Mio.
+        text = str(wert_f)   
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
+
+        # iAK:
+        key = 'iAK'
+        wert_s = str(self.w.label_iak.text())
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000.0  # Wert auf der Maske ist in Promille
+        text = str(wert_f)     
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
+
+        # vk_stueck:
+        key = 'vk_stueck'
+        wert_s = str(self.w.label_vk_stueck.text())
+        wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s)  # Wert auf der Maske ist in Euro
+        text = str(wert_f)     
+        keyDict['key'] = key
+        keyDict['wert'] = text
+        self.optionenCSV.SchreibeInCSV(keyDict)
+        keyDict.clear()
+
+
+        ### Ende Kosten
         
         
         
@@ -297,6 +450,7 @@ class GrundEinstelleungWindow():
     def SchliesseFenster(self):
         self.w.close()
         
+    
     def RufeFensterAuf(self):
         self.w.pushButton_weiter.clicked.connect(self.LeseDatenAusFenster)
         self.ZeigeStartWerte()

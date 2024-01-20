@@ -20,7 +20,7 @@ class Provision():
         ocsv["gevo"]=None
         ocsv["name"]=None
         ocsv["wert"]=None
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
 
     
     def LeseAusProvisionCSV(self, key_dict):

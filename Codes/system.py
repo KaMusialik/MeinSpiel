@@ -67,7 +67,7 @@ class System():
         ocsv["histnr"]=None
         ocsv["name"]=None
         ocsv["wert"]=None
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
 
     def LegeBestand(self):
         datei=self.file_system_bestand
@@ -78,7 +78,7 @@ class System():
         ocsv["bis"]=None
         ocsv["name"]=None
         ocsv["wert"]=None
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
 
     def LegeFortschreibung(self):
         datei=self.file_system_fortschreibung
@@ -89,7 +89,7 @@ class System():
         ocsv["bis"]=None
         ocsv["name"]=None
         ocsv["wert"]=None
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
 
     def LegeAntragstabelleFest(self, file_system_antrag):
             self.file_system_antrag = file_system_antrag

@@ -462,7 +462,7 @@ class Kapitalanlagen:
         ocsv["name"]=None
         ocsv["wert"]=None
         ocsv[['jahr', 'topf','name', 'wert']] = ocsv[['jahr', 'topf','name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='Kapitalanlegen: Tabelle fuer die Kapitalanlagen wurde angelegt: '+str(self.file_kapitalanlagen)
         self.oprot.SchreibeInProtokoll(text)
@@ -475,7 +475,7 @@ class Kapitalanlagen:
         ocsv['name']=None
         ocsv["wert"]=None
         ocsv[['jahr', 'name', 'wert']] = ocsv[['jahr', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
+        ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
         text='Kapitalanlegen: Tabelle fuer die SA wurde angelegt: '+str(datei)
         self.oprot.SchreibeInProtokoll(text)

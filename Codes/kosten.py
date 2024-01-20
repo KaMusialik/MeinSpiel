@@ -2,6 +2,8 @@
 
 import protokoll as prot
 import hilfe_statistik as hs
+import optionen_grundeinstellungCSV
+import kostenCSV
 
 import pandas as pd
 import random 
@@ -12,7 +14,9 @@ from pathlib import Path
 class Kosten():
 
     def __init__(self, f_dict):
-        self.optionen_file_kosten = f_dict.get('optionen_file_kosten')  
+        self.optionenCSV = optionen_grundeinstellungCSV.Optionen_GrundeinstellungCSV(f_dict) 
+        self.kostenCSV = kostenCSV.KostenCSV(f_dict)
+        
         self.oprot = prot.Protokoll(f_dict.get('protokoll_file_kosten'))
         
         self.file_kosten = f_dict.get('file_kosten')
@@ -20,21 +24,47 @@ class Kosten():
         
         self.file_system_fortfreibung = f_dict.get('file_system_fortschreibung')
         self.file_system_fortschteibung_struktur = f_dict.get('file_system_fortschreibung_struktur')
+
+        self.LegeFileKosten()
+        self.fixkosten = 0.0  # fixer Betrag in Euro
+        self.iak = 0.0  # in %0 der BS
+        self.vk_stueck = 0.0  # in Euro
+
+        self.InitalisiereKosten()  # hier werden die Kostensätze aus optionen gelesen
+    
+    def InitalisiereKosten(self):  # hier werden die Kosten aus Optionen gelesen
+        keyOptionenDict = {}
+        
+        # Fixkosten:
+        key = 'fixkosten'
+        keyOptionenDict['key'] = key
+        wert_s = self.optionenCSV.LeseWertAusCSV(keyOptionenDict)
+        wert_f = float(wert_s)
+        self.fixkosten = wert_f
+        keyOptionenDict.clear()
+
+        # iAK:
+        key = 'iak'
+        keyOptionenDict['key'] = key
+        wert_s = self.optionenCSV.LeseWertAusCSV(keyOptionenDict)
+        wert_f = float(wert_s)
+        self.iak = wert_f
+        keyOptionenDict.clear()
+
+        # vk_stueck:
+        key = 'vk_stueck'
+        keyOptionenDict['key'] = key
+        wert_s = self.optionenCSV.LeseWertAusCSV(keyOptionenDict)
+        wert_f = float(wert_s)
+        self.vk_stueck = wert_f
+        keyOptionenDict.clear()
     
     
     def LegeTabelleKostenAn(self):
+        self.kostenCSV.LegeTabelleKostenCSVAn()
+        
         datei = self.file_kosten
-        ocsv = pd.DataFrame()
-        ocsv['jahr'] = None
-        ocsv['vsnr'] = None
-        ocsv['avbg'] = None
-        ocsv['name'] = None
-        ocsv["wert"] = None
-        
-        ocsv[['jahr', 'vsnr', 'avbg', 'name', 'wert']] = ocsv[['jahr', 'vsnr', 'avbg', 'name', 'wert']].astype(str)
-        ocsv.to_csv(datei, ';', index=False)
-        
-        text='Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: '+str(datei)
+        text='Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: ' + str(datei)
         self.oprot.SchreibeInProtokoll(text)
         
     
@@ -116,36 +146,12 @@ class Kosten():
         return wert
 
     
-    def LeseAusKostenCSV(self, key_dict):
-        datei = self.file_kosten
-        struktur = self.file_kosten_struktur
-        
-        df = pd.read_csv(datei, sep=";",  dtype = struktur)
-        
-        jahr = int(key_dict.get('jahr'))
-        vsnr = int(key_dict.get('vsnr'))
-        avbg = str(key_dict.get('avbg'))
-        name = str(key_dict.get('name'))
-
-        df1 = df[( (df.jahr == jahr) & (df.vsnr == vsnr) & (df.name == name) & (df.avbg == avbg))]
-        
-        if df1.empty:
-            wert=0
-            text='In der Kostentabelle: ' + datei + ' zu den Daten: ' +str(key_dict ) + ' wurden keine Daten gefunden'
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
- 
-        return wert
-    
-    
     def Rechne_iAK(self, vtg_dict):
         key_dict = {}
         key_dict['avbg'] = vtg_dict.get('avbg')
         key_dict['name'] = 'iAK'
         
-        satz_iAK = float(self.LeseAusOptionenCSV(key_dict))
+        satz_iAK = self.iak
         bs = float(vtg_dict.get('beitragssumme'))
         anzahl = float(vtg_dict.get('anzahl'))
         
@@ -155,31 +161,25 @@ class Kosten():
         return vtg_dict
     
     
-    def SchreibeInKosten(self, eintrag_dict):
-        datei = self.file_kosten
-        
-        jahr = eintrag_dict.get('jahr')
-        vsnr = eintrag_dict.get('vsnr')
-        avbg = eintrag_dict.get('avbg')
-        name = eintrag_dict.get('name')
-        wert = eintrag_dict.get('wert')
-                
-        text = str(jahr) + ';' + str(vsnr) + ';' + str(avbg) + ';' + str(name) + ';' + str(wert) + '\n'
-        
-        f=open(datei, "a")
-        f.write(text)    
-        f.close()     
-
-    
     def RechneVerwaltungskostenStueck(self, vtg_dict):
         key_dict = {}
         key_dict['avbg'] = vtg_dict.get('avbg')
         key_dict['name'] = 'VK_Stueck'
         
-        satz = float(self.LeseAusOptionenCSV(key_dict))
+        satz = self.vk_stueck
         anzahl = float(vtg_dict.get('anzahl'))
         
         vtg_dict['VK_Stueck'] = satz * anzahl
+ 
+        return vtg_dict
+
+
+    def RechneFixkosten(self, vtg_dict):
+        key_dict = {}
+        key_dict['avbg'] = vtg_dict.get('avbg')
+        key_dict['name'] = 'fixkosten'
+        
+        vtg_dict['fixkosten'] = self.file_kosten
  
         return vtg_dict
 
@@ -213,7 +213,7 @@ class Kosten():
                 eintrag_dict['wert'] = 0.0
                 
             
-            self.SchreibeInKosten(eintrag_dict)
+            self.kostenCSV.SchreibeInKosten(eintrag_dict)
             
             #Verwaltungskosten Stückkosten:
             eintrag_dict['name'] = 'VK_Stueck'
@@ -221,5 +221,15 @@ class Kosten():
             vtg_dict = self.RechneVerwaltungskostenStueck(vtg_dict)
             eintrag_dict['avbg'] = vtg_dict.get('avbg')            
             eintrag_dict['wert'] = vtg_dict.get('VK_Stueck')
-            self.SchreibeInKosten(eintrag_dict)
+            self.kostenCSV.SchreibeInKosten(eintrag_dict)
+
+        #Fixkosten:
+        eintrag_dict['vsnr'] = '999'
+        eintrag_dict['jahr'] = str(jahr)
+        eintrag_dict['name'] = 'fixkosten'
+        eintrag_dict['avbg'] = '999' 
+        
+        vtg_dict = self.RechneFixkosten(vtg_dict)           
+        eintrag_dict['wert'] = vtg_dict.get('fixkosten')
+        self.kostenCSV.SchreibeInKosten(eintrag_dict)
             

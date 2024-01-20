@@ -537,7 +537,6 @@ def Steuerung():
     ZeigeKostenModellTabelleAn()
     
     okosten = kosten.Kosten(files_dict)
-    okosten.LegeFileKosten()
     
     # Nachreservierung:
     onachres = nachreservierung.Nachreservierung(files_dict)
