@@ -25,9 +25,12 @@ import kapitalanlagen as kap
 import provision
 import nachreservierung
 import kosten
+import kostenCSV
 import vertraegeausfortschreibungwindow
 import cashflowWindow
 import kapitalanlagenWindow
+
+import hilfe_system
 
 files_dict = {}
 # work directory:
@@ -132,7 +135,7 @@ files_dict['protokoll_file_vertraegeausderfortschreibungwindow'] = files_dict.ge
 #Kosten:
 files_dict['optionen_file_kosten'] = files_dict.get('work_dir')+'optionen_kosten.csv'
 files_dict['protokoll_file_kosten'] = files_dict.get('work_dir')+'protokoll_kosten.txt'
-files_dict['file_kosten'] = files_dict.get('work_dir')+'kosten.csv'
+files_dict['file_kosten'] = files_dict.get('work_dir') + 'kosten.csv'
 files_dict['file_kosten_struktur'] = { 'jahr':int, 'vsnr':int, 'avbg':str, 'name':str, 'wert':float }
 
 
@@ -236,10 +239,43 @@ def ZeigeStatistikTabelleAn():
 
 def ZeigeKostenModellTabelleAn():
     #Hier wird die Kosten-Optionentabelle angezeigt
-    tabelle = wSpielwindow.tableWidget_Kostenmodell
-    ozD = zD.ZeigeDatnInTabelle(tabelle)
-    file_daten = files_dict.get('optionen_file_kosten')
-    ozD.SchreibeDatenIntabelle(file_daten)
+    okostenCSV = kostenCSV.KostenCSV(files_dict)
+    oh = hilfe_system.ZahlenFormatieren()
+
+    # Fixkosten:
+    eintrag_dict = {}
+    eintrag_dict['vsnr'] = 999
+    eintrag_dict['jahr'] = str(jahr_beginn)
+    eintrag_dict['name'] = 'fixkosten_grund'
+    eintrag_dict['avbg'] = '999'
+    wert_f = okostenCSV.LeseKostenCSV(eintrag_dict)
+    wert_f = wert_f / 1000000.0  # da der Wert in Mio. ist
+    wert_s = oh.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+    wSpielwindow.label_fixkosten.setText(wert_s)
+    eintrag_dict.clear()
+
+    # iAK:
+    eintrag_dict['vsnr'] = 999
+    eintrag_dict['jahr'] = str(jahr_beginn)
+    eintrag_dict['name'] = 'iak_grund'
+    eintrag_dict['avbg'] = '999'
+    wert_f = okostenCSV.LeseKostenCSV(eintrag_dict)
+    wert_f = wert_f * 1000.0  # da der Wert in %o ist
+    wert_s = oh.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+    wSpielwindow.label_iak.setText(wert_s)
+    eintrag_dict.clear()
+
+    # vk_stück:
+    eintrag_dict['vsnr'] = 999
+    eintrag_dict['jahr'] = str(jahr_beginn)
+    eintrag_dict['name'] = 'vk_stueck_grund'
+    eintrag_dict['avbg'] = '999'
+    wert_f = okostenCSV.LeseKostenCSV(eintrag_dict)
+    wert_f = wert_f  # da der Wert in Euro
+    wert_s = oh.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
+    wSpielwindow.label_vk_stueck.setText(wert_s)
+    eintrag_dict.clear()
+
 
 
 def LegeLaufzeitAuswahlBeiRentenFestInKa():
@@ -533,11 +569,11 @@ def Steuerung():
     # die Tabelle im Dialog mit Ergebnissen der GuV wird angelegt:
     ZeigeGuVTabelleAn()
 
-    # die Tabelle mit Kostenmodell wird angezeigtt:
-    ZeigeKostenModellTabelleAn()
-    
     okosten = kosten.Kosten(files_dict)
-    
+    # die Tabelle mit Kostenmodell wird angezeigt:
+    ZeigeKostenModellTabelleAn()
+
+
     # Nachreservierung:
     onachres = nachreservierung.Nachreservierung(files_dict)
     onachres.LegeFileNachreservierung()

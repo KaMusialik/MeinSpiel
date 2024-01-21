@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import protokoll as prot
-import hilfe_statistik as hs
+#import hilfe_statistik as hs
 import optionen_grundeinstellungCSV
 import kostenCSV
 
 import pandas as pd
-import random 
+#import random
 import os
 from pathlib import Path
 
@@ -31,6 +31,9 @@ class Kosten():
         self.vk_stueck = 0.0  # in Euro
 
         self.InitalisiereKosten()  # hier werden die Kostensätze aus optionen gelesen
+
+        startJahr = f_dict.get('Startjahr_Simulation')
+        self.InitiallisiereKostenParameter(startJahr)  # hier werden die Kostensätze in die KostenCSV reingeschrieben
     
     def InitalisiereKosten(self):  # hier werden die Kosten aus Optionen gelesen
         keyOptionenDict = {}
@@ -64,14 +67,14 @@ class Kosten():
         self.kostenCSV.LegeTabelleKostenCSVAn()
         
         datei = self.file_kosten
-        text='Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: ' + str(datei)
+        text = 'Kosten/LegeTabelleKostenAn: Tabelle fuer Kosten wurde angelegt: ' + str(datei)
         self.oprot.SchreibeInProtokoll(text)
         
     
     def LegeFileKosten(self):
-        datei= Path(self.file_kosten)
+        datei = Path(self.file_kosten)
         if datei.is_file():
-            text="Kosten/LegeFileKosten " +str(datei)+ " existiert bereits. Daher muss die Datein zuerst entfernt werden."
+            text = "Kosten/LegeFileKosten " + str(datei) + " existiert bereits. Daher muss die Datein zuerst entfernt werden."
             print(text)
             self.oprot.SchreibeInProtokoll(text)
             os.remove(datei)
@@ -124,26 +127,6 @@ class Kosten():
             vtg_dict[name] = wert
 
         return vtg_dict
-    
-    
-    def LeseAusOptionenCSV(self, key_dict):
-        datei = self.optionen_file_kosten
-        df = pd.read_csv(datei, sep=";")
-        
-        name = str(key_dict.get('name')).replace(' ', '')
-        avbg = str(key_dict.get('avbg')).replace(' ', '')
-
-        df1 = df[((df.name == name) & (df.avbg == avbg))]
-        
-        if df1.empty:
-            wert=0
-            text='In der OptionenKostentabelle: ' + datei + ' zu den Daten: ' +str(key_dict ) + ' wurden keine Daten gefunden'
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            index=df1.index[0]
-            wert=df1.at[index, 'wert']
- 
-        return wert
 
     
     def Rechne_iAK(self, vtg_dict):
@@ -230,6 +213,36 @@ class Kosten():
         eintrag_dict['avbg'] = '999' 
         
         vtg_dict = self.RechneFixkosten(vtg_dict)           
-        eintrag_dict['wert'] = vtg_dict.get('fixkosten')
+        eintrag_dict['wert'] = self.fixkosten
         self.kostenCSV.SchreibeInKosten(eintrag_dict)
-            
+
+    def InitiallisiereKostenParameter(self, jahr):
+        # Fixkosten:
+        eintrag_dict = {}
+        eintrag_dict['vsnr'] = 999
+        eintrag_dict['jahr'] = str(jahr)
+        eintrag_dict['name'] = 'fixkosten_grund'
+        eintrag_dict['avbg'] = '999'
+        eintrag_dict['wert'] = self.fixkosten
+        self.kostenCSV.SchreibeInKosten(eintrag_dict)
+        eintrag_dict.clear()
+
+        #vk_stück:
+        eintrag_dict['vsnr'] = 999
+        eintrag_dict['jahr'] = str(jahr)
+        eintrag_dict['name'] = 'vk_stueck_grund'
+        eintrag_dict['avbg'] = '999'
+        eintrag_dict['wert'] = self.vk_stueck
+        self.kostenCSV.SchreibeInKosten(eintrag_dict)
+        eintrag_dict.clear()
+
+        #iAK:
+        eintrag_dict['vsnr'] = 999
+        eintrag_dict['jahr'] = str(jahr)
+        eintrag_dict['name'] = 'iak_grund'
+        eintrag_dict['avbg'] = '999'
+        eintrag_dict['wert'] = self.iak
+        self.kostenCSV.SchreibeInKosten(eintrag_dict)
+        eintrag_dict.clear()
+
+

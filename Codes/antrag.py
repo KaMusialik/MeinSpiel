@@ -35,11 +35,11 @@ class Antrag():
         self.file_vertrieb = file_vertrieb
         
     def LeseVertrieb(self, jahr):
-        jahr=str(jahr).zfill(4)
-        datei=self.file_vertrieb
-        df=pd.read_csv(datei, sep=";", dtype=object)
+        jahr = str(jahr).zfill(4)
+        datei = self.file_vertrieb
+        df = pd.read_csv(datei, sep=";", dtype=object)
         df1 = df[(df.jahr == str(jahr))]
-        df1.to_csv(self.temp, ';', index=False)
+        df1.to_csv(path_or_buf=self.temp, sep=';', index=False)
         self.LeseDatensaetzteAusCSV()
         os.remove(self.temp)
         

@@ -1,4 +1,5 @@
 key;wert
+iAK;0.014
 ka_renten_sa;normal
 ka_aktien_sa;normal
 provisionMarktRente;0.045
@@ -8,6 +9,6 @@ anzahlMarktBu;15000.0
 streuungImNG;keine Streuung
 nachreservierungJaNein;nein
 darlehenszins;0.05
-fixkosten;6000000.0
-iAK;0.02
-vk_stueck;33.0
+fixkosten;5000000.0
+iak;0.015
+vk_stueck;5.0

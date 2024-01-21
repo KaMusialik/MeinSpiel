@@ -191,7 +191,7 @@ class GrundEinstelleungWindow():
         self.w.label_fixkosten.setText(wert_s)
     
         # Wert für iAK:
-        key = 'iak'
+        key = 'iAK'
         wert_s = self.start_dict.get(key)
         if wert_s == '' or wert_s == None:
             wert_s = '0.0'
@@ -272,7 +272,7 @@ class GrundEinstelleungWindow():
         keyDict.clear()
 
         #Wert für iAK:
-        key = 'iAK'
+        key = 'iak'
         keyDict['key'] = key
         wert = self.optionenCSV.LeseWertAusCSV(keyDict)
         self.start_dict[key] = wert
@@ -415,7 +415,7 @@ class GrundEinstelleungWindow():
         keyDict.clear()
 
         # iAK:
-        key = 'iAK'
+        key = 'iak'
         wert_s = str(self.w.label_iak.text())
         wert_f = self.ohs.StgMitTausendtrennzeichenZuFloat(wert_s) / 1000.0  # Wert auf der Maske ist in Promille
         text = str(wert_f)     

@@ -9,10 +9,14 @@ import kapitalanlagenCSV
 import bilanzCSV
 import ka_rentenCSV
 import ka_aktienCSV
+import kostenCSV
 
 class Kapitalanlagen:
         
     def __init__(self, f_dict):
+
+        self.f_dict = f_dict
+
         file_protokoll = f_dict.get('protokoll_file_kapitalanlagen')
         self.oprot = prot.Protokoll(file_protokoll)
 
@@ -282,36 +286,36 @@ class Kapitalanlagen:
         key_dict['wert'] = kapitalertraege
         self.kapitalanlagenCSV.SchreibeInKapitalanlagenCSV(key_dict)
 
-    
-    def LeseAusKosten(self, key_dict):
-        datei = self.file_kosten
-        df = pd.read_csv(datei, sep=";", dtype=self.file_kosten_struktur)
-        
-        jahr= int(key_dict.get('jahr'))
-        name = key_dict.get('name')
-        
-        #welche verträge sind betroffen:
-        df1 = df[ ( (df.jahr == jahr) & (df.name == name) ) ]
-        df1 = df1.astype({'wert':float})  # Umwandlung des Feldes wert in float
-        wert = df1['wert'].sum()
-
-        return wert
 
 
     def ErmittleKosten(self, jahr):  # hier werden die Kosten für cf ermittelt
+
+        oKostenCSV = kostenCSV.KostenCSV(self.f_dict)
+
         key_dict = {}
         
         # interne AK (iAK):
         key_dict['jahr'] = jahr
         key_dict['name'] = 'iAK'
-        iAK = self.LeseAusKosten(key_dict)
+        key_dict['vsnr'] = 999
+        key_dict['avbg'] = '999'
+        iAK = oKostenCSV.LeseKostenCSV(key_dict)
         
         # Verwaltungskosten (VK_Stück):
         key_dict['jahr'] = jahr
         key_dict['name'] = 'VK_Stueck'
-        vk_Stueck = self.LeseAusKosten(key_dict)
+        key_dict['vsnr'] = 999
+        key_dict['avbg'] = '999'
+        vk_Stueck = oKostenCSV.LeseKostenCSV(key_dict)
 
-        wert = iAK + vk_Stueck
+        # fixkosten:
+        key_dict['jahr'] = jahr
+        key_dict['name'] = 'fixkosten'
+        key_dict['vsnr'] = 999
+        key_dict['avbg'] = '999'
+        fixkosten = oKostenCSV.LeseKostenCSV(key_dict)
+
+        wert = iAK + vk_Stueck + fixkosten
         return wert
 
     
