@@ -4,7 +4,3 @@ kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null ve
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
 kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
-kapitalanlagen/LeseSACSV: kein Eintrag in der Tabelle gefunden. Es wurde null verwendetNone
