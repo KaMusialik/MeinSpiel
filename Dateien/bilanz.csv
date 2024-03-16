@@ -1,8 +1,8 @@
 jahr;rl;avbg;name;wert
-2019;bilanz;999;eigenkapital_ende;100000
-2019;bilanz;999;kasse_ende;100000
-2020;bilanz;999;eigenkapital_anfang;100000.0
-2020;bilanz;999;kasse_anfang;100000.0
+2019;bilanz;999;eigenkapital_ende;100000000.0
+2019;bilanz;999;kasse_ende;100000000.0
+2020;bilanz;999;eigenkapital_anfang;100000000.0
+2020;bilanz;999;kasse_anfang;100000000.0
 2020;bilanz;999;kapitalanlagen_anfang;0.0
 2020;bilanz; BG111_Rente;bil_derue1_ende;526698.0
 2020;bilanz; BG113_Risiko;bil_derue1_ende;726480.0
@@ -31,18 +31,15 @@ jahr;rl;avbg;name;wert
 2020;guv; BG111_Rente;ap;270000.0
 2020;guv; BG113_Risiko;ap;4950000.0
 2020;guv;999;ap;5220000.0
-2020;guv; BG111_Rente;iAK;72000.0
-2020;guv; BG113_Risiko;iAK;1080000.0
 2020;guv;999;iAK;1152000.0
-2020;guv; BG111_Rente;VK_Stueck;5000.0
-2020;guv; BG113_Risiko;VK_Stueck;75000.0
 2020;guv;999;VK_Stueck;80000.0
-2020;bilanz;999;kapitalanlagen_ende;97880.0348320694
+2020;guv;999;fixkosten;5000000.0
+2020;bilanz;999;kapitalanlagen_ende;109354404.1607151
 2020;bilanz;999;kasse_ende;-6352000.0
-2020;guv;999;kapitalertraege;-2119.965167930598
+2020;guv;999;kapitalertraege;9354404.160715094
 2020;guv;999;zinsAufKasse;0.0
 2020;guv; BG111_Rente;bil_derue7_veraenderung;526698.0
 2020;guv; BG113_Risiko;bil_derue7_veraenderung;726480.0
 2020;guv;999;bil_derue7_veraenderung;1253178.0
-2020;guv;999;jahresueberschuss;-2607297.965167931
-2020;bilanz;999;eigenkapital_ende;-2507297.965167931
+2020;guv;999;jahresueberschuss;1749226.1607150938
+2020;bilanz;999;eigenkapital_ende;101749226.16071509

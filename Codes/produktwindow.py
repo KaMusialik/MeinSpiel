@@ -7,7 +7,6 @@ import pandas as pd
 from pathlib import Path
 
 import PyQt5.uic as uic
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5 import QtGui
 
@@ -28,7 +27,7 @@ class ProduktWindow():
       
         self.file_ui = f_dict.get('produktwindow_file')
 
-        datei= Path(self.file_ui)
+        datei = Path(self.file_ui)
         if datei.is_file():
             text = 'Produktwindow/init: Die Datei ' +self.file_ui+ ' existiert'
             self.oprot.SchreibeInProtokoll(text)
@@ -37,8 +36,11 @@ class ProduktWindow():
             
         else:
             self.w = None
-            text = 'Produktwindow/init: Die Datei ' +self.file_ui+ ' existiert nicht!'
+            text = 'Produktwindow/init: Die Datei ' + self.file_ui + ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
+            return
+
+        self.w.setWindowTitle('Produktdaten ...')
             
     def LeseProdukt(self):
         #hier werden alle gefiltrte Informationen zum Produkt ausgegeben:
@@ -47,10 +49,10 @@ class ProduktWindow():
         tkz = int(self.w.comboBox_tkz.currentText())
         sra = self.w.comboBox_sra.currentText()
         
-        datei=self.file_produkt
+        datei = self.file_produkt
         
         df = pd.read_csv(datei, sep=";")
-        df1 = df[( (df.tkz==tkz) & (df.sra==sra) )]
+        df1 = df[((df.tkz == tkz) & (df.sra == sra))]
 
         col_labels = ['name', 'Wert']
         
@@ -75,21 +77,21 @@ class ProduktWindow():
             
         
         #Anpassung der zwei Spalten an das TableWigets:
-        self.w.tableWidget_Produkt.setFixedWidth(self.w.tableWidget_Produkt.columnWidth(0)+self.w.tableWidget_Produkt.columnWidth(1) )
+        #self.w.tableWidget_Produkt.setFixedWidth(self.w.tableWidget_Produkt.columnWidth(0)+self.w.tableWidget_Produkt.columnWidth(1) )
 
     
     def BestimmeListe(self, nameDerEntitaet):
         #hier wird die Liste der vorkommenden Auspraegungen ermittelt. Die Liste wird dann in der Combobox erscheinen 
         
-        datei=self.file_produkt
-        df=pd.read_csv(datei, sep=";")
+        datei = self.file_produkt
+        df = pd.read_csv(datei, sep=";")
                 
         df1 = df.groupby([nameDerEntitaet], as_index=False)['wert'].sum()
         
         liste = []
         
         if df1.empty:
-            text = 'Produktwindow/BestimmeListe: in der Statistiktabelle: ' +datei+ ' wurden keine Daten gefunden'
+            text = 'Produktwindow/BestimmeListe: in der Statistiktabelle: ' + datei + ' wurden keine Daten gefunden'
             self.oprot.SchreibeInProtokoll(text)
         else:
             for index, row in df1.iterrows():

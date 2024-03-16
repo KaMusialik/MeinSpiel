@@ -46,7 +46,9 @@ class GrundEinstelleungWindow():
             self.w = None
             text = 'Die Datei ' +self.file_ui+ ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
-            
+            return
+
+        self.w.setWindowTitle('Grundeinstellungen ...')
         self.ohs = hs.ZahlenFormatieren()
     
         self.optionenCSV = optionen_grundeinstellungCSV.Optionen_GrundeinstellungCSV(f_dict)
@@ -54,6 +56,7 @@ class GrundEinstelleungWindow():
         startwertDarlehenszins = 5
         self.w.horizontalSlider_Darlehenszins.setMinimum(0)
         self.w.horizontalSlider_Darlehenszins.setMaximum(10)
+        self.w.horizontalSlider_Darlehenszins.setTickInterval(1)
         self.w.horizontalSlider_Darlehenszins.setValue(int(startwertDarlehenszins))
         self.w.horizontalSlider_Darlehenszins.valueChanged.connect(self.DarlehenszinsSlider)
         self.w.label_Darlehenszins.setText(str(startwertDarlehenszins))
@@ -191,7 +194,7 @@ class GrundEinstelleungWindow():
         self.w.label_fixkosten.setText(wert_s)
     
         # Wert für iAK:
-        key = 'iAK'
+        key = 'iak'
         wert_s = self.start_dict.get(key)
         if wert_s == '' or wert_s == None:
             wert_s = '0.0'

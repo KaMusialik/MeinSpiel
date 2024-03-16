@@ -100,7 +100,7 @@ class KostenCSV():
                 index = df3.index[0]
                 wert = float(df3.at[index, 'wert'])
                 return wert
-            else:  # wenn mehr als ein Satzt hier sind, dann ist etwas falsch
+            else:  # wenn mehr als ein Satz hier sind, dann ist etwas falsch
                 wert = 0.0
                 text = 'KostenCSV/LeseKostenCSV: Es wurden zu viele Einträge in der Tabelle KostenCSV gefunden. Da ist etwas falsch. Key: jahr=' + str(
                     jahr) + ' name=' + str(name) + ' vsnr= ' + str(vsnr) + ' avbg= ' + str(avbg)

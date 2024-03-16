@@ -3,10 +3,10 @@ jahr;name;wert
 2020;aktien_anfang;0.0
 2020;kurs_anfang;100.0
 2020;anteile_anfang;0.0
-2020;anlage_betrag;30000.0
-2020;anteile_neu;300.0
-2020;anteile_ende;300.0
-2020;kurs_ende;92.04489895320474
-2020;kurs_veraenderung;-7.955101046795264
-2020;aktien_ende;27613.46968596142
-2020;kursertraege;-2386.530314038579
+2020;anlage_betrag;30000000.0
+2020;anteile_neu;300000.0
+2020;anteile_ende;300000.0
+2020;kurs_ende;130.45014510156255
+2020;kurs_veraenderung;30.450145101562555
+2020;aktien_ende;39135043.53046877
+2020;kursertraege;9135043.530468766

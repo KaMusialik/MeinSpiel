@@ -4,35 +4,39 @@
 import protokoll as prot
 import pandas as pd
 import provision
-import kosten
+import bilanzCSV
+import kostenCSV
 
-class Bilanz(object):
+class Bilanz():
 
     def __init__(self, f_dict):
         
         self.file_dict = f_dict
-        
-        file_protokoll=f_dict.get('protokoll_file_bilanz')
+
+        self.obilanzCSV = bilanzCSV.BilanzCSV(self.file_dict)
+        self.okostenCSV = kostenCSV.KostenCSV(self.file_dict)
+
+        file_protokoll = f_dict.get('protokoll_file_bilanz')
         self.oprot = prot.Protokoll(file_protokoll)
 
-        self.file_bilanz_start=f_dict.get('file_bilanz_start')
+        self.file_bilanz_start = f_dict.get('file_bilanz_start')
         text = 'Bilanz/__init__: File für Startbilanz: '+str(self.file_bilanz_start)
         self.oprot.SchreibeInProtokoll(text)
         
-        self.file_bilanz=f_dict.get('file_bilanz')
+        self.file_bilanz = f_dict.get('file_bilanz')
         text = 'Bilanz/__init__: File für Bilanz: '+str(self.file_bilanz)
         self.oprot.SchreibeInProtokoll(text)
         
-        self.dtype_dic= f_dict.get('file_bilanz_struktur')
+        self.dtype_dic = f_dict.get('file_bilanz_struktur')
         text = 'Bilanz/__init__: es wurde eine Beschreibung der Binalnztabelle angelegt: '+str(self.dtype_dic)
         self.oprot.SchreibeInProtokoll(text)
 
-        self.dtype_dic_start= { 'jahr':int, 'rgl':str, 'avbg': str, 'name':str, 'wert':str}
+        self.dtype_dic_start = { 'jahr':int, 'rgl':str, 'avbg': str, 'name':str, 'wert':float}
         text = 'Bilanz/__init__: es wurde eine Beschreibung der Start-Binalnztabelle angelegt: '+str(self.dtype_dic_start)
         self.oprot.SchreibeInProtokoll(text)
  
-        self.file_system_fortschreibung=f_dict.get('file_system_fortschreibung')
-        self.dtype_fortschteibung=f_dict.get('file_system_fortschreibung_struktur')
+        self.file_system_fortschreibung = f_dict.get('file_system_fortschreibung')
+        self.dtype_fortschteibung = f_dict.get('file_system_fortschreibung_struktur')
         
         self.file_provision = f_dict.get('file_provision')
         self.file_provision_struktur = f_dict.get('file_provision_struktur')
@@ -46,37 +50,37 @@ class Bilanz(object):
         self.LegeBilanzAn()
         
     def Init_Bilanz(self, jahr):
-        key_dict={}
+        key_dict = {}
         key_dict.clear()
 
-        name='eigenkapital_ende'
-        avbg='999'
-        rl='bilanz'
-        key_dict['name']=name
-        key_dict['avbg']=avbg
-        key_dict['jahr']=jahr-1
-        key_dict['rl']=rl 
-        key_dict['wert']=self.LeseStartBilanzCSV(key_dict)
+        name = 'eigenkapital_ende'
+        avbg = '999'
+        rl = 'bilanz'
+        key_dict['name'] = name
+        key_dict['avbg'] = avbg
+        key_dict['jahr'] = jahr - 1
+        key_dict['rl'] = rl
+        key_dict['wert'] = self.LeseStartBilanzCSV(key_dict)
 
-        name='eigenkapital_ende'
-        key_dict['name']=name
-        key_dict['jahr']=jahr-1
-        self.SchreibeInBilanzCSV(key_dict)
+        name = 'eigenkapital_ende'
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr - 1
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
-        key_dict['rl']='bilanz'
-        key_dict['name']='kasse_ende'
-        key_dict['jahr']=jahr-1
-        key_dict['avbg']='999'
-        self.SchreibeInBilanzCSV(key_dict)
+        key_dict['rl'] = 'bilanz'
+        key_dict['name'] = 'kasse_ende'
+        key_dict['jahr'] = jahr - 1
+        key_dict['avbg'] = '999'
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
     
     def LegeBilanzAn(self):
-        datei=self.file_bilanz
-        ocsv=pd.DataFrame()
-        ocsv["jahr"]=None
-        ocsv["rl"]=None
-        ocsv["avbg"]=None
-        ocsv["name"]=None
-        ocsv["wert"]=None
+        datei = self.file_bilanz
+        ocsv = pd.DataFrame()
+        ocsv["jahr"] = None
+        ocsv["rl"] = None
+        ocsv["avbg"] = None
+        ocsv["name"] = None
+        ocsv["wert"] = None
         ocsv[['jahr', 'rl', 'avbg', 'name', 'wert']] = ocsv[['jahr', 'rl', 'avbg', 'name', 'wert']].astype(str)
         ocsv.to_csv(path_or_buf=datei, sep=';', index=False)
         
@@ -91,31 +95,31 @@ class Bilanz(object):
     
     
     def LeseBilanzVorjahr(self, key_dict):
-        name_alt=key_dict['name']
-        name=name_alt+'_ende'
-        jahr_alt=key_dict['jahr']
-        key_dict['name']=name
-        key_dict['jahr']=jahr_alt-1
+        name_alt = key_dict['name']
+        name = name_alt+'_ende'
+        jahr_alt = key_dict['jahr']
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr_alt - 1
         
         datei=self.file_bilanz
         df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
         
-        jahr=key_dict.get('jahr')
-        rl=key_dict.get('rl')
-        name=key_dict.get('name')
+        jahr = key_dict.get('jahr')
+        rl = key_dict.get('rl')
+        name = key_dict.get('name')
  
-        df1 = df[(df.jahr == jahr) & (df.rl==rl) & (df.name==name)]
+        df1 = df[(df.jahr == jahr) & (df.rl == rl) & (df.name == name)]
         if df1.__len__() != 0:
             for index, row in df1.iterrows():
-                avbg=row['avbg']
-                wert=row['wert']
-                key_dict['avbg']=avbg
-                key_dict['wert']=wert
-                name=name_alt+'_anfang'
-                key_dict['name']=name
-                key_dict['jahr']=jahr_alt
+                avbg = row['avbg']
+                wert = row['wert']
+                key_dict['avbg'] = avbg
+                key_dict['wert'] = wert
+                name = name_alt + '_anfang'
+                key_dict['name'] = name
+                key_dict['jahr'] = jahr_alt
                 
-                self.SchreibeInBilanzCSV(key_dict)
+                self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
                 
     
     def Kapitalanlagen_Anfang(self, jahr):  # Initialisierung der Bilanz zum Beginn des GJ
@@ -130,13 +134,13 @@ class Bilanz(object):
         key_dict['avbg'] = avbg
         key_dict['jahr'] = jahr-1 
         key_dict['rl'] = rl
-        key_dict['wert'] = self.LeseBilanzCSV(key_dict)
+        key_dict['wert'] = self.obilanzCSV.LeseBilanzCSV(key_dict)
 
         name='kasse_anfang'
         key_dict['name'] = name
         key_dict['jahr'] = jahr
 
-        self.SchreibeInBilanzCSV(key_dict)
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
         #******************************************
    
         # Kapitalanlagen_ende:
@@ -148,13 +152,13 @@ class Bilanz(object):
         key_dict['avbg'] = avbg
         key_dict['jahr'] = jahr-1 
         key_dict['rl'] = rl
-        key_dict['wert'] = self.LeseBilanzCSV(key_dict)
+        key_dict['wert'] = self.obilanzCSV.LeseBilanzCSV(key_dict)
 
         name='kapitalanlagen_anfang'
         key_dict['name'] = name
         key_dict['jahr'] = jahr
 
-        self.SchreibeInBilanzCSV(key_dict)
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
         #******************************************
 
 
@@ -163,50 +167,50 @@ class Bilanz(object):
 
         #Egenkapital_Ende:
         key_dict.clear()
-        name='eigenkapital_ende'
-        avbg='999'
-        rl='bilanz'
-        key_dict['name']=name
-        key_dict['avbg']=avbg
-        key_dict['jahr']=jahr-1 
-        key_dict['rl']=rl
-        key_dict['wert']=self.LeseBilanzCSV(key_dict)
+        name = 'eigenkapital_ende'
+        avbg = '999'
+        rl = 'bilanz'
+        key_dict['name'] = name
+        key_dict['avbg'] = avbg
+        key_dict['jahr'] = jahr-1
+        key_dict['rl'] = rl
+        key_dict['wert'] = self.obilanzCSV.LeseBilanzCSV(key_dict)
 
-        name='eigenkapital_anfang'
-        key_dict['name']=name
-        key_dict['jahr']=jahr
+        name = 'eigenkapital_anfang'
+        key_dict['name'] = name
+        key_dict['jahr'] = jahr
 
-        self.SchreibeInBilanzCSV(key_dict)
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
         #*******************************************
         
     
     def BilDK_Anfang(self, jahr):
-        key_dict={}
-        key_dict['jahr']=jahr
-        key_dict['rl']='bilanz'
+        key_dict = {}
+        key_dict['jahr'] = jahr
+        key_dict['rl'] = 'bilanz'
 
-        key_dict['name']='bil_derue1'
+        key_dict['name'] = 'bil_derue1'
         self.LeseBilanzVorjahr(key_dict)
 
-        key_dict['name']='bil_derue2'
+        key_dict['name'] = 'bil_derue2'
         self.LeseBilanzVorjahr(key_dict)
         
-        key_dict['name']='bil_derue3'
+        key_dict['name'] = 'bil_derue3'
         self.LeseBilanzVorjahr(key_dict)
         
-        key_dict['name']='bil_derue5'
+        key_dict['name'] = 'bil_derue5'
         self.LeseBilanzVorjahr(key_dict)
 
-        key_dict['name']='bil_derue7'
+        key_dict['name'] = 'bil_derue7'
         self.LeseBilanzVorjahr(key_dict)
 
-        key_dict['name']='bil_bio_nachreservierung'
+        key_dict['name'] = 'bil_bio_nachreservierung'
         self.LeseBilanzVorjahr(key_dict)
 
-        key_dict['name']='bil_zzr_nachreservierung'
+        key_dict['name'] = 'bil_zzr_nachreservierung'
         self.LeseBilanzVorjahr(key_dict)
 
-        key_dict['name']='bil_unisex_nachreservierung'
+        key_dict['name'] = 'bil_unisex_nachreservierung'
         self.LeseBilanzVorjahr(key_dict)
         
     
@@ -226,39 +230,42 @@ class Bilanz(object):
         
     
     def Jahresueberschuss(self, jahr):
-        key_dict={}
+        key_dict = {}
         
-        key_dict['jahr']=jahr
-        key_dict['rl']='guv'
-        key_dict['avbg']='999'
+        key_dict['jahr'] = jahr
+        key_dict['rl'] = 'guv'
+        key_dict['avbg'] = '999'
         
         key_dict['name'] = 'bil_gebuchter_beitrag'
-        gebbtg = float(self.LeseBilanzCSV(key_dict))
+        gebbtg = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         key_dict['name'] = 'bil_derue7_veraenderung'
-        veranderung_derue = float(self.LeseBilanzCSV(key_dict))
+        veranderung_derue = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         key_dict['name'] = 'ap'
-        ap = float(self.LeseBilanzCSV(key_dict))
+        ap = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         key_dict['name'] = 'iAK'
-        iAK = float(self.LeseBilanzCSV(key_dict))
+        iAK = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         key_dict['name'] = 'VK_Stueck'
-        VK_Stueck = float(self.LeseBilanzCSV(key_dict))
-        
+        VK_Stueck = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
+
+        key_dict['name'] = 'fixkosten'
+        fixkosten = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
+
         key_dict['name'] = 'kapitalertraege'
-        kapitalertraege = float(self.LeseBilanzCSV(key_dict))
+        kapitalertraege = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         key_dict['name'] = 'zinsAufKasse'
-        zinsAufKasse = float(self.LeseBilanzCSV(key_dict))
+        zinsAufKasse = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
     
-        jahresueberschuss = gebbtg - veranderung_derue - ap - iAK - VK_Stueck + kapitalertraege + zinsAufKasse
+        jahresueberschuss = gebbtg - veranderung_derue - ap - iAK - VK_Stueck - fixkosten + kapitalertraege + zinsAufKasse
         
         key_dict['name'] = 'jahresueberschuss'
         key_dict['wert'] = jahresueberschuss
-        self.SchreibeInBilanzCSV(key_dict)
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
     
     
     def Veraenderungspositionen(self, jahr):
@@ -270,46 +277,46 @@ class Bilanz(object):
     
     def VeraenderungspositionenName(self, jahr, name_quelle):
         #hier wird für eine Bilanzposition 'name_quelle' die Veränderung zum Vorjahr ermittelt:
-        datei=self.file_bilanz
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
+        datei = self.file_bilanz
+        df = pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
 
-        name_alt=name_quelle
+        name_alt = name_quelle
         
-        key_dict={}
+        key_dict = {}
         
-        key_dict['jahr']=jahr
-        rl='bilanz'
-        key_dict['rl']=rl
-        name=name_alt+'_ende'
-        key_dict['name']=name
+        key_dict['jahr'] = jahr
+        rl = 'bilanz'
+        key_dict['rl'] = rl
+        name = name_alt + '_ende'
+        key_dict['name'] = name
         
         df1 = df[(df.jahr==int(jahr)) & (df.rl==rl) & (df.avbg!='999') & (df.name==name)]
         if df1.__len__() != 0:
             for index, row in df1.iterrows():
-                avbg=row['avbg']
-                wert_ende=float(row['wert'])
-                key_dict['avbg']=avbg
-                key_dict['rl']='bilanz'
+                avbg = row['avbg']
+                wert_ende = float(row['wert'])
+                key_dict['avbg'] = avbg
+                key_dict['rl'] = 'bilanz'
                 
-                name=name_alt+'_anfang'
-                key_dict['name']=name
-                wert_anfang=float(self.LeseBilanzCSV(key_dict))
+                name = name_alt + '_anfang'
+                key_dict['name'] = name
+                wert_anfang = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
                 
                 wert_veraenderung=wert_ende-wert_anfang
                 name=name_alt+'_veraenderung'
                 key_dict['name']=name
                 key_dict['wert']=wert_veraenderung
                 key_dict['rl']='guv'
-                self.SchreibeInBilanzCSV(key_dict)
+                self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
         else:
             text = 'Bilanz/VeraenderungspositionenName: keine Datensätzte gefunden' + str(df1)
             self.oprot.SchreibeInProtokoll(text)
 
          
-        wert=self.KumuliereAlleAvbgInBilanz(key_dict)
-        key_dict['wert']=wert
-        key_dict['avbg']='999'
-        self.SchreibeInBilanzCSV(key_dict)
+        wert = self.obilanzCSV.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert'] = wert
+        key_dict['avbg'] = '999'
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
     
     
     def BilanzPositionenAusProvision(self, jahr):
@@ -371,7 +378,10 @@ class Bilanz(object):
 
         key_dict['name'] = 'VK_Stueck'
         self.LeseAusKosten(key_dict)
-    
+
+        key_dict['name'] = 'fixkosten'
+        self.LeseAusKosten(key_dict)
+
     
     def BilanzPositionenAusFortschreibung(self, jahr):
         key_dict={}
@@ -400,75 +410,40 @@ class Bilanz(object):
         self.LeseAusFortschreibung(key_dict)
         
         #**********************************************************
-        key_dict['rl']='guv'
+        key_dict['rl'] = 'guv'
         
-        key_dict['name']='bil_gebuchter_beitrag'
+        key_dict['name'] = 'bil_gebuchter_beitrag'
         self.LeseAusFortschreibung(key_dict)
 
-        key_dict['name']='bil_verdienter_beitrag_nw216'
+        key_dict['name'] = 'bil_verdienter_beitrag_nw216'
         self.LeseAusFortschreibung(key_dict)
 
 
-    def KumuliereAlleAvbgInBilanz(self, key_dict):
-        datei = self.file_bilanz
-        df = pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
-        
-        jahr = int(key_dict.get('jahr'))
-        rl = str(key_dict.get('rl'))
-        name = key_dict.get('name')
-
-        df1 = df[(df.jahr == jahr) & (df.rl == rl) & ( df.avbg != '999') & ( df.name == str(name))]
-        
-        if df1.empty:
-            wert = 0.0
-            text = 'Bilanz/KumuliereAlleAvbgInBilanz: Eintrag in der Tabelle nicht gefunden. Keine Kumulierung möglich!'
-            self.oprot.SchreibeInProtokoll(text)
-            print(text)
-        else:
-            df2 = df1[['name', 'wert']]
-            df2['wert'] = pd.to_numeric(df2['wert']) 
-
-            df3 = df2.groupby('name')['wert'].sum()
-            
-            if len(df3) != 1:
-                wert = 0.0
-                text = 'Bilanz/KumuliereAlleAvbgInBilanz: Unerwartete anzahl der kummulierten Sätze!' + str(df3)
-                self.oprot.SchreibeInProtokoll(text)
-                print(text)
-            else:
-                wert = df3[0]
-       
-        return wert   
-    
 
     def LeseAusKosten(self, key_dict):
-        datei = self.file_kosten
-        struktur = self.file_kosten_struktur
-        df = pd.read_csv(datei, sep=";", dtype = struktur)
-        
+
+        kostenDict = {}
         jahr = int(key_dict.get('jahr'))
         name = str(key_dict.get('name')) 
-        
-        #welche verträge mit welchen Bestandsgruppen sind betroffen:
-        df1 = df[( (df.jahr == jahr) & (df.name == name) )]
-        df2 = df1[['jahr','avbg', 'wert']].groupby(['jahr', 'avbg']).sum().reset_index()
+        rl = str(key_dict.get('rl'))
 
-        for index, row in df2.iterrows():
-            
-            avbg = str(row['avbg'])
-            wert = float(row['wert'])
-            
-            key_dict['avbg'] = avbg
-            key_dict['wert'] = wert
-            
-            self.SchreibeInBilanzCSV(key_dict)
+        vsnr = 999
+        avbg = '999'
+        kostenDict['jahr'] = jahr
+        kostenDict['name'] = name
+        kostenDict['vsnr'] = vsnr
+        kostenDict['avbg'] = avbg
 
+        wert = self.okostenCSV.LeseKostenCSV(kostenDict)
 
-        wert = self.KumuliereAlleAvbgInBilanz(key_dict)
-        key_dict['wert']=wert
-        key_dict['avbg']='999'
-        self.SchreibeInBilanzCSV(key_dict)
-    
+        bilanzDict = {}
+        bilanzDict['jahr'] = jahr
+        bilanzDict['name'] = name
+        bilanzDict['rl'] = rl
+        bilanzDict['avbg'] = avbg
+        bilanzDict['wert'] = wert
+
+        self.obilanzCSV.SchreibeInBilanzCSV(bilanzDict)
     
     def LeseAusKapitalanlagen(self, key_dict):
         datei = self.file_kapitalanlagen_csv
@@ -495,18 +470,18 @@ class Bilanz(object):
 
         key_dict['wert'] = wert
         key_dict['name'] = key_dict.get('name_fuer_bilanz_csv')
-        self.SchreibeInBilanzCSV(key_dict)
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
 
     def LeseAusProvisionAP(self, key_dict):
         datei = self.file_provision
         df = pd.read_csv(datei, sep=";", dtype=self.file_provision_struktur)
         
-        jahr= int(key_dict.get('jahr'))
+        jahr = int(key_dict.get('jahr'))
         
         #welche verträge mit welchen Bestandsgruppen sind betroffen:
         df1 = df[( (df.jahr == jahr) )]
-        df2=df1.groupby(['jahr', 'vsnr']).count().reset_index()
+        df2 = df1.groupby(['jahr', 'vsnr']).count().reset_index()
 
         listeDerVertraege = []
         for index, row in df2.iterrows():
@@ -532,13 +507,13 @@ class Bilanz(object):
             key_dict['name'] = 'ap'
             key_dict['wert'] = ap
             
-            self.SchreibeInBilanzCSV(key_dict)
+            self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
 
-        wert = self.KumuliereAlleAvbgInBilanz(key_dict)
-        key_dict['wert']=wert
-        key_dict['avbg']='999'
-        self.SchreibeInBilanzCSV(key_dict)
+        wert = self.obilanzCSV.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert'] = wert
+        key_dict['avbg'] = '999'
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
 
     def LeseAusFortschreibung(self,key_dict):
@@ -561,7 +536,7 @@ class Bilanz(object):
         df4 = df3.reset_index()
         
         #Berechnung pro vertrag von dem ausgewählten Feld "name" * anzahl:
-        df5 = df4.assign( wert =  pd.to_numeric(df4[name])* pd.to_numeric(df4['anzahl']))
+        df5 = df4.assign( wert = pd.to_numeric(df4[name])* pd.to_numeric(df4['anzahl']))
         
         #und jetz nach avbg gruppieren und in dem Feld wert summieren:
         df6 = df5.groupby(['avbg'])['wert'].sum().reset_index()
@@ -572,12 +547,12 @@ class Bilanz(object):
             wert = float(row['wert'])
             key_dict['avbg'] = avbg
             key_dict['wert'] = wert
-            self.SchreibeInBilanzCSV(key_dict)
+            self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
             
-        wert=self.KumuliereAlleAvbgInBilanz(key_dict)
-        key_dict['wert']=wert
-        key_dict['avbg']='999'
-        self.SchreibeInBilanzCSV(key_dict)
+        wert = self.obilanzCSV.KumuliereAlleAvbgInBilanz(key_dict)
+        key_dict['wert'] = wert
+        key_dict['avbg'] = '999'
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
     
     def Eigenkapital_Ende(self, jahr):
@@ -589,13 +564,13 @@ class Bilanz(object):
         key_dict['avbg'] = avbg
         key_dict['jahr'] = jahr
         key_dict['rl'] = 'bilanz'
-        ek_anfang = float(self.LeseBilanzCSV(key_dict))
+        ek_anfang = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
         
         name = 'jahresueberschuss'
         key_dict['name'] = name
         key_dict['rl'] = 'guv'
 
-        jue = float(self.LeseBilanzCSV(key_dict))
+        jue = float(self.obilanzCSV.LeseBilanzCSV(key_dict))
 
         ek_ende = ek_anfang + jue
         key_dict['wert'] = ek_ende
@@ -603,34 +578,8 @@ class Bilanz(object):
         key_dict['rl'] = 'bilanz'
         key_dict['name'] = name
         
-        self.SchreibeInBilanzCSV(key_dict)
-        
+        self.obilanzCSV.SchreibeInBilanzCSV(key_dict)
 
-    def LeseBilanzCSV(self, key_dict):
-        datei=self.file_bilanz
-        df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
-       
-        jahr=int(key_dict.get('jahr'))
-        rl=str(key_dict.get('rl'))
-        avbg=str(key_dict.get('avbg'))
-        name=str(key_dict.get('name'))
- 
-        df1 = df[(df.jahr == jahr) & (df.rl==rl) & (df.avbg==avbg) & (df.name==name)]
-
-        if df1.empty:
-            wert=0
-            text='bilanz/LeseBilanzCSV: Eintrag in der Tabelle nicht gefunden. Es wurde null verwendet: '+str(key_dict)
-            self.oprot.SchreibeInProtokoll(text)
-        else:
-            if df1.__len__() != 1:
-                wert=999999999
-                text='bilanz/LeseBilanzCSV: mehrere Eintraeg in der Tabelle gefunden. Es wurde ein Wert von '+str(wert)+ ' verwendet: '+str(key_dict)
-                self.oprot.SchreibeInProtokoll(text)
-            else:
-                index=df1.index[0]
-                wert=df1.at[index, 'wert']
-
-        return float(wert)   
 
 
     def LeseStartBilanzCSV(self, key_dict):
@@ -654,36 +603,3 @@ class Bilanz(object):
         return wert   
     
 
-    def SchreibeInBilanzCSV(self, key_dict):
-        datei=self.file_bilanz
-        
-        jahr=key_dict.get('jahr')
-        rl=key_dict.get('rl')
-        avbg=key_dict.get('avbg')
-        name=key_dict.get('name')
-        wert=key_dict.get('wert')
-        
-        if self.LeseBilanzCSV(key_dict) != 0:
-            self.ZeileLoeschenInBilanzCSV(key_dict)
-        
-        text=str(jahr)+';'+str(rl)+';'+str(avbg)+';'+str(name)+';'+str(wert)+'\n'
-        f=open(datei, "a")
-        f.write(text)    
-        f.close()       
-        
-
-    def ZeileLoeschenInBilanzCSV(self, key_dict):
-        datei=self.file_bilanz
-        
-        jahr=key_dict.get('jahr')
-        rl=key_dict.get('rl')
-        avbg=key_dict.get('avbg')
-        name=key_dict.get('name')
-        
-        if self.LeseBilanzCSV(key_dict) != 0:
-            df=pd.read_csv(datei, sep=";", dtype=self.dtype_dic)
-            df1=df[(df['jahr'] != jahr) & (df['rl']!=rl) & (df['avbg']!=avbg) & (df['name']!=name)]
-            df1.to_csv(datei, ';', index=False)
-            
-            text='Bilanz/ZeileLoeschenInBilanzCSV: Eintrag in der Bilanztabelle geloescht: jahr='+str(jahr)+' rl='+str(rl)+' avbg='+str(avbg)+' name='+str(name)
-            self.oprot.SchreibeInProtokoll(text)

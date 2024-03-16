@@ -38,13 +38,14 @@ class GuVWindow():
             
         else:
             self.w = None
-            text = 'GuVWindow/init: Die Datei ' +self.file_ui+ ' existiert nicht!'
+            text = 'GuVWindow/init: Die Datei ' + str(self.file_ui) + ' existiert nicht!'
             self.oprot.SchreibeInProtokoll(text)
 
         self.listeDerPositionen = {'Gebuchter Beitrag': ('bil_gebuchter_beitrag', 1),
                                    'Abschlussprovision':('ap', 50),
                                    'interne AK':('iAK', 51),
-                                   'VK Stueck':('VK_Stueck', 52),
+                                   'Verwaltungskosten_Stückt': ('VK_Stueck', 52),
+                                   'Verwaltungskosten_Fix': ('fixkosten', 53),
                                    'Veränderung der Deckungsrückstellung': ('bil_derue7_veraenderung', 100),
                                    'Kapitalerträge': ('kapitalertraege', 201),
                                    'Darlehenszins': ('zinsAufKasse', 202),

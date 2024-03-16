@@ -33,8 +33,10 @@ import kapitalanlagenWindow
 import hilfe_system
 
 files_dict = {}
-# work directory:
+# work directory in linux:
 files_dict['work_dir'] = '/home/karol/Projekte/MeinSpiel/Dateien/'
+# work direktory in windows:
+#files_dict['work_dir'] = 'c:\\MeinSpiel\\Dateien\\'
 
 # einzelne Dateien:
 files_dict['grundeinstellungwindow_file'] = files_dict.get('work_dir')+'grundeinstellungwindow.ui'
@@ -106,7 +108,7 @@ files_dict['protokoll_file_antrag_oe'] = files_dict.get('work_dir')+'protokoll_a
 files_dict['protokoll_file_bilanz'] = files_dict.get('work_dir')+'protokoll_bilanz.txt'
 files_dict['file_bilanz'] = files_dict.get('work_dir')+'bilanz.csv'
 files_dict['file_bilanz_start'] = files_dict.get('work_dir')+'bilanz_start.csv'
-files_dict['file_bilanz_struktur'] = {'jahr': int, 'rgl': str, 'avbg': str, 'name': str, 'wert': str}
+files_dict['file_bilanz_struktur'] = {'jahr': int, 'rgl': str, 'avbg': str, 'name': str, 'wert': float}
 
 #hier stehen die Produktdaten:
 files_dict['file_produkt'] = files_dict.get('work_dir')+'produkt.csv'
@@ -259,8 +261,8 @@ def ZeigeKostenModellTabelleAn():
     eintrag_dict['jahr'] = str(jahr_beginn)
     eintrag_dict['name'] = 'iak_grund'
     eintrag_dict['avbg'] = '999'
-    wert_f = okostenCSV.LeseKostenCSV(eintrag_dict)
-    wert_f = wert_f * 1000.0  # da der Wert in %o ist
+    wert_f = okostenCSV.LeseKostenCSV(eintrag_dict)  # der Wert wird aus der KostenCSV gelesen
+    wert_f = wert_f * 1000.0  # da der Wert in %o ist, wird er mit 1000 multipiziert
     wert_s = oh.FloatZuStgMitTausendtrennzeichen(wert_f, 1)
     wSpielwindow.label_iak.setText(wert_s)
     eintrag_dict.clear()
